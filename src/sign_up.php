@@ -33,8 +33,7 @@ $message = "";
 if (isset($_SESSION['loggedInSkeleton'])) {
     // user is already logged in, just display a message:
     echo "You are already logged in, please log out if you wish to create a new account<br>";
-} 
-elseif (isset($_POST['username'])) {
+} elseif (isset($_POST['username'])) {
     // user just tried to sign up:
 
     // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
@@ -82,8 +81,7 @@ elseif (isset($_POST['username'])) {
             // show an unsuccessful signup message:
             $message = "Sign up failed, please try again<br>";
         }
-    } 
-    else {
+    } else {
         // validation failed, show the form again with guidance:
         $show_signup_form = true;
         // show an unsuccessful signin message:
@@ -92,14 +90,17 @@ elseif (isset($_POST['username'])) {
 
     // we're finished with the database, close the connection:
     mysqli_close($connection);
-} 
-else {
+} else {
+
     // just a normal visit to the page, show the signup form:
+
     $show_signup_form = true;
 }
 
 if ($show_signup_form) {
+
     // show the form that allows users to sign up
+
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
     echo <<<_END
     <form action="sign_up.php" method="post">
