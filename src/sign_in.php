@@ -70,7 +70,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         $result = mysqli_query($connection, $query); //+
                        
         // if there was a match then set the session variables and display a success message:
-        if (mysqli_num_rows($result) > 0) {
+        if (mysqli_num_rows($result) > 0) { //+
             // set a session variable to record that this user has successfully logged in:
             $_SESSION['loggedInSkeleton'] = true;
             // and copy their username into the session data for use by our other scripts:

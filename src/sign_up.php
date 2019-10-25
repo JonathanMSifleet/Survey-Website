@@ -15,9 +15,13 @@
 require_once "header.php";
 
 // default values we show in the form:
+$firstname = ""; // +
+$surname = ""; // +
 $username = "";
 $password = "";
 $email = "";
+$number = ""; // +
+$DOB = ""; // +
 
 // strings to hold any validation error messages:
 $username_val = "";
@@ -68,7 +72,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     if ($errors == "") {
 
         // try to insert the new details:
-        $query = "INSERT INTO users (username, password, email) VALUES ('$username', '$password', '$email');";
+        $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
         $result = mysqli_query($connection, $query);
 
         // no data returned, we just test for true(success)/false(failure):
@@ -104,12 +108,20 @@ if ($show_signup_form) {
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
     echo <<<_END
     <form action="sign_up.php" method="post">
-      Please choose a username and password:<br>
+      Please fill in the following fields:<br>
       Username: <input type="text" name="username" maxlength="16" value="$username" required> $username_val
+      <br>      
+      First name: <input type="text" name="firstname" maxlength="16" value="$firstname" required>
+      <br>
+      Surname: <input type="text" name="surname" maxlength="24" value="$surname" required>
       <br>
       Password: <input type="password" name="password" maxlength="16" value="$password" required> $password_val
       <br>
       Email: <input type="email" name="email" maxlength="64" value="$email" required> $email_val
+      <br>
+      Phone number: <input type="text" name="number" maxlength="11" value="$number" required>
+      <br>
+      Date of birth: <input type="date" name="DOB" value="$DOB" required>
       <br>
       <input type="submit" value="Submit">
     </form>	
