@@ -13,24 +13,18 @@ require_once "header.php";
 
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
-if (!isset($_SESSION['loggedInSkeleton']))
-{
-	// user isn't logged in, display a message saying they must be:
-	echo "You must be logged in to view this page.<br>";
-}
-
-// the user must be signed-in, show them suitable page content
-else
-{
-	echo "Use this space to allow your users to create and manage their surveys<br>";
+if (! isset($_SESSION['loggedInSkeleton'])) {
+    // user isn't logged in, display a message saying they must be:
+    echo "You must be logged in to view this page.<br>";
+} // the user must be signed-in, show them suitable page content
+else {
+    echo "Use this space to allow your users to create and manage their surveys<br>";
     echo "At present, there are no surveys to display<br>";
-    
+
     // a little extra text that only the admin will see:
-	if ($_SESSION['username'] == "admin")
-	{
-		echo "[admin sees more!]<br>";
-	}
-    
+    if ($_SESSION['username'] == "admin") {
+        echo "[admin sees more!]<br>";
+    }
 }
 
 // finish off the HTML for this page:
