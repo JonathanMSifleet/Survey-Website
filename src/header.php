@@ -39,8 +39,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     if ($_SESSION['username'] == "admin") {
         echo " |||| <a href='admin.php'>Admin Tools</a>";
     }
-} 
-else {
+} else {
     // THIS PERSON IS NOT LOGGED IN
     // show the logged out menu options:
     echo <<<_END
@@ -50,6 +49,7 @@ else {
     <a href='about.php'>About</a> ||
     <a href='sign_up.php'>Sign Up</a> ||
     <a href='sign_in.php'>Sign In</a>
+    <a href='create_data.php'>Create data (testing purposes only)</a>
     _END;
 }
 
