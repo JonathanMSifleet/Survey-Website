@@ -48,11 +48,11 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     <body>
     <a href='about.php'>About</a> ||
     <a href='sign_up.php'>Sign Up</a> ||
-    <a href='sign_in.php'>Sign In</a>
-    <a href='create_data.php'>Create data (testing purposes only)</a>
+    <a href='sign_in.php'>Sign In</a> ||
+    <a href='create_data.php'>Create data (testing purposes only)</a> <!-- + -->
     _END;
 }
-
+ 
 echo <<<_END
 <br>
 <h1>2CWK50: A Survey Website</h1>
