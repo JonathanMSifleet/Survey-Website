@@ -15,9 +15,9 @@
 require_once "header.php";
 
 // default values we show in the form:
+$username = "";
 $firstname = ""; // +
 $surname = ""; // +
-$username = "";
 $password = "";
 $email = "";
 $number = ""; // +
@@ -52,8 +52,12 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
     // take copies of the credentials the user submitted, and sanitise (clean) them:
     $username = sanitise($_POST['username'], $connection);
+    $firstname = $_POST['firstname']; //+ needs sanitation
+    $surname = $_POST['surname']; //+ needs sanitation
     $password = sanitise($_POST['password'], $connection);
     $email = sanitise($_POST['email'], $connection);
+    $number = $_POST['number']; //+ needs sanitation
+    $DOB = $_POST['DOB']; //+ needs sanitation
 
     // VALIDATION (see helper.php for the function definitions)
     // now validate the data (both strings must be between 1 and 16 characters long):
@@ -70,7 +74,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
-
+        
         // try to insert the new details:
         $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
         $result = mysqli_query($connection, $query);

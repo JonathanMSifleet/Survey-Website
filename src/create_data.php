@@ -50,7 +50,7 @@ if (mysqli_query($connection, $sql)) {
 
 // make our table:
 // notice that the username field is a PRIMARY KEY and so must be unique in each record
-$sql = "CREATE TABLE users (username VARCHAR(16), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(16), email VARCHAR(64), number VARCHAR(11), DOB date, PRIMARY KEY(username))"; // +
+$sql = "CREATE TABLE users (username VARCHAR(16), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(16), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
 
 /*
  * List of variables
@@ -111,7 +111,7 @@ $dobs[] = '1993-02-09';
 $usernames[] = 'a';
 $passwords[] = 'test';
 $emails[] = 'a@alphabet.test.com';
-$firstnames[] = 'Aplhabet';
+$firstnames[] = 'Alphabet';
 $surnames[] = 'Test';
 $numbers[] = '07123456713';
 $dobs[] = '1994-10-12';
