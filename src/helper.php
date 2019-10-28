@@ -122,6 +122,7 @@ function validateDate($field, $todaysDate)
 }
 
 function encryptInput($input)
+{
     return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
 }
 
