@@ -23,6 +23,7 @@ function sanitise($str, $connection)
     return $str;
 }
 
+// if the input is contains only non-numbers and is the correct length then return an empty string, if the data is invalid return a help message
 // this entire function is made by me:
 function validateString($field, $minlength, $maxlength) // master function +
 {
@@ -30,6 +31,8 @@ function validateString($field, $minlength, $maxlength) // master function +
     $errors = $errors . validateStringLength($field, $minlength, $maxlength);
     $errors = $errors . checkIsNonNumeric($field);
 }
+
+
 
 // if the data is valid return an empty string, if the data is invalid return a help message
 function validateStringLength($field, $minlength, $maxlength) // + edit function name
@@ -46,6 +49,7 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     return "";
 }
 
+// if the input is contains only numbers then return an empty string, if the data is invalid return a help message
 // this entire function is made by me:
 function checkIsNonNumeric($field)
 {
