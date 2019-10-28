@@ -58,6 +58,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $firstname = sanitise($_POST['firstname'], $connection); //+
     $firstname = checkIsNonNumeric($firstname); //+
     $surname = sanitise($_POST['surname'], $connection); //+
+    $surname = checkIsNonNumeric($surname); //+
     $password = sanitise($_POST['password'], $connection);
     $email = sanitise($_POST['email'], $connection);
     $number = sanitise($_POST['number'], $connection); //+
