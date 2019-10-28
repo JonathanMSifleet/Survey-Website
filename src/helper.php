@@ -65,7 +65,7 @@ function validatePhoneNumber($field) // +
         return "";
     }
 
-    return "Number length: " . strlen($field) . ". This is not a valid phone number (must be 11 digits long)";
+    return "Phone number must be 11 digits long, yours was " . strlen($field) . " digits long";
 }
 // all other validation functions should follow the same rule:
 // if the data is valid return an empty string, if the data is invalid return a help message
