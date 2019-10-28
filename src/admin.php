@@ -20,6 +20,7 @@ else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
     if ($_SESSION['username'] == "admin") {
+        echo "Implement the admin tools here... See the assignment specification for more details.<br>";
 
         $query = "SELECT * FROM users"; // +
         $result = mysqli_query($connection, $query); // +
@@ -29,7 +30,12 @@ else {
             $row = mysqli_fetch_assoc($result);
             echo <<<_END
             username: {$row['username']}<br>
-            <br>
+            firstname: {$row['firstname']}<br>
+            surname: {$row['surname']}<br>
+            password: {$row['password']}<br>
+            email: {$row['email']}<br>
+            number: {$row['number']}<br>
+            DOB: {$row['DOB']}<br><br>
             _END;
         }
         mysqli_close($connection);

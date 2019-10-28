@@ -55,7 +55,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // now validate the data (both strings must be between 1 and 16 characters long):
     // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table)
     $username_val = validateString($username, 3, 16); // +
-    $password_val = validateString($password, 6, 32); // +
+    $password_val = validateString($password, 6, 31); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
     $errors = $username_val . $password_val;
