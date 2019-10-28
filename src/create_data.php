@@ -9,6 +9,7 @@
 // NOTE: this last one is VERY IMPORTANT - you need to include test data that enables the markers to test all of your site's functionality
 
 // read in the details of our MySQL server:
+require_once "header.php"; // for ease of use+
 require_once "credentials.php";
 
 // We'll use the procedural (rather than object oriented) mysqli calls
@@ -50,7 +51,9 @@ if (mysqli_query($connection, $sql)) {
 
 // make our table:
 // notice that the username field is a PRIMARY KEY and so must be unique in each record
-$sql = "CREATE TABLE users (username VARCHAR(16), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(16), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
+$sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(31), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
+// phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
+
 
 /*
  * List of variables
@@ -75,9 +78,10 @@ if (mysqli_query($connection, $sql)) {
 
 // this whole section is edditted:
 
-// date format: YYYY-MM-DD
+// date format: YYYY-MM-DD +
+// passwords generated from passwordsgenerator.net
 $usernames[] = 'barrym';
-$passwords[] = 'letmein';
+$passwords[] = '$cZsrv566&2N6U=z';
 $emails[] = 'barry@m-domain.com';
 $firstnames[] = 'Barry';
 $surnames[] = 'madeup';
@@ -85,7 +89,7 @@ $numbers[] = '07123456789';
 $dobs[] = '1990-04-13';
 
 $usernames[] = 'mandyb';
-$passwords[] = 'abc123';
+$passwords[] = 'xEuxmu&-dy&KL3QU';
 $emails[] = 'webmaster@mandy-g.co.uk';
 $firstnames[] = 'Mandy';
 $surnames[] = 'Basic';
@@ -93,7 +97,7 @@ $numbers[] = '07123456710';
 $dobs[] = '1991-04-28';
 
 $usernames[] = 'timmy';
-$passwords[] = 'secret95';
+$passwords[] = 'J#X3nNQ!CVDdq@xJ';
 $emails[] = 'timmy@lassie.com';
 $firstnames[] = 'Timmy';
 $surnames[] = 'Turner';
@@ -101,31 +105,31 @@ $numbers[] = '07123456711';
 $dobs[] = '1992-07-17';
 
 $usernames[] = 'briang';
-$passwords[] = 'password';
+$passwords[] = '*S&Sj5mQ!y_NXL8Y';
 $emails[] = 'brian@quahog.gov';
 $firstnames[] = 'Brian';
 $surnames[] = 'Lifeof';
 $numbers[] = '07123456712';
 $dobs[] = '1993-02-09';
 
-$usernames[] = 'a';
-$passwords[] = 'test';
+$usernames[] = 'abc';
+$passwords[] = 'N!N4dhS-mUS&_2Jm';
 $emails[] = 'a@alphabet.test.com';
 $firstnames[] = 'Alphabet';
 $surnames[] = 'Test';
 $numbers[] = '07123456713';
 $dobs[] = '1994-10-12';
 
-$usernames[] = 'b';
-$passwords[] = 'test';
+$usernames[] = 'bcde';
+$passwords[] = 'r6*E?UnF9qg6-g-G';
 $emails[] = 'b@alphabet.test.com';
 $firstnames[] = 'Brandon';
 $surnames[] = 'Stark';
 $numbers[] = '07123456714';
 $dobs[] = '1995-03-08';
 
-$usernames[] = 'c';
-$passwords[] = 'test';
+$usernames[] = 'cdefg';
+$passwords[] = '3Hep5mbe!Kv!$&P+';
 $emails[] = 'c@alphabet.test.com';
 $firstnames[] = 'Chris';
 $surnames[] = 'Topher';
@@ -133,7 +137,7 @@ $numbers[] = '07123456715';
 $dobs[] = '1996-05-16';
 
 $usernames[] = 'd';
-$passwords[] = 'test';
+$passwords[] = '&2M!qTq4MkhjDGZr';
 $emails[] = 'd@alphabet.test.com';
 $firstnames[] = 'Dee';
 $surnames[] = 'Sweet';
