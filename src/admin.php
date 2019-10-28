@@ -18,8 +18,6 @@ else {
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
     if ($_SESSION['username'] == "admin") {
         echo "Implement the admin tools here... See the assignment specification for more details.<br>";
-<<<<<<< HEAD
-<<<<<<< HEAD
 
         $query = "SELECT * FROM users"; // +
         $result = mysqli_query($connection, $query); // +
@@ -33,14 +31,6 @@ else {
         }
         mysqli_close($connection);
     } else {
-=======
-    } 
-    else {
->>>>>>> parent of d984849... Admin can now see each user's data
-=======
-    } 
-    else {
->>>>>>> parent of d984849... Admin can now see each user's data
         echo "You don't have permission to view this page...<br>";
     }
 }
