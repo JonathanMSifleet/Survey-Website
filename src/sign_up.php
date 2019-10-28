@@ -118,6 +118,7 @@ if ($show_signup_form) {
 
     // get current date: +
     // $currentDate = date("yyyy-mm-dd");
+    // max="$currentDate"
 
     echo <<<_END
     <form action="sign_up.php" method="post">
@@ -134,7 +135,7 @@ if ($show_signup_form) {
       <br>
       Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $number_val
       <br>
-      Date of birth: <input type="date" name="DOB" max="$currentDate" value="$DOB" required>
+      Date of birth: <input type="date" name="DOB" value="$DOB" required>
       <br>
       <input type="submit" value="Submit">
     </form>	

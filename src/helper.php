@@ -54,6 +54,8 @@ function checkIsNonNumeric($field)
     for ($i = 0; $i < count($charArray); $i ++) {
         if (is_numeric($charArray[$i]) == false) {
             return "Must not contain any numbers";
+        } else {
+            return "";
         }
     }
 }
@@ -61,11 +63,15 @@ function checkIsNonNumeric($field)
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
 function validatePhoneNumber($field) // +
 {
-    if (strlen($field) == "11") {
-        return "";
+    if (is_numeric($field)) {
+        if (strlen($field) == "11") {
+            return "";
+        } else {
+            return "Phone number must be 11 digits long, yours was " . strlen($field) . " digits long";
+        }
+    } else {
+        return "Phone number must not contain any characters";
     }
-
-    return "Phone number must be 11 digits long, yours was " . strlen($field) . " digits long";
 }
 // all other validation functions should follow the same rule:
 // if the data is valid return an empty string, if the data is invalid return a help message
