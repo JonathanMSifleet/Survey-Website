@@ -51,6 +51,7 @@ function checkIsNonNumeric($field)
 {
     $charArray = str_split($field);
 
+
     for ($i = 0; $i < count($charArray); $i ++) {
         if (is_numeric($charArray[$i]) == false) {
             return "Must not contain any numbers";
@@ -61,11 +62,17 @@ function checkIsNonNumeric($field)
 }
 
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
-function validatePhoneNumber($field) // +
+// function is completely written by me:
+function validatePhoneNumber($field) //
 {
-    if (is_numeric($field)) {
-        if (strlen($field) == "11") {
-            return "";
+    
+    // could add functionality that only allows specific number prefixs
+    // e.g. 01, 07, 08, etc... but https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Kingdom
+    // A number can start with every combination of 0X. e.g. 01, 02, 03, 04 etc...
+    
+    if (is_numeric($field)) { // check if phone number is numerical
+        if (strlen($field) == "11") { // check if phone number is correct length
+            return ""; 
         } else {
             return "Phone number must be 11 digits long, yours was " . strlen($field) . " digits long";
         }
