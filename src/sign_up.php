@@ -71,7 +71,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $email_val = validateString($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
-    $number_val = validateString($number, 11, 11); // +
+    $number_val = validateInt($number, 11, 11); // +
     // date of birth not validated as HTML form enforces validation arleady
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
