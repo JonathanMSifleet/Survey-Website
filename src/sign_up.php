@@ -26,7 +26,9 @@ $DOB = ""; // +
 // strings to hold any validation error messages:
 $username_val = "";
 $firstname_val = ""; // +
+$firstname_val2 =""; // +
 $surname_val = ""; // +
+$surname_val2 =""; // +
 $password_val = "";
 $email_val = "";
 $number_val = ""; // +
@@ -56,9 +58,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // take copies of the credentials the user submitted, and sanitise (clean) them:
     $username = sanitise($_POST['username'], $connection);
     $firstname = sanitise($_POST['firstname'], $connection); //+
-    $firstname = checkIsNonNumeric($firstname); //+
     $surname = sanitise($_POST['surname'], $connection); //+
-    $surname = checkIsNonNumeric($surname); //+
     $password = sanitise($_POST['password'], $connection);
     $email = sanitise($_POST['email'], $connection);
     $number = sanitise($_POST['number'], $connection); //+
@@ -72,8 +72,11 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $password_val = validateString($password, 1, 31); //+
     $email_val = validateString($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
     $firstname_val = validateString($firstname, 2, 16); // see line below +
+    $firstname_val2 = checkIsNonNumeric($firstname); //+
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+    $surname_val2 = checkIsNonNumeric($surname); //+    
     $number_val = validateInt($number, 11, 11); // +
+    
     // date of birth not validated as HTML form enforces validation arleady
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
@@ -124,9 +127,9 @@ if ($show_signup_form) {
       Please fill in the following fields:<br>
       Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $username_val
       <br>      
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val $firstname_val2
       <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val $surname_val2
       <br>
       Password: <input type="password" name="password" minlength="12" maxlength="31" value="$password" required> $password_val
       <br>
