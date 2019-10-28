@@ -23,6 +23,9 @@ $email = "";
 $number = ""; // +
 $DOB = ""; // +
 
+// global: +
+$todaysDate = date('Y-m-d'); // get current date: +
+
 // strings to hold any validation error messages:
 $username_val = "";
 $firstname_val = ""; // +
@@ -30,6 +33,7 @@ $surname_val = ""; // +
 $password_val = "";
 $email_val = "";
 $number_val = ""; // +
+$DOB_val = ""; //+
 
 // should we show the signup form?:
 $show_signup_form = false;
@@ -60,6 +64,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $password = sanitise($_POST['password'], $connection);
     $email = sanitise($_POST['email'], $connection);
     $number = sanitise($_POST['number'], $connection); // +
+    $DOB = sanitise($_POST['DOB'], $connection); // +
 
     // VALIDATION (see helper.php for the function definitions)
     // now validate the data (both strings must be between 1 and 16 characters long):
@@ -72,11 +77,12 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
+    $DOB_val = validateDate($DOB, $todaysDate); //+
 
     // date of birth not validated as HTML form enforces validation arleady
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-    $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val;
+    $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
 
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
@@ -116,10 +122,6 @@ if ($show_signup_form) {
     // show the form that allows users to sign up
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
 
-    // get current date: +
-    // $currentDate = date("yyyy-mm-dd");
-    // max="$currentDate"
-
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
@@ -135,7 +137,7 @@ if ($show_signup_form) {
       <br>
       Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $number_val
       <br>
-      Date of birth: <input type="date" name="DOB" value="$DOB" required>
+      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $DOB_val
       <br>
       <input type="submit" value="Submit">
     </form>	
