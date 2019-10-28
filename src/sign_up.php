@@ -56,6 +56,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // take copies of the credentials the user submitted, and sanitise (clean) them:
     $username = sanitise($_POST['username'], $connection);
     $firstname = sanitise($_POST['firstname'], $connection); //+
+    $firstname = checkIsNonNumeric($firstname); //+
     $surname = sanitise($_POST['surname'], $connection); //+
     $password = sanitise($_POST['password'], $connection);
     $email = sanitise($_POST['email'], $connection);

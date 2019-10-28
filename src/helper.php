@@ -29,14 +29,25 @@ function validateString($field, $minlength, $maxlength)
     if (strlen($field) < $minlength) {
         // wasn't a valid length, return a help message:
         return "Minimum length: " . $minlength;
-    } 
-    elseif (strlen($field) > $maxlength) {
+    } elseif (strlen($field) > $maxlength) {
         // wasn't a valid length, return a help message:
         return "Maximum length: " . $maxlength;
     }
 
     // data was valid, return an empty string:
     return "";
+}
+
+// this entire function is made by me:
+function checkIsNonNumeric($field)
+{
+    $charArray = str_split($field);
+
+    for ($i = 0; $i < count($charArray); $i ++) {
+        if (is_numeric($charArray[$i]) == false) {
+            return "Must not contain any numbers";
+        }
+    }
 }
 
 // if the data is valid return an empty string, if the data is invalid return a help message
