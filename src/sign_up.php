@@ -55,32 +55,32 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
     // take copies of the credentials the user submitted, and sanitise (clean) them:
     $username = sanitise($_POST['username'], $connection);
-    $firstname = sanitise($_POST['firstname'], $connection); //+
-    $surname = sanitise($_POST['surname'], $connection); //+
+    $firstname = sanitise($_POST['firstname'], $connection); // +
+    $surname = sanitise($_POST['surname'], $connection); // +
     $password = sanitise($_POST['password'], $connection);
     $email = sanitise($_POST['email'], $connection);
-    $number = sanitise($_POST['number'], $connection); //+
+    $number = sanitise($_POST['number'], $connection); // +
 
     // VALIDATION (see helper.php for the function definitions)
     // now validate the data (both strings must be between 1 and 16 characters long):
     // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table for username and password)
     // firstname is VARCHAR(32) and lastname is VARCHAR(64) in the DB
     // email is VARCHAR(64) and telephone is VARCHAR(16) in the DB
-    $username_val = validateStringLength($username, 1, 20); //+
-    $password_val = validateStringLength($password, 1, 31); //+
+    $username_val = validateStringLength($username, 1, 20); // +
+    $password_val = validateStringLength($password, 1, 31); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
-    
+
     // date of birth not validated as HTML form enforces validation arleady
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-    $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val .  $number_val;
+    $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val;
 
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
-        
+
         // try to insert the new details:
         $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
         $result = mysqli_query($connection, $query);
@@ -115,11 +115,10 @@ if ($show_signup_form) {
 
     // show the form that allows users to sign up
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
-    
+
     // get current date: +
-    //$currentDate = date("yyyy-mm-dd");
-    // max="$currentDate"
-    
+    // $currentDate = date("yyyy-mm-dd");
+
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
@@ -135,7 +134,7 @@ if ($show_signup_form) {
       <br>
       Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $number_val
       <br>
-      Date of birth: <input type="date" name="DOB" value="$DOB" required>
+      Date of birth: <input type="date" name="DOB" max="$currentDate" value="$DOB" required>
       <br>
       <input type="submit" value="Submit">
     </form>	

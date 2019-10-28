@@ -52,8 +52,7 @@ if (mysqli_query($connection, $sql)) {
 // make our table:
 // notice that the username field is a PRIMARY KEY and so must be unique in each record
 $sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(31), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
-// phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
-
+                                                                                                                                                                                              // phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
 
 /*
  * List of variables

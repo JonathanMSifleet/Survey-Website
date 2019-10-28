@@ -60,7 +60,7 @@ function checkIsNonNumeric($field)
 
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
 function validatePhoneNumber($field) // +
-{       
+{
     if (strlen($field) == "11") {
         return "";
     }

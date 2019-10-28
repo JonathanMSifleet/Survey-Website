@@ -35,7 +35,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     echo "You are already logged in, please log out first.<br>";
 } elseif (isset($_POST['username'])) {
     // user has just tried to log in:
-    
+
     // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
@@ -65,13 +65,13 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
         // currently only barryg, mandyb, or timmy can sign in... each with ANY password
         // you need to replace this code with code that checks the username and password against the relevant database table...
-        
-        $query = "SELECT * FROM users WHERE username='$username' AND password='$password'"; //+
-        $result = mysqli_query($connection, $query); //+
-                       
+
+        $query = "SELECT * FROM users WHERE username='$username' AND password='$password'"; // +
+        $result = mysqli_query($connection, $query); // +
+
         // if there was a match then set the session variables and display a success message:
-        if (mysqli_num_rows($result) > 0) { //+
-            // set a session variable to record that this user has successfully logged in:
+        if (mysqli_num_rows($result) > 0) { // +
+                                            // set a session variable to record that this user has successfully logged in:
             $_SESSION['loggedInSkeleton'] = true;
             // and copy their username into the session data for use by our other scripts:
             $_SESSION['username'] = $username;
@@ -83,7 +83,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
             // no matching credentials found so redisplay the signin form with a failure message:
             $show_signin_form = true;
             // show an unsuccessful signin message:
-            $message = "No credentials found<br>"; //+
+            $message = "No credentials found<br>"; // +
         }
     } else {
         // validation failed, show the form again with guidance:
