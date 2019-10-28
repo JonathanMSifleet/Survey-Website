@@ -120,17 +120,17 @@ if ($show_signup_form) {
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
-      Username: <input type="text" name="username" maxlength="16" value="$username" required> $username_val
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $username_val
       <br>      
-      First name: <input type="text" name="firstname" maxlength="16" value="$firstname" required> $firstname_val
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val
       <br>
-      Surname: <input type="text" name="surname" maxlength="24" value="$surname" required> $surname_val
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
       <br>
-      Password: <input type="password" name="password" maxlength="16" value="$password" required> $password_val
+      Password: <input type="password" name="password" minlength="12" maxlength="31" value="$password" required> $password_val
       <br>
-      Email: <input type="email" name="email" maxlength="64" value="$email" required> $email_val
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
       <br>
-      Phone number: <input type="text" name="number" maxlength="11" value="$number" required> $number_val
+      Phone number: <input type="text" name="number" minlength="11" maxlength="11" value="$number" required> $number_val
       <br>
       Date of birth: <input type="date" name="DOB" value="$DOB" required>
       <br>

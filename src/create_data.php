@@ -136,7 +136,7 @@ $surnames[] = 'Topher';
 $numbers[] = '07123456715';
 $dobs[] = '1996-05-16';
 
-$usernames[] = 'd';
+$usernames[] = 'defg';
 $passwords[] = '&2M!qTq4MkhjDGZr';
 $emails[] = 'd@alphabet.test.com';
 $firstnames[] = 'Dee';
