@@ -51,7 +51,7 @@ if (mysqli_query($connection, $sql)) {
 
 // make our table:
 // notice that the username field is a PRIMARY KEY and so must be unique in each record
-$sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(32), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
+$sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(31), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
                                                                                                                                                                                               // phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
 
 /*
@@ -89,6 +89,7 @@ $numbers[] = '';
 $dobs[] = '';
 
 $usernames[] = 'barrym';
+$passwords[] = '$cZsrv566&2N6U=z';
 $emails[] = 'barry@m-domain.com';
 $firstnames[] = 'Barry';
 $surnames[] = 'madeup';
@@ -96,6 +97,7 @@ $numbers[] = '07123456789';
 $dobs[] = '1990-04-13';
 
 $usernames[] = 'mandyb';
+$passwords[] = 'xEuxmu&-dy&KL3QU';
 $emails[] = 'webmaster@mandy-g.co.uk';
 $firstnames[] = 'Mandy';
 $surnames[] = 'Basic';
@@ -103,6 +105,7 @@ $numbers[] = '07123456710';
 $dobs[] = '1991-04-28';
 
 $usernames[] = 'timmy';
+$passwords[] = 'J#X3nNQ!CVDdq@xJ';
 $emails[] = 'timmy@lassie.com';
 $firstnames[] = 'Timmy';
 $surnames[] = 'Turner';
@@ -110,6 +113,7 @@ $numbers[] = '07123456711';
 $dobs[] = '1992-07-17';
 
 $usernames[] = 'briang';
+$passwords[] = '*S&Sj5mQ!y_NXL8Y';
 $emails[] = 'brian@quahog.gov';
 $firstnames[] = 'Brian';
 $surnames[] = 'Lifeof';
@@ -117,6 +121,7 @@ $numbers[] = '07123456712';
 $dobs[] = '1993-02-09';
 
 $usernames[] = 'abc';
+$passwords[] = 'N!N4dhS-mUS&_2Jm';
 $emails[] = 'a@alphabet.test.com';
 $firstnames[] = 'Alphabet';
 $surnames[] = 'Test';
@@ -124,6 +129,7 @@ $numbers[] = '07123456713';
 $dobs[] = '1994-10-12';
 
 $usernames[] = 'bcde';
+$passwords[] = 'r6*E?UnF9qg6-g-G';
 $emails[] = 'b@alphabet.test.com';
 $firstnames[] = 'Brandon';
 $surnames[] = 'Stark';
@@ -131,6 +137,7 @@ $numbers[] = '07123456714';
 $dobs[] = '1995-03-08';
 
 $usernames[] = 'cdefg';
+$passwords[] = '3Hep5mbe!Kv!$&P+';
 $emails[] = 'c@alphabet.test.com';
 $firstnames[] = 'Chris';
 $surnames[] = 'Topher';
@@ -138,6 +145,7 @@ $numbers[] = '07123456715';
 $dobs[] = '1996-05-16';
 
 $usernames[] = 'defg';
+$passwords[] = '&2M!qTq4MkhjDGZr';
 $emails[] = 'd@alphabet.test.com';
 $firstnames[] = 'Dee';
 $surnames[] = 'Sweet';
@@ -149,13 +157,6 @@ $dobs[] = '1997-11-19';
 // loop through the arrays above and add rows to the table:
 for ($i = 0; $i < count($usernames); $i ++) {
     // create the SQL query to be executed
-    if ($i == 0) {
-        $password[$i] = 'secret'; // manually overrides admin password
-    } else {
-        $passwords[$i] = generatePassword();
-    }
-    $passwords[$i] = encryptInput($passwords[$i]); // encrypt password before entering DB +
-
     $sql = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$usernames[$i]','$firstnames[$i]','$surnames[$i]','$passwords[$i]','$emails[$i]','$numbers[$i]', '$dobs[$i]')";
 
     // run the above query '$sql' on our DB
