@@ -69,7 +69,6 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         $query = "SELECT * FROM users WHERE username='$username' AND password='$password'"; // +
         $result = mysqli_query($connection, $query); // +
 
-
         // if there was a match then set the session variables and display a success message:
         if (mysqli_num_rows($result) > 0) {
             // set a session variable to record that this user has successfully logged in:
@@ -79,8 +78,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
             // show a successful signin message:
             $message = "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
-            //setcookie(session_name(), '', time()-2592000, '/'); // maybe add https +
-            
+            // setcookie(session_name(), '', time()-2592000, '/'); // maybe add https +
         } else {
             // no matching credentials found so redisplay the signin form with a failure message:
             $show_signin_form = true;

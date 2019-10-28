@@ -54,7 +54,7 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     return "";
 }
 
-// if the input contains the @ symbol then return an empty string, if the data is invalid return a help message 
+// if the input contains the @ symbol then return an empty string, if the data is invalid return a help message
 // this function is made by me:
 function checkIsEmail($field)
 {
@@ -119,6 +119,11 @@ function validateDate($field, $todaysDate)
     } else {
         return "";
     }
+}
+
+function encryptInput($input)
+{
+    return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
 }
 
 // all other validation functions should follow the same rule:
