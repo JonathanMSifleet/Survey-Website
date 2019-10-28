@@ -32,7 +32,12 @@ function validateString($field, $minlength, $maxlength) // master function +
     $errors = $errors . checkIsNonNumeric($field);
 }
 
-
+function validateEmail($field, $minLength, $maxLength)
+{
+    $errors = "";
+    $errors = $errors . validateStringLength($field, $minLength, $maxLength);
+    $errors = $errors . checkIsEmail($field);
+}
 
 // if the data is valid return an empty string, if the data is invalid return a help message
 function validateStringLength($field, $minlength, $maxlength) // + edit function name
@@ -47,6 +52,15 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
 
     // data was valid, return an empty string:
     return "";
+}
+
+function checkIsEmail($field)
+{
+    if (strpos($field, '@') == false) {
+        return "Email is not valid";
+    } else {
+        "";
+    }
 }
 
 // if the input is contains only numbers then return an empty string, if the data is invalid return a help message
