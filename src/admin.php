@@ -19,6 +19,7 @@ else {
     if ($_SESSION['username'] == "admin") {
         echo "Implement the admin tools here... See the assignment specification for more details.<br>";
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         $query = "SELECT * FROM users"; // +
         $result = mysqli_query($connection, $query); // +
@@ -32,6 +33,10 @@ else {
         }
         mysqli_close($connection);
     } else {
+=======
+    } 
+    else {
+>>>>>>> parent of d984849... Admin can now see each user's data
 =======
     } 
     else {
