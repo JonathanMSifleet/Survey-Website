@@ -20,6 +20,20 @@ else {
         echo "Implement the admin tools here... See the assignment specification for more details.<br>";
     } 
     else {
+
+        $query = "SELECT * FROM users"; // +
+        $result = mysqli_query($connection, $query); // +
+
+        $n = mysqli_num_rows($result);
+        for ($i = 0; $i < $n; $i ++) {
+            $row = mysqli_fetch_assoc($result);
+            echo <<<_END
+            username: {$row['username']}<br>
+            <br>
+            _END;
+        }
+        mysqli_close($connection);
+    } else {
         echo "You don't have permission to view this page...<br>";
     }
 }

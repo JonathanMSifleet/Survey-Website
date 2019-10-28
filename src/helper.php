@@ -54,7 +54,7 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     return "";
 }
 
-// if the input contains the @ symbol then return an empty string, if the data is invalid return a help message 
+// if the input contains the @ symbol then return an empty string, if the data is invalid return a help message
 // this function is made by me:
 function checkIsEmail($field)
 {
@@ -119,6 +119,29 @@ function validateDate($field, $todaysDate)
     } else {
         return "";
     }
+}
+
+function encryptInput($input)
+    return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
+}
+
+// this function generates 32 random integers characters, converts them to ascii, combines the combination of characters, then returns the combination
+// this function is written by me:
+function generatePassword()
+{
+    $tempPassword[] = "";
+
+    for ($i = 1; $i <= 31; $i ++) {
+        $tempPassword[$i] = chr(rand(33, 126)); // 33 and 126 are 'safe' characters
+    }
+
+    $finalPassword = "";
+
+    for ($i = 0; $i <= 31; $i ++) {
+        $finalPassword = $finalPassword . $tempPassword[$i]; // = chr(rand(33,126));
+    }
+
+    return $finalPassword;
 }
 
 // all other validation functions should follow the same rule:
