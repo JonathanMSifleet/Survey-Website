@@ -121,6 +121,12 @@ function validateDate($field, $todaysDate)
     }
 }
 
+function encryptInput($input) {
+    
+    return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
+    
+}
+
 // all other validation functions should follow the same rule:
 // if the data is valid return an empty string, if the data is invalid return a help message
 // ...
