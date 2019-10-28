@@ -26,9 +26,7 @@ $DOB = ""; // +
 // strings to hold any validation error messages:
 $username_val = "";
 $firstname_val = ""; // +
-$firstname_val2 =""; // +
 $surname_val = ""; // +
-$surname_val2 =""; // +
 $password_val = "";
 $email_val = "";
 $number_val = ""; // +
@@ -73,7 +71,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
-    $number_val = validateInt($number, 11, 11); // +
+    $number_val = validatePhoneNumber($number); // +
     
     // date of birth not validated as HTML form enforces validation arleady
 
@@ -116,24 +114,26 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 if ($show_signup_form) {
 
     // show the form that allows users to sign up
-
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
     
-    // add min lengths to form for extra validation: +
+    // get current date: +
+    //$currentDate = date("yyyy-mm-dd");
+    // max="$currentDate"
+    
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
       Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $username_val
       <br>      
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val $firstname_val2
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val
       <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val $surname_val2
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
       <br>
       Password: <input type="password" name="password" minlength="12" maxlength="31" value="$password" required> $password_val
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
       <br>
-      Phone number: <input type="text" name="number" minlength="11" maxlength="11" value="$number" required> $number_val
+      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $number_val
       <br>
       Date of birth: <input type="date" name="DOB" value="$DOB" required>
       <br>

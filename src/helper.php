@@ -58,25 +58,15 @@ function checkIsNonNumeric($field)
     }
 }
 
-// if the data is valid return an empty string, if the data is invalid return a help message
-function validateInt($field, $min, $max)
-{
-    // see PHP manual for more info on the options: http://php.net/manual/en/function.filter-var.php
-    $options = array(
-        "options" => array(
-            "min_range" => $min,
-            "max_range" => $max
-        )
-    );
-
-    if (! filter_var($field, FILTER_VALIDATE_INT, $options)) {
-        // wasn't a valid integer, return a help message:
-        return "Not a valid number (must be 11 digits long";
+// if the input is 11 digits long return an empty string, if the data is invalid return a help message
+function validatePhoneNumber($field) // +
+{       
+    if (strlen($field) == "11") {
+        return "";
     }
-    // data was valid, return an empty string:
-    return "";
-}
 
+    return "Number length: " . strlen($field) . ". This is not a valid phone number (must be 11 digits long)";
+}
 // all other validation functions should follow the same rule:
 // if the data is valid return an empty string, if the data is invalid return a help message
 // ...
