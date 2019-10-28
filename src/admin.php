@@ -29,13 +29,7 @@ else {
         for ($i = 0; $i < $n; $i ++) {
             $row = mysqli_fetch_assoc($result);
             echo <<<_END
-            username: {$row['username']}<br>
-            firstname: {$row['firstname']}<br>
-            surname: {$row['surname']}<br>
-            password: {$row['password']}<br>
-            email: {$row['email']}<br>
-            number: {$row['number']}<br>
-            DOB: {$row['DOB']}<br><br>
+            username: {$row['username']}<br><br>
             _END;
         }
         mysqli_close($connection);
