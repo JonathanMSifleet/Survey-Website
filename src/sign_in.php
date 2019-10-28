@@ -84,6 +84,8 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
             // show a successful signin message:
             $message = "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
+            setcookie(session_name(), '', time()-2592000, '/'); // maybe add https+
+            
         } else {
             // no matching credentials found so redisplay the signin form with a failure message:
             $show_signin_form = true;
