@@ -23,6 +23,15 @@ function sanitise($str, $connection)
     return $str;
 }
 
+// this entire function is made by me:
+function validateString($field, $minlength, $maxlength) // master function +
+{
+    $errors="";
+    $errors = $errors . validateStringLength($field, $minlength, $maxlength);
+    $errors = $errors . checkIsNonNumeric($field);
+    
+}
+
 // if the data is valid return an empty string, if the data is invalid return a help message
 function validateStringLength($field, $minlength, $maxlength) // + edit function name
 {
