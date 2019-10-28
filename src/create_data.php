@@ -51,7 +51,7 @@ if (mysqli_query($connection, $sql)) {
 
 // make our table:
 // notice that the username field is a PRIMARY KEY and so must be unique in each record
-$sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(60), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
+$sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(31), email VARCHAR(64), number VARCHAR(11), DOB DATE, PRIMARY KEY(username))"; // +
                                                                                                                                                                                               // phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
 
 /*
@@ -156,16 +156,8 @@ $dobs[] = '1997-11-19';
 
 // loop through the arrays above and add rows to the table:
 for ($i = 0; $i < count($usernames); $i ++) {
-
-    if ($i !== 0) {
-        $tempPassword = encryptInput($passwords[$i]); // encrypt password before entering DB +
-    } else {
-        $tempPassword = $passwords[$i];
-    }
-
     // create the SQL query to be executed
-
-    $sql = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$usernames[$i]','$firstnames[$i]','$surnames[$i]','$tempPassword','$emails[$i]','$numbers[$i]', '$dobs[$i]')";
+    $sql = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$usernames[$i]','$firstnames[$i]','$surnames[$i]','$passwords[$i]','$emails[$i]','$numbers[$i]', '$dobs[$i]')";
 
     // run the above query '$sql' on our DB
     // no data returned, we just test for true(success)/false(failure):
