@@ -68,12 +68,12 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table for username and password)
     // firstname is VARCHAR(32) and lastname is VARCHAR(64) in the DB
     // email is VARCHAR(64) and telephone is VARCHAR(16) in the DB
-    $username_val = validateString($username, 1, 20); //+
-    $password_val = validateString($password, 1, 31); //+
-    $email_val = validateString($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
-    $firstname_val = validateString($firstname, 2, 16); // see line below +
+    $username_val = validateStringLength($username, 1, 20); //+
+    $password_val = validateStringLength($password, 1, 31); //+
+    $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
+    $firstname_val = validateStringLength($firstname, 2, 16); // see line below +
     $firstname_val2 = checkIsNonNumeric($firstname); //+
-    $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+    $surname_val = validateStringLength($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $surname_val2 = checkIsNonNumeric($surname); //+    
     $number_val = validateInt($number, 11, 11); // +
     

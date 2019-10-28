@@ -24,7 +24,7 @@ function sanitise($str, $connection)
 }
 
 // if the data is valid return an empty string, if the data is invalid return a help message
-function validateString($field, $minlength, $maxlength)
+function validateStringLength($field, $minlength, $maxlength) // + edit function name
 {
     if (strlen($field) < $minlength) {
         // wasn't a valid length, return a help message:
