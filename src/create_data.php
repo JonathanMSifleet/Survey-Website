@@ -80,6 +80,15 @@ if (mysqli_query($connection, $sql)) {
 
 // date format: YYYY-MM-DD +
 // passwords generated from passwordsgenerator.net
+
+$usernames[] = 'admin';
+$passwords[] = 'secret';
+$emails[] = 'jonathanmsifleet@gmail.com';
+$firstnames[] = '';
+$surnames[] = '';
+$numbers[] = '';
+$dobs[] = '';
+
 $usernames[] = 'barrym';
 $passwords[] = '$cZsrv566&2N6U=z';
 $emails[] = 'barry@m-domain.com';

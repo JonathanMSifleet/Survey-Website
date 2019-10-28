@@ -26,10 +26,9 @@ function sanitise($str, $connection)
 // this entire function is made by me:
 function validateString($field, $minlength, $maxlength) // master function +
 {
-    $errors="";
+    $errors = "";
     $errors = $errors . validateStringLength($field, $minlength, $maxlength);
     $errors = $errors . checkIsNonNumeric($field);
-    
 }
 
 // if the data is valid return an empty string, if the data is invalid return a help message
