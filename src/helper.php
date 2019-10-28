@@ -54,10 +54,12 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     return "";
 }
 
+// if the input contains the @ symbol then return an empty string, if the data is invalid return a help message 
+// this function is made by me:
 function checkIsEmail($field)
 {
     if (strpos($field, '@') == false) {
-        return "Email is not valid";
+        return "Email must contain an '@'";
     } else {
         "";
     }
@@ -80,7 +82,7 @@ function checkIsNonNumeric($field)
 
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
 // function is completely written by me:
-function validatePhoneNumber($field) //
+function validatePhoneNumber($field)
 {
 
     // could add functionality that only allows specific number prefixs
