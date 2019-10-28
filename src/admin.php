@@ -16,10 +16,10 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 } // the user must be signed-in, show them suitable page content
 else {
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
+
+    $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
     if ($_SESSION['username'] == "admin") {
-        echo "Implement the admin tools here... See the assignment specification for more details.<br>";
-    } 
-    else {
 
         $query = "SELECT * FROM users"; // +
         $result = mysqli_query($connection, $query); // +
