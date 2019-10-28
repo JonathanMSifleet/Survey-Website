@@ -54,8 +54,8 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
     // now validate the data (both strings must be between 1 and 16 characters long):
     // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table)
-    $username_val = validateString($username, 3, 16);
-    $password_val = validateString($password, 6, 31);
+    $username_val = validateString($username, 3, 16); // +
+    $password_val = validateString($password, 6, 31); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
     $errors = $username_val . $password_val;
@@ -69,14 +69,9 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         $query = "SELECT * FROM users WHERE username='$username' AND password='$password'"; // +
         $result = mysqli_query($connection, $query); // +
 
-        if ($result = mysqli_query($connection, $query)) { // +l)) {
-            $n = 1;
-        } else {
-            $n = 0;
-        }
 
         // if there was a match then set the session variables and display a success message:
-        if ($n > 0) {
+        if (mysqli_num_rows($result) > 0) {
             // set a session variable to record that this user has successfully logged in:
             $_SESSION['loggedInSkeleton'] = true;
             // and copy their username into the session data for use by our other scripts:
@@ -84,13 +79,13 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
             // show a successful signin message:
             $message = "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
-            setcookie(session_name(), '', time()-2592000, '/'); // maybe add https+
+            //setcookie(session_name(), '', time()-2592000, '/'); // maybe add https +
             
         } else {
             // no matching credentials found so redisplay the signin form with a failure message:
             $show_signin_form = true;
             // show an unsuccessful signin message:
-            $message = "Sign in failed, please try again<br>";
+            $message = "No credentials found<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
