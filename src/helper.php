@@ -72,7 +72,7 @@ function validateInt($field, $min, $max)
 
     if (! filter_var($field, FILTER_VALIDATE_INT, $options)) {
         // wasn't a valid integer, return a help message:
-        return "Not a valid number (must be whole and in the range: " . $min . " to " . $max . ")";
+        return "Not a valid number (must be 11 digits long";
     }
     // data was valid, return an empty string:
     return "";
