@@ -70,7 +70,6 @@ if (mysqli_query($connection, $sql)) {
 // passwords generated from passwordsgenerator.net
 
 $usernames[] = 'admin';
-$passwords[] = 'secret';
 $emails[] = 'jonathanmsifleet@gmail.com';
 $firstnames[] = '';
 $surnames[] = '';
@@ -78,7 +77,6 @@ $numbers[] = '';
 $dobs[] = '';
 
 $usernames[] = 'barrym';
-$passwords[] = '$cZsrv566&2N6U=z';
 $emails[] = 'barry@m-domain.com';
 $firstnames[] = 'Barry';
 $surnames[] = 'madeup';
@@ -86,7 +84,6 @@ $numbers[] = '07123456789';
 $dobs[] = '1990-04-13';
 
 $usernames[] = 'mandyb';
-$passwords[] = 'xEuxmu&-dy&KL3QU';
 $emails[] = 'webmaster@mandy-g.co.uk';
 $firstnames[] = 'Mandy';
 $surnames[] = 'Basic';
@@ -94,7 +91,6 @@ $numbers[] = '07123456710';
 $dobs[] = '1991-04-28';
 
 $usernames[] = 'timmy';
-$passwords[] = 'J#X3nNQ!CVDdq@xJ';
 $emails[] = 'timmy@lassie.com';
 $firstnames[] = 'Timmy';
 $surnames[] = 'Turner';
@@ -102,7 +98,6 @@ $numbers[] = '07123456711';
 $dobs[] = '1992-07-17';
 
 $usernames[] = 'briang';
-$passwords[] = '*S&Sj5mQ!y_NXL8Y';
 $emails[] = 'brian@quahog.gov';
 $firstnames[] = 'Brian';
 $surnames[] = 'Lifeof';
@@ -118,7 +113,6 @@ $numbers[] = '07123456713';
 $dobs[] = '1994-10-12';
 
 $usernames[] = 'bcde';
-$passwords[] = 'r6*E?UnF9qg6-g-G';
 $emails[] = 'b@alphabet.test.com';
 $firstnames[] = 'Brandon';
 $surnames[] = 'Stark';
@@ -126,7 +120,6 @@ $numbers[] = '07123456714';
 $dobs[] = '1995-03-08';
 
 $usernames[] = 'cdefg';
-$passwords[] = '3Hep5mbe!Kv!$&P+';
 $emails[] = 'c@alphabet.test.com';
 $firstnames[] = 'Chris';
 $surnames[] = 'Topher';
@@ -145,6 +138,12 @@ $dobs[] = '1997-11-19';
 
 // loop through the arrays above and add rows to the table:
 for ($i = 0; $i < count($usernames); $i ++) {
+    
+    if ($i == 0) {
+        $passwords[$i] = 'secret'; // manually overrides admin password
+    } else {
+        $passwords[$i] = generatePassword();
+    }
 
     $passwords[$i] = encryptInput($passwords[$i]); // encrypt password before entering DB +
 

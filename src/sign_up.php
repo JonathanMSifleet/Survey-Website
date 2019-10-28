@@ -131,7 +131,7 @@ if ($show_signup_form) {
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
       <br>
-      Password: <input type="password" name="password" minlength="12" maxlength="31" value="$password" required> $password_val
+      Password: <input type="password" name="password" minlength="12" maxlength="32" value="$password" required> $password_val
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
       <br>
