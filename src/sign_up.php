@@ -33,7 +33,7 @@ $surname_val = ""; // +
 $password_val = "";
 $email_val = "";
 $number_val = ""; // +
-$DOB_val = ""; //+
+$DOB_val = ""; // +
 
 // should we show the signup form?:
 $show_signup_form = false;
@@ -77,16 +77,18 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
-    $DOB_val = validateDate($DOB, $todaysDate); //+
-    
+    $DOB_val = validateDate($DOB, $todaysDate); // +
+
     // this was created by me:
-    if($password_val == "Zero") {
+
+    $password_plaintext = "";
+    if ($password_val == "Zero") {
         $password = generatePassword();
         $password_plaintext = $password;
         $password_val = "";
     }
     $password = encryptInput($password);
-    /////////
+    // ///////
 
     // date of birth not validated as HTML form enforces validation arleady
 
@@ -103,7 +105,11 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            $message = "Signup was successful. Your password is (no apostrophes) Please sign in<br>";
+            if ($password_plaintext !== "") {
+                $message = "Signup was successful. Your password is " . $password_plaintext . " please sign in<br>";
+            } else {
+                $message = "Signup was successful. Please sign in<br>";                
+            }
         } else {
             // show the form:
             $show_signup_form = true;
@@ -140,7 +146,7 @@ if ($show_signup_form) {
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
       <br>
-      Password: <input type="password" name="password" maxlength="32" value="$password"> $password_val
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $password_val
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
       <br>

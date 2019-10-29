@@ -99,10 +99,8 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname)
 
 function createAccount($dbhost, $dbuser, $dbpass, $dbname)
 {
-    
     $currentURL = $_SERVER['REQUEST_URI'];
-    
-    
+
     // default values we show in the form:
     $username = "";
     $firstname = ""; // +
@@ -111,10 +109,10 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     $email = "";
     $number = ""; // +
     $DOB = ""; // +
-    
+
     // global: +
     $todaysDate = date('Y-m-d'); // get current date: +
-    
+
     // strings to hold any validation error messages:
     $username_val = "";
     $firstname_val = ""; // +
@@ -122,8 +120,8 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     $password_val = "";
     $email_val = "";
     $number_val = ""; // +
-    $DOB_val = ""; //+
-    
+    $DOB_val = ""; // +
+
     echo <<<_END
     <form action="$currentURL" method="post">
       Please fill in the following fields:<br>
@@ -133,7 +131,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
       <br>
-      Password: <input type="password" name="password" maxlength="32" value="$password"> $password_val
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $password_val
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
       <br>
@@ -144,10 +142,10 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
       <input type="submit" value="Submit">
     </form>
     _END;
-    
-    if(isset($_POST['username'])) {
+
+    if (isset($_POST['username'])) {
         $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-        
+
         $username = sanitise($_POST['username'], $connection);
         $firstname = sanitise($_POST['firstname'], $connection);
         $surname = sanitise($_POST['surname'], $connection);
@@ -155,7 +153,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         $email = sanitise($_POST['email'], $connection);
         $number = sanitise($_POST['number'], $connection);
         $DOB = sanitise($_POST['DOB'], $connection);
-        
+
         $username_val = validateStringLength($username, 1, 20);
         $password_val = validatePassword($password, 12, 31);
         $email_val = validateStringLength($email, 1, 64);
@@ -163,26 +161,32 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         $surname_val = validateString($surname, 2, 20);
         $number_val = validatePhoneNumber($number);
         $DOB_val = validateDate($DOB, $todaysDate);
-        
-        if($password_val == "Zero") {
+
+        $password_plaintext = "";
+        if ($password_val == "Zero") {
             $password = generatePassword();
-            $password = encryptInput($password);
+            $password_plaintext = $password;
             $password_val = "";
         }
-        
+        $password = encryptInput($password);
+
         $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
-        
+
         // check that all the validation tests passed before going to the database:
         if ($errors == "") {
-            
+
             // try to insert the new details:
             $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
             $result = mysqli_query($connection, $query);
-            
+
             // no data returned, we just test for true(success)/false(failure):
             if ($result) {
                 // show a successful signup message:
-                $message = "Signup was successful<br>";
+                if ($password_plaintext !== "") {
+                    $message = "Signup was successful. Your password is " . $password_plaintext . " please sign in<br>";
+                } else {
+                    $message = "Signup was successful. Please sign in<br>";
+                }
             } else {
                 // show the form:
                 $show_signup_form = true;
@@ -196,7 +200,6 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
             $message = "Sign up failed, please check the errors shown above and try again<br>";
         }
     }
-    
 }
 
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
