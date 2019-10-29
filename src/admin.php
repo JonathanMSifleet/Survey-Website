@@ -99,26 +99,37 @@ function changePassword($dbhost, $dbuser, $dbpass, $dbname)
 
         // $password_val
 
+        $currentURL = $_SERVER['REQUEST_URI'];
+
         echo <<<_END
-        <form action="sign_up.php" method="post">
+        <form action="$currentURL" method="post">
           Please fill in the following fields:<br>
           Password: <input type="password" name="newPassword" maxlength="32">
           <br>
           <input type="submit" value="Submit">
         </form>
         _END;
-    }
 
-    if (isset($_POST['newPassword'])) {
-        $newPassword = sanitise($_POST['newPassword'], $connection);
-        $newPassword = encryptInput($newPassword);
-        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-        $query = "UPDATE users SET password=$newPassword WHERE username = '$username'";
-        $result = mysqli_query($connection, $query); // +
-        
-        echo "Password changed";
-    }
-}
+        if (isset($_POST['newPassword'])) {
+            $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
+            $newPassword = sanitise($_POST['newPassword'], $connection);
+            $newPassword_val = validatePassword($newPassword, 12, 31);
+
+            if ($newPassword_val == "") {
+                $newPassword = encryptInput($newPassword);
+                $query = "UPDATE users SET password=$newPassword WHERE username = '$username'";
+                $result = mysqli_query($connection, $query); // +
+            }
+            if ($result) {
+                echo "Password changed";
+            } else {
+                echo "Password failed to change";
+            }
+            
+        } // end of isset
+    } // end of admin if
+} // end of function
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:
