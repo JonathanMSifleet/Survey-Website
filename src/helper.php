@@ -150,38 +150,18 @@ function encryptInput($input)
     return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
 }
 
-// this function generates 32 random integers characters, converts them to ascii, combines the combination of characters, then returns the combination
+// this function generates 32 random alphanumeric characters, converts them to ascii, combines the combination of characters, then returns the combination
 // this function is written by me:
 function generatePassword()
 {
-    $charArray[] = "";
-
-    $j = 0;
-
-    for ($i = 48; $i < 58; $i ++) {
-        $charArray[$j] = chr($i);
-        $j ++;
-    }
-
-    for ($i = 65; $i < 91; $i ++) {
-        $charArray[$j] = chr($i);
-        $j ++;
-    }
-
-    for ($i = 97; $i < 123; $i ++) {
-        $charArray[$j] = chr($i);
-        $j ++;
-    }
-
-    $lengthOfCharArray = count($charArray);
+    $charArray = createArrayOfUsableCharacters();
+    $lengthOfCharArray = count($charArray) - 1;
 
     $tempPassword[] = "";
 
     for ($i = 0; $i <= 31; $i ++) {
-
-        $randNumber = rand(0, $lengthOfCharArray - 1);
-
-        $tempPassword[$i] = $charArray[$randNumber];
+        $randNumber = rand(0, $lengthOfCharArray);
+        $tempPassword[$i] = chr($charArray[$randNumber]);
     }
 
     $finalPassword = "";
@@ -191,6 +171,32 @@ function generatePassword()
     }
 
     return $finalPassword;
+}
+
+// this function creates an array of all alphanumeric characters
+// this function is written by me:
+function createArrayOfUsableCharacters()
+{
+    $charArray[] = "";
+
+    $j = 0;
+
+    for ($i = 48; $i <= 57; $i ++) {
+        $charArray[$j] = $i;
+        $j ++;
+    }
+
+    for ($i = 65; $i <= 90; $i ++) {
+        $charArray[$j] = $i;
+        $j ++;
+    }
+
+    for ($i = 97; $i <= 122; $i ++) {
+        $charArray[$j] = $i;
+        $j ++;
+    }
+
+    return $charArray;
 }
 
 // all other validation functions should follow the same rule:
