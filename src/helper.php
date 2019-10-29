@@ -154,16 +154,40 @@ function encryptInput($input)
 // this function is written by me:
 function generatePassword()
 {
+    $charArray[] = "";
+
+    $j = 0;
+
+    for ($i = 48; $i < 58; $i ++) {
+        $charArray[$j] = chr($i);
+        $j ++;
+    }
+
+    for ($i = 65; $i < 91; $i ++) {
+        $charArray[$j] = chr($i);
+        $j ++;
+    }
+
+    for ($i = 97; $i < 123; $i ++) {
+        $charArray[$j] = chr($i);
+        $j ++;
+    }
+
+    $lengthOfCharArray = count($charArray);
+
     $tempPassword[] = "";
 
     for ($i = 0; $i <= 31; $i ++) {
-        $tempPassword[$i] = chr(rand(33, 126)); // 33 and 126 are 'safe' characters
+
+        $randNumber = rand(0, $lengthOfCharArray - 1);
+
+        $tempPassword[$i] = $charArray[$randNumber];
     }
 
     $finalPassword = "";
 
     for ($i = 0; $i <= 31; $i ++) {
-        $finalPassword = $finalPassword . $tempPassword[$i]; // = chr(rand(33,126));
+        $finalPassword = $finalPassword . $tempPassword[$i];
     }
 
     return $finalPassword;

@@ -72,7 +72,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // firstname is VARCHAR(32) and lastname is VARCHAR(64) in the DB
     // email is VARCHAR(64) and telephone is VARCHAR(16) in the DB
     $username_val = validateStringLength($username, 1, 20); // +
-    $password_val = validatePassword($password, 1, 31); // +
+    $password_val = validatePassword($password, 12, 31); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
@@ -82,7 +82,8 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     
     if($password_val == "Zero") {
         $password = generatePassword();
-        encryptInput($password);
+        $password_plaintext = $password;
+        $password = encryptInput($password);
         $password_val = "";
     }
 
@@ -101,7 +102,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            $message = "Signup was successful, please sign in<br>";
+            $message = "Signup was successful. Your password is '" . $password_plaintext . "' (no apostrophes) Please sign in<br>";
         } else {
             // show the form:
             $show_signup_form = true;
