@@ -15,7 +15,8 @@ else {
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
     if ($_SESSION['username'] == "admin") {
-        echo "Implement the admin tools here... See the assignment specification for more details.<br>";
+        //echo "Implement the admin tools here... See the assignment specification for more details.<br>";
+        
         $query = "SELECT username FROM users"; // +
         $result = mysqli_query($connection, $query); // +
         
@@ -23,7 +24,7 @@ else {
         echo"<tr><td>username</td></tr>";
         
         while($row = mysqli_fetch_assoc($result)) {
-            echo"<tr><td>{$row['username']}</td></tr>";
+            echo"<tr><td><a href>{$row['username']}</a></td></tr>";
         }
         echo"</table>";
         
