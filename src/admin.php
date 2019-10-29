@@ -21,6 +21,9 @@ else {
         $query = "SELECT username FROM users"; // +
         $result = mysqli_query($connection, $query); // +
         
+        echo "Click a name from the table to view user's data:";
+        echo"<br>";
+        
         echo"<table border ='1'>";
         echo"<tr><td>username</td></tr>";
         
@@ -36,6 +39,11 @@ else {
         }
         ////////////
         
+        if(isset($_GET['deleteAccount'])) {
+            printUserData($dbhost, $dbuser, $dbpass, $dbname);
+        }
+        ////////////
+        
         mysqli_close($connection);
     } else {
         echo "You don't have permission to view this page...<br>";
@@ -44,26 +52,38 @@ else {
 // finish off the HTML for this page:
 require_once "footer.php";
 
-// 
+// this function gets the username of the selected user from the session superglobal, gets all their information using an SQL query, displays it in a table
+// then shows the options to either change the password or delete the account
 // this function is written by me:
 function printUserData($dbhost, $dbuser, $dbpass, $dbname) {
       
         $username = $_GET["username"];
-
+        
+        echo "User selected: " .$username;
+        echo "<br>";
+        
         $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
         $query = "SELECT * FROM users WHERE username = '$username'"; // +
         $result = mysqli_query($connection, $query); // +
-        
-        echo "<br>";
-        
+                
+        echo "User's details:";
         echo"<table border ='1'>";
         echo"<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>DOB</td></tr>";
     
         while($row = mysqli_fetch_assoc($result)) {
             echo"<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['DOB']}</td></tr>";
-    }
-    echo"</table>";
-    
+        }
+        echo "</table>";
+        
+        
+        echo "<a href ={$_SERVER['REQUEST_URI']}&changePassword=true>Change password</a>";
+        echo " ";
+        //echo "<a href ={$_SERVER['REQUEST_URI']}&editaccount=true>Create user account</a>";
+        echo "<a href ={$_SERVER['REQUEST_URI']}&deleteAccount=true>Delete user account</a>";
+
 }
+
+//
+// this function is written by me:
 
 ?>
