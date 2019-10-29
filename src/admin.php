@@ -40,7 +40,7 @@ else {
         ////////////
         
         if(isset($_GET['deleteAccount'])) {
-            printUserData($dbhost, $dbuser, $dbpass, $dbname);
+            deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
         }
         ////////////
         
@@ -83,7 +83,33 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname) {
 
 }
 
-//
+// this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:
+function deleteAccount($dbhost, $dbuser, $dbpass, $dbname) {
+    $username = $_GET["username"];
+    
+    if($username == "admin") {
+        echo "The admin account cannot be deleted";
+    } else {
+        echo "<br>";
+        echo "are you sure you want to delete " . $username . "? ";
+        echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
+        echo " ";
+        echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=false>Cancel</a>";
+        
+        $shouldDeleteAccount = "";
+        
+        $shouldDeleteAccount = $_GET["confirmDeletion"];
+        
+        if ($shouldDeleteAccount=="true" ) {
+            $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+            $query = "DELETE FROM users WHERE username = '$username'";
+            $result = mysqli_query($connection, $query); // +
+         
+            echo "Account deleted";
+        }
+    }
+    
+}
 
 ?>
