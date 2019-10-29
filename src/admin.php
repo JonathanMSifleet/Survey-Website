@@ -24,7 +24,16 @@ else {
 
         $query = "SELECT username FROM users"; // +
         $result = mysqli_query($connection, $query); // +
+        
+        echo"<table border ='1'>";
+        echo"<tr><td>username</td></tr>";
+        
+        while($row = mysqli_fetch_assoc($result)) {
+            echo"<tr><td>{$row['username']}</td></tr>";         
+        }
 
+        echo"</table>";
+        
         mysqli_close($connection);
     } else {
         echo "You don't have permission to view this page...<br>";
