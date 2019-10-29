@@ -5,6 +5,10 @@
 // When an admin user is verified, you can implement all the admin tools functionality from this script, or distribute them over multiple pages - your choice
 // execute the header script:
 require_once "header.php";
+
+$password=""; //+
+$password_val = ""; //+
+
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
@@ -36,6 +40,11 @@ else {
         // print user's data
         if(isset($_GET['username'])) {
             printUserData($dbhost, $dbuser, $dbpass, $dbname);
+        }
+        ////////////
+        
+        if(isset($_GET['changePassword'])) {
+            changePassword($dbhost, $dbuser, $dbpass, $dbname);
         }
         ////////////
         
@@ -83,6 +92,40 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname) {
 
 }
 
+// this function gets the username of the selected user from the session superglobal, then changes the account's password via an SQL query
+// this function is written by me:
+function changePassword($dbhost, $dbuser, $dbpass, $dbname) {
+    $username = $_GET["username"];
+    
+    if($username == "admin") {
+        echo "The admin's password cannot be changed";
+    } else {
+        echo "<br>";
+        
+        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+        
+        $password = "";
+        $password = sanitise($_POST['password'], $connection);
+        $password_val = validatePassword($password, 12, 31); // +
+        $password = encryptInput($password);
+        
+        echo <<<_END
+        <form action="admin.php" method="post">
+            Please enter the new password:<br>
+            Password: <input type="password" name="password" minlength="6" maxlength="32" value="$password" required> $password_val
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+        _END;
+        
+        $query = "UPDATE users SET password = $password WHERE username = '$username'";
+        $result = mysqli_query($connection, $query); // +
+        
+        echo "Password changed";
+        
+    }
+}
+
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:
 function deleteAccount($dbhost, $dbuser, $dbpass, $dbname) {
@@ -97,8 +140,7 @@ function deleteAccount($dbhost, $dbuser, $dbpass, $dbname) {
         echo " ";
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=false>Cancel</a>";
         
-        $shouldDeleteAccount = "";
-        
+        $shouldDeleteAccount = ""; // required to fix undefined index error        
         $shouldDeleteAccount = $_GET["confirmDeletion"];
         
         if ($shouldDeleteAccount=="true" ) {
