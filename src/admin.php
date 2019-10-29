@@ -15,8 +15,9 @@ else {
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
     if ($_SESSION['username'] == "admin") {
-        //echo "Implement the admin tools here... See the assignment specification for more details.<br>";
         
+        // queries mysql table, outputs results to table
+        // this is written by me:
         $query = "SELECT username FROM users"; // +
         $result = mysqli_query($connection, $query); // +
         
@@ -24,9 +25,16 @@ else {
         echo"<tr><td>username</td></tr>";
         
         while($row = mysqli_fetch_assoc($result)) {
-            echo"<tr><td><a href>{$row['username']}</a></td></tr>";
+            // if row hyperlink is clicked, set superglobal with user's name
+            echo"<tr><td><a href =?username={$row['username']}>{$row['username']}</a></td></tr>"; // turns row result into hyperlink
         }
         echo"</table>";
+        
+        // print user's data
+        if(isset($_GET['username'])) {
+            printUserData($dbhost, $dbuser, $dbpass, $dbname);
+        }
+        ////////////
         
         mysqli_close($connection);
     } else {
@@ -35,4 +43,27 @@ else {
 }
 // finish off the HTML for this page:
 require_once "footer.php";
+
+// 
+// this function is written by me:
+function printUserData($dbhost, $dbuser, $dbpass, $dbname) {
+      
+        $username = $_GET["username"];
+
+        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+        $query = "SELECT * FROM users WHERE username = '$username'"; // +
+        $result = mysqli_query($connection, $query); // +
+        
+        echo "<br>";
+        
+        echo"<table border ='1'>";
+        echo"<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>DOB</td></tr>";
+    
+        while($row = mysqli_fetch_assoc($result)) {
+            echo"<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['DOB']}</td></tr>";
+    }
+    echo"</table>";
+    
+}
+
 ?>
