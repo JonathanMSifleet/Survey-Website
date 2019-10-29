@@ -5,10 +5,6 @@
 // When an admin user is verified, you can implement all the admin tools functionality from this script, or distribute them over multiple pages - your choice
 // execute the header script:
 require_once "header.php";
-
-$password=""; //+
-$password_val = ""; //+
-
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
@@ -43,11 +39,6 @@ else {
         }
         ////////////
         
-        if(isset($_GET['changePassword'])) {
-            changePassword($dbhost, $dbuser, $dbpass, $dbname);
-        }
-        ////////////
-        
         if(isset($_GET['deleteAccount'])) {
             deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
         }
@@ -60,72 +51,35 @@ else {
 }
 // finish off the HTML for this page:
 require_once "footer.php";
-
 // this function gets the username of the selected user from the session superglobal, gets all their information using an SQL query, displays it in a table
 // then shows the options to either change the password or delete the account
 // this function is written by me:
 function printUserData($dbhost, $dbuser, $dbpass, $dbname) {
-      
-        $username = $_GET["username"];
-        
-        echo "User selected: " .$username;
-        echo "<br>";
-        
-        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-        $query = "SELECT * FROM users WHERE username = '$username'"; // +
-        $result = mysqli_query($connection, $query); // +
-                
-        echo "User's details:";
-        echo"<table border ='1'>";
-        echo"<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>DOB</td></tr>";
     
-        while($row = mysqli_fetch_assoc($result)) {
-            echo"<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['DOB']}</td></tr>";
-        }
-        echo "</table>";
-        
-        
-        echo "<a href ={$_SERVER['REQUEST_URI']}&changePassword=true>Change password</a>";
-        echo " ";
-        //echo "<a href ={$_SERVER['REQUEST_URI']}&editaccount=true>Create user account</a>";
-        echo "<a href ={$_SERVER['REQUEST_URI']}&deleteAccount=true>Delete user account</a>";
-
-}
-
-// this function gets the username of the selected user from the session superglobal, then changes the account's password via an SQL query
-// this function is written by me:
-function changePassword($dbhost, $dbuser, $dbpass, $dbname) {
     $username = $_GET["username"];
     
-    if($username == "admin") {
-        echo "The admin's password cannot be changed";
-    } else {
-        echo "<br>";
-        
-        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-        
-        $password = "";
-        $password = sanitise($_POST['password'], $connection);
-        $password_val = validatePassword($password, 12, 31); // +
-        $password = encryptInput($password);
-        
-        echo <<<_END
-        <form action="admin.php" method="post">
-            Please enter the new password:<br>
-            Password: <input type="password" name="password" minlength="6" maxlength="32" value="$password" required> $password_val
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-        _END;
-        
-        $query = "UPDATE users SET password = $password WHERE username = '$username'";
-        $result = mysqli_query($connection, $query); // +
-        
-        echo "Password changed";
-        
+    echo "User selected: " .$username;
+    echo "<br>";
+    
+    $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+    $query = "SELECT * FROM users WHERE username = '$username'"; // +
+    $result = mysqli_query($connection, $query); // +
+    
+    echo "User's details:";
+    echo"<table border ='1'>";
+    echo"<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>DOB</td></tr>";
+    
+    while($row = mysqli_fetch_assoc($result)) {
+        echo"<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['DOB']}</td></tr>";
     }
+    echo "</table>";
+    
+    
+    echo "<a href ={$_SERVER['REQUEST_URI']}&changePassword=true>Change password</a>";
+    echo " ";
+    //echo "<a href ={$_SERVER['REQUEST_URI']}&editaccount=true>Create user account</a>";
+    echo "<a href ={$_SERVER['REQUEST_URI']}&deleteAccount=true>Delete user account</a>";
 }
-
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:
 function deleteAccount($dbhost, $dbuser, $dbpass, $dbname) {
@@ -140,18 +94,18 @@ function deleteAccount($dbhost, $dbuser, $dbpass, $dbname) {
         echo " ";
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=false>Cancel</a>";
         
-        $shouldDeleteAccount = ""; // required to fix undefined index error        
+        $shouldDeleteAccount = "";
+        
         $shouldDeleteAccount = $_GET["confirmDeletion"];
         
         if ($shouldDeleteAccount=="true" ) {
             $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
             $query = "DELETE FROM users WHERE username = '$username'";
             $result = mysqli_query($connection, $query); // +
-         
+            
             echo "Account deleted";
         }
     }
     
 }
-
 ?>
