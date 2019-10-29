@@ -79,8 +79,10 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $number_val = validatePhoneNumber($number); // +
     $DOB_val = validateDate($DOB, $todaysDate); //+
     
+    
     if($password_val == "Zero") {
         $password = generatePassword();
+        encryptInput($password);
         $password_val = "";
     }
 

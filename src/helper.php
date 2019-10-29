@@ -49,7 +49,7 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
         return "Minimum length: " . $minlength;
     } elseif (strlen($field) > $maxlength) {
         // wasn't a valid length, return a help message:
-        return "Maximum length: " . $maxlength;
+        return "Password length: " . strlen($field) . " Maximum length: " . $maxlength;
     }
 
     // data was valid, return an empty string:
@@ -96,7 +96,7 @@ function checkIsNonNumeric($field)
     $charArray = str_split($field);
 
     for ($i = 0; $i < count($charArray); $i ++) {
-        if (is_numeric($charArray[$i]) == false) {
+        if (is_numeric($charArray[$i]) == true) {
             return "Must not contain any numbers";
         } else {
             return "";
@@ -156,7 +156,7 @@ function generatePassword()
 {
     $tempPassword[] = "";
 
-    for ($i = 1; $i <= 31; $i ++) {
+    for ($i = 0; $i <= 31; $i ++) {
         $tempPassword[$i] = chr(rand(33, 126)); // 33 and 126 are 'safe' characters
     }
 
