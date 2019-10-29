@@ -79,13 +79,14 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $number_val = validatePhoneNumber($number); // +
     $DOB_val = validateDate($DOB, $todaysDate); //+
     
-    
+    // this was created by me:
     if($password_val == "Zero") {
         $password = generatePassword();
         $password_plaintext = $password;
         $password = encryptInput($password);
         $password_val = "";
     }
+    /////////
 
     // date of birth not validated as HTML form enforces validation arleady
 

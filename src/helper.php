@@ -33,6 +33,8 @@ function validateString($field, $minlength, $maxlength) // master function +
     return $errors;
 }
 
+// this function checks if an inputted email address is valid, and then returns an error message if it isn't
+// this function is made by me:
 function validateEmail($field, $minLength, $maxLength)
 {
     $errors = "";
@@ -56,6 +58,8 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     return "";
 }
 
+// this function checks if an inputted password is equal to 0 chracters, then validates the string length and returns any error messages
+// this function is made by me:
 function validatePassword($field, $minlength, $maxlength)
 {
     $errors = "";
@@ -69,6 +73,9 @@ function validatePassword($field, $minlength, $maxlength)
     }
 }
 
+// this function checks if an input is 0 chracters long and returns a message, if the input is larger than 0 characters
+// send a different message
+// this function is made by me:
 function checkIfLengthZero($field)
 {
     if (strlen($field) == 0) {
@@ -145,6 +152,8 @@ function validateDate($field, $todaysDate)
     }
 }
 
+// this function encrypts a user input
+// this function is written by me:
 function encryptInput($input)
 {
     return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
