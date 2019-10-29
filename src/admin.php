@@ -104,7 +104,7 @@ function changePassword($dbhost, $dbuser, $dbpass, $dbname)
         echo <<<_END
         <form action="$currentURL" method="post">
           Please fill in the following fields:<br>
-          Password: <input type="password" name="newPassword" maxlength="32">
+          Password: <input type="password" name="newPassword" minlength="12" maxlength="32">
           <br>
           <input type="submit" value="Submit">
         </form>
@@ -118,7 +118,7 @@ function changePassword($dbhost, $dbuser, $dbpass, $dbname)
 
             if ($newPassword_val == "") {
                 $newPassword = encryptInput($newPassword);
-                $query = "UPDATE users SET password=$newPassword WHERE username = '$username'";
+                $query = "UPDATE users SET password='$newPassword' WHERE username = '$username'";
                 $result = mysqli_query($connection, $query); // +
             }
             if ($result) {
@@ -126,10 +126,11 @@ function changePassword($dbhost, $dbuser, $dbpass, $dbname)
             } else {
                 echo "Password failed to change";
             }
-            
         } // end of isset
     } // end of admin if
-} // end of function
+}
+
+// end of function
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:
