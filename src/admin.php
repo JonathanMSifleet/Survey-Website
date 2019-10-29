@@ -1,13 +1,10 @@
 <?php
-
 // Things to notice:
 // You need to add code to this script to implement the admin functions and features
 // Notice that the code not only checks whether the user is logged in, but also whether they are the admin, before it displays the page content
 // When an admin user is verified, you can implement all the admin tools functionality from this script, or distribute them over multiple pages - your choice
-
 // execute the header script:
 require_once "header.php";
-
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
@@ -16,24 +13,18 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 } // the user must be signed-in, show them suitable page content
 else {
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
-
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
     if ($_SESSION['username'] == "admin") {
-        //echo "Implement the admin tools here... See the assignment specification for more details.<br>";
-
+        echo "Implement the admin tools here... See the assignment specification for more details.<br>";
         $query = "SELECT username FROM users"; // +
         $result = mysqli_query($connection, $query); // +
         
-        $numberOfRows=mysqli_num_rows($result);
-                
         echo"<table border ='1'>";
         echo"<tr><td>username</td></tr>";
         
         while($row = mysqli_fetch_assoc($result)) {
-            echo"<tr><td><a href ='" . $row['username'] . "</a></td></tr>";
+            echo"<tr><td>{$row['username']}</td></tr>";
         }
-
         echo"</table>";
         
         mysqli_close($connection);
@@ -41,7 +32,6 @@ else {
         echo "You don't have permission to view this page...<br>";
     }
 }
-
 // finish off the HTML for this page:
 require_once "footer.php";
 ?>
