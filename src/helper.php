@@ -30,6 +30,7 @@ function validateString($field, $minlength, $maxlength) // master function +
     $errors = "";
     $errors = $errors . validateStringLength($field, $minlength, $maxlength);
     $errors = $errors . checkIsNonNumeric($field);
+    return $errors;
 }
 
 function validateEmail($field, $minLength, $maxLength)
@@ -37,6 +38,7 @@ function validateEmail($field, $minLength, $maxLength)
     $errors = "";
     $errors = $errors . validateStringLength($field, $minLength, $maxLength);
     $errors = $errors . checkIsEmail($field);
+    return $errors;
 }
 
 // if the data is valid return an empty string, if the data is invalid return a help message
@@ -54,6 +56,28 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     return "";
 }
 
+function validatePassword($field, $minlength, $maxlength)
+{
+    $errors = "";
+    $errors = checkIfLengthZero($field);
+
+    if ($errors == "Not Zero") {
+        $errors = "";
+        $errors = validateStringLength($field, $minlength, $maxlength);
+    } else {
+        return $errors;
+    }
+}
+
+function checkIfLengthZero($field)
+{
+    if (strlen($field) == 0) {
+        return "Zero";
+    } else {
+        return "Not Zero";
+    }
+}
+
 // if the input contains the @ symbol then return an empty string, if the data is invalid return a help message
 // this function is made by me:
 function checkIsEmail($field)
@@ -61,7 +85,7 @@ function checkIsEmail($field)
     if (strpos($field, '@') == false) {
         return "Email must contain an '@'";
     } else {
-        "";
+        return "";
     }
 }
 

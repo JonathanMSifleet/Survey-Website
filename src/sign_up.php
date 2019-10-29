@@ -72,12 +72,17 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // firstname is VARCHAR(32) and lastname is VARCHAR(64) in the DB
     // email is VARCHAR(64) and telephone is VARCHAR(16) in the DB
     $username_val = validateStringLength($username, 1, 20); // +
-    $password_val = validateStringLength($password, 1, 31); // +
+    $password_val = validatePassword($password, 1, 31); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
     $DOB_val = validateDate($DOB, $todaysDate); //+
+    
+    if($password_val == "Zero") {
+        $password = generatePassword();
+        $password_val = "";
+    }
 
     // date of birth not validated as HTML form enforces validation arleady
 
@@ -131,7 +136,7 @@ if ($show_signup_form) {
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
       <br>
-      Password: <input type="password" name="password" minlength="12" maxlength="32" value="$password" required> $password_val
+      Password: <input type="password" name="password" maxlength="32" value="$password"> $password_val
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
       <br>
