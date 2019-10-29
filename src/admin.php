@@ -19,38 +19,47 @@ else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
     if ($_SESSION['username'] == "admin") {
 
-        // queries mysql table, outputs results to table
-        // this is written by me:
-        $query = "SELECT username FROM users"; // +
-        $result = mysqli_query($connection, $query); // +
+        echo "Click to create a new account:";
 
-        echo "Click a name from the table to view user's data:";
+        echo "<a href ={$_SERVER['REQUEST_URI']}?createAccount=true>Create user account</a>";
         echo "<br>";
 
-        echo "<table border ='1'>";
-        echo "<tr><td>username</td></tr>";
+        if (isset($_GET['createAccount'])) {
+            createAccount($dbhost, $dbuser, $dbpass, $dbname);
+        } else {
 
-        while ($row = mysqli_fetch_assoc($result)) {
-            // if row hyperlink is clicked, set superglobal with user's name
-            echo "<tr><td><a href =?username={$row['username']}>{$row['username']}</a></td></tr>"; // turns row result into hyperlink
+            // queries mysql table, outputs results to table
+            // this is written by me:
+            $query = "SELECT username FROM users"; // +
+            $result = mysqli_query($connection, $query); // +
+
+            echo "Or click a name from the table to view user's data:";
+            echo "<br>";
+
+            echo "<table border ='1'>";
+            echo "<tr><td>username</td></tr>";
+
+            while ($row = mysqli_fetch_assoc($result)) {
+                // if row hyperlink is clicked, set superglobal with user's name
+                echo "<tr><td><a href =?username={$row['username']}>{$row['username']}</a></td></tr>"; // turns row result into hyperlink
+            }
+            echo "</table>";
+
+            // print user's data
+            if (isset($_GET['username'])) {
+                printUserData($dbhost, $dbuser, $dbpass, $dbname);
+            }
+            // //////////
+
+            if (isset($_GET['changePassword'])) {
+                changePassword($dbhost, $dbuser, $dbpass, $dbname);
+            }
+
+            if (isset($_GET['deleteAccount'])) {
+                deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
+            }
+            // //////////
         }
-        echo "</table>";
-
-        // print user's data
-        if (isset($_GET['username'])) {
-            printUserData($dbhost, $dbuser, $dbpass, $dbname);
-        }
-        // //////////
-
-        if (isset($_GET['changePassword'])) {
-            changePassword($dbhost, $dbuser, $dbpass, $dbname);
-        }
-
-        if (isset($_GET['deleteAccount'])) {
-            deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
-        }
-        // //////////
-
         mysqli_close($connection);
     } else {
         echo "You don't have permission to view this page...<br>";
@@ -84,10 +93,115 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname)
 
     echo "<a href ={$_SERVER['REQUEST_URI']}&changePassword=true>Change password</a>";
     echo " ";
-    // echo "<a href ={$_SERVER['REQUEST_URI']}&editaccount=true>Create user account</a>";
+
     echo "<a href ={$_SERVER['REQUEST_URI']}&deleteAccount=true>Delete user account</a>";
 }
 
+function createAccount($dbhost, $dbuser, $dbpass, $dbname)
+{
+    
+    $currentURL = $_SERVER['REQUEST_URI'];
+    
+    
+    // default values we show in the form:
+    $username = "";
+    $firstname = ""; // +
+    $surname = ""; // +
+    $password = "";
+    $email = "";
+    $number = ""; // +
+    $DOB = ""; // +
+    
+    // global: +
+    $todaysDate = date('Y-m-d'); // get current date: +
+    
+    // strings to hold any validation error messages:
+    $username_val = "";
+    $firstname_val = ""; // +
+    $surname_val = ""; // +
+    $password_val = "";
+    $email_val = "";
+    $number_val = ""; // +
+    $DOB_val = ""; //+
+    
+    echo <<<_END
+    <form action="$currentURL" method="post">
+      Please fill in the following fields:<br>
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $username_val
+      <br>
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val
+      <br>
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
+      <br>
+      Password: <input type="password" name="password" maxlength="32" value="$password"> $password_val
+      <br>
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
+      <br>
+      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $number_val
+      <br>
+      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $DOB_val
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+    
+    if(isset($_POST['username'])) {
+        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+        
+        $username = sanitise($_POST['username'], $connection);
+        $firstname = sanitise($_POST['firstname'], $connection);
+        $surname = sanitise($_POST['surname'], $connection);
+        $password = sanitise($_POST['password'], $connection);
+        $email = sanitise($_POST['email'], $connection);
+        $number = sanitise($_POST['number'], $connection);
+        $DOB = sanitise($_POST['DOB'], $connection);
+        
+        $username_val = validateStringLength($username, 1, 20);
+        $password_val = validatePassword($password, 12, 31);
+        $email_val = validateStringLength($email, 1, 64);
+        $firstname_val = validateString($firstname, 2, 16);
+        $surname_val = validateString($surname, 2, 20);
+        $number_val = validatePhoneNumber($number);
+        $DOB_val = validateDate($DOB, $todaysDate);
+        
+        if($password_val == "Zero") {
+            $password = generatePassword();
+            $password = encryptInput($password);
+            $password_val = "";
+        }
+        
+        $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
+        
+        // check that all the validation tests passed before going to the database:
+        if ($errors == "") {
+            
+            // try to insert the new details:
+            $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
+            $result = mysqli_query($connection, $query);
+            
+            // no data returned, we just test for true(success)/false(failure):
+            if ($result) {
+                // show a successful signup message:
+                $message = "Signup was successful<br>";
+            } else {
+                // show the form:
+                $show_signup_form = true;
+                // show an unsuccessful signup message:
+                $message = "Sign up failed, please try again<br>";
+            }
+        } else {
+            // validation failed, show the form again with guidance:
+            $show_signup_form = true;
+            // show an unsuccessful signin message:
+            $message = "Sign up failed, please check the errors shown above and try again<br>";
+        }
+    }
+    
+}
+
+// this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
+// then updates the user's password via an SQL query
+// this function is written by me
 function changePassword($dbhost, $dbuser, $dbpass, $dbname)
 {
     $username = $_GET["username"];
