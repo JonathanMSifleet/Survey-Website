@@ -37,7 +37,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // add an extra menu option if this was the admin:
     // this allows us to display the admin tools to them only
     if ($_SESSION['username'] == "admin") {
-        echo " |||| <a href='admin.php'>Admin Tools</a>";
+        echo " || <a href='admin.php'>Admin Tools</a>";
     }
 } else {
     // THIS PERSON IS NOT LOGGED IN

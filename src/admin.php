@@ -22,22 +22,9 @@ else {
     if ($_SESSION['username'] == "admin") {
         echo "Implement the admin tools here... See the assignment specification for more details.<br>";
 
-        $query = "SELECT * FROM users"; // +
+        $query = "SELECT username FROM users"; // +
         $result = mysqli_query($connection, $query); // +
 
-        $n = mysqli_num_rows($result);
-        for ($i = 0; $i < $n; $i ++) {
-            $row = mysqli_fetch_assoc($result);
-            echo <<<_END
-            username: {$row['username']}<br>
-            firstname: {$row['firstname']}<br>
-            surname: {$row['surname']}<br>
-            password: {$row['password']}<br>
-            email: {$row['email']}<br>
-            number: {$row['number']}<br>
-            DOB: {$row['DOB']}<br><br>
-            _END;
-        }
         mysqli_close($connection);
     } else {
         echo "You don't have permission to view this page...<br>";
