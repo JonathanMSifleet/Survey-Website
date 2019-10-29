@@ -83,9 +83,9 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     if($password_val == "Zero") {
         $password = generatePassword();
         $password_plaintext = $password;
-        $password = encryptInput($password);
         $password_val = "";
     }
+    $password = encryptInput($password);
     /////////
 
     // date of birth not validated as HTML form enforces validation arleady
@@ -103,7 +103,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            $message = "Signup was successful. Your password is '" . $password_plaintext . "' (no apostrophes) Please sign in<br>";
+            $message = "Signup was successful. Your password is (no apostrophes) Please sign in<br>";
         } else {
             // show the form:
             $show_signup_form = true;
