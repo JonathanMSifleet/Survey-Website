@@ -59,14 +59,15 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     }
 }
 
-// UPDATE
+// this function checks if an input is 0 chracters long and returns a message, if the input is larger than 0 characters
+// send a different message
 // this function is made by me:
-function validatePassword($field, $minlength, $maxlength)
+function checkIfLengthZero($field)
 {
     if (strlen($field) == 0) {
-        return 0;
+        return true;
     } else {
-        return validateStringLength($field, $minlength, $maxlength);
+        return false;
     }
 }
 
@@ -93,7 +94,6 @@ function checkIsNonNumeric($field)
             return "Must not contain any numbers ";
         }
     }
-
     return "";
 }
 
@@ -142,12 +142,13 @@ function validateDate($field, $todaysDate)
 // this function is written by me:
 function encryptInput($input)
 {
+    
     return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
 }
 
 // this function generates 32 random alphanumeric characters, converts them to ascii, combines the combination of characters, then returns the combination
 // this function is written by me:
-function generatePassword()
+function generateAlphanumericString()
 {
     $charArray = createArrayOfUsableCharacters();
     $lengthOfCharArray = count($charArray) - 1;
@@ -194,22 +195,23 @@ function createArrayOfUsableCharacters()
     return $charArray;
 }
 
-function createArrayOfErrors($username, $email, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
+function createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
     $username_val = validateStringLength($username, 1, 20); // +
-    $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
+    $email_val = validateStringLength($email, 1, 64);
+    $password_val = validateStringLength($password, 12, 32);
     $firstname_val = validateName($firstname, 2, 16); // see line below +
     $surname_val = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
     $DOB_val = validateDate($DOB, $todaysDate); // +
 
-    $arrayOfErrors[]=$username_val;
-    $arrayOfErrors[]=$email_val;   
-    $arrayOfErrors[]=$firstname_val;   
-    $arrayOfErrors[]=$surname_val;  
-    $arrayOfErrors[]=$number_val; 
-    $arrayOfErrors[]=$DOB_val;
-    
+    $arrayOfErrors[0] = $username_val;
+    $arrayOfErrors[1] = $email_val;
+    $arrayOfErrors[2] = $password_val;
+    $arrayOfErrors[3] = $firstname_val;
+    $arrayOfErrors[4] = $surname_val;
+    $arrayOfErrors[5] = $number_val;
+    $arrayOfErrors[6] = $DOB_val;
 }
 
 ?>

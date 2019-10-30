@@ -138,7 +138,7 @@ for ($i = 0; $i < count($usernames); $i ++) {
     if ($i == 0) {
         $passwords[$i] = 'secret'; // manually overrides admin password
     } else {
-        $passwords[$i] = generatePassword();
+        $passwords[$i] = encryptInput(generateAlphanumericString());
     }
     /////////
 
