@@ -59,28 +59,15 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     }
 }
 
-// this function checks if an inputted password is equal to 0 chracters, then validates the string length and returns any error messages
+// UPDATE
 // this function is made by me:
 function validatePassword($field, $minlength, $maxlength)
 {
-    $isZero = checkIfLengthZero($field);
 
-    if ($isZero) {
+    if (strlen($field) == 0) {
         return 0;
     } else {
         return validateStringLength($field, $minlength, $maxlength);
-    }
-}
-
-// this function checks if an input is 0 chracters long and returns a message, if the input is larger than 0 characters
-// send a different message
-// this function is made by me:
-function checkIfLengthZero($field)
-{
-    if (strlen($field) == 0) {
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -154,14 +141,14 @@ function validateDate($field, $todaysDate)
 
 // this function encrypts a user input
 // this function is written by me:
-function encryptInput($input)
+function generatePassword($input)
 {
-    return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
+    return password_hash(generateAlphanumericString(), PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
 }
 
 // this function generates 32 random alphanumeric characters, converts them to ascii, combines the combination of characters, then returns the combination
 // this function is written by me:
-function generatePassword()
+function generateAlphanumericString()
 {
     $charArray = createArrayOfUsableCharacters();
     $lengthOfCharArray = count($charArray) - 1;
