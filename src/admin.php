@@ -123,21 +123,21 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     $DOB_val = ""; // +
 
     echo <<<_END
-    <form action="$currentURL" method="post">
+    <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
-      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $username_val
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
       <br>
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val
-      <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
       <br>
       Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $password_val
       <br>
-      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[2]
       <br>
-      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $number_val
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[3]
       <br>
-      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $DOB_val
+      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[4]
+      <br>
+      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[5]
       <br>
       <input type="submit" value="Submit">
     </form>
@@ -146,17 +146,35 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     if (isset($_POST['username'])) {
         $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-        sanitiseInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate, $connection);
-
+        // cannot be put into function as _POST requires superglobals
+        $username = sanitise($_POST['username'], $connection);
+        $email = sanitise($_POST['email'], $connection);
+        $password = sanitise($_POST['password'], $connection);
+        $firstname = sanitise($_POST['firstname'], $connection); // +
+        $surname = sanitise($_POST['surname'], $connection); // +
+        $number = sanitise($_POST['number'], $connection); // +
+        $DOB = sanitise($_POST['DOB'], $connection); // +
+        
+        $password_val = validatePassword($password, 12, 32); // +
         $password_plaintext = "";
-        if ($password_val == "Zero") {
+        
+        if ($password_val == 0) {
             $password = generatePassword();
             $password_plaintext = $password;
             $password_val = "";
         }
         $password = encryptInput($password);
 
-        $errors = validateInputs($username, $password, $email, $firstname, $surname, $password, $number, $DOB, $todaysDate);
+        // this was created by me:
+        $arrayOfErrors = createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate); //+
+        $numberOfErrors = count($arrayOfErrors); //+
+        
+        // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
+        $errors ="";
+        for ($i = 0; $i < $numberOfErrors; $i ++) {
+            $errors = $errors . $arrayOfErrors[$i];
+        }
+        ///////////
 
         // check that all the validation tests passed before going to the database:
         if ($errors == "") {
