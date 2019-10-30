@@ -16,20 +16,20 @@ require_once "header.php";
 
 // default values we show in the form:
 $username = "";
+$email = "";
+$password = "";
 $firstname = ""; // +
 $surname = ""; // +
-$password = "";
-$email = "";
 $number = ""; // +
 $DOB = ""; // +
 
 // strings to hold any validation error messages:
 $username_val = "";
+$email_val = "";
+$number_val = ""; // +
 $firstname_val = ""; // +
 $surname_val = ""; // +
 $password_val = "";
-$email_val = "";
-$number_val = ""; // +
 $DOB_val = ""; // +
 
 
@@ -57,12 +57,18 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     }
 
     // SANITISATION (see helper.php for the function definition)
-    sanitiseInputs($username, $firstname, $surname, $password, $email, $password, $number, $DOB, $todaysDate, $connection);
+    $username = sanitise($_POST['username'], $connection);
+    $email = sanitise($_POST['email'], $connection);
+    $password = sanitise($_POST['password'], $connection);
+    $firstname = sanitise($_POST['firstname'], $connection); // +
+    $surname = sanitise($_POST['surname'], $connection); // +
+    $number = sanitise($_POST['number'], $connection); // +
+    $DOB = sanitise($_POST['DOB'], $connection); // +
     
     $username_val = validateStringLength($username, 1, 20); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
-    $firstname_val = validateString($firstname, 2, 16); // see line below +
-    $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+    $firstname_val = validateName($firstname, 2, 16); // see line below +
+    $surname_val = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
     $DOB_val = validateDate($DOB, $todaysDate); // +
     
@@ -79,7 +85,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     //////////
     
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-    $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
+    $errors = $username_val .$email_val . $password_val .  $firstname_val . $surname_val . $number_val . $DOB_val;
 
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {

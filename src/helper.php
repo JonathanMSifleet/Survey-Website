@@ -25,11 +25,12 @@ function sanitise($str, $connection)
 
 // if the input is contains only non-numbers and is the correct length then return an empty string, if the data is invalid return a help message
 // this entire function is made by me:
-function validateString($field, $minlength, $maxlength) // master function +
+function validateName($field, $minlength, $maxlength) // master function +
 {
     $errors = "";
-    $errors = $errors . validateStringLength($field, $minlength, $maxlength);
     $errors = $errors . checkIsNonNumeric($field);
+    $errors = $errors . validateStringLength($field, $minlength, $maxlength);
+
     return $errors;
 }
 
@@ -53,8 +54,8 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
         // wasn't a valid length, return a help message:
         return "Password length: " . strlen($field) . " Maximum length: " . $maxlength;
     } else {
-    // data was valid, return an empty string:
-    return "";
+        // data was valid, return an empty string:
+        return "";
     }
 }
 
@@ -65,7 +66,7 @@ function validatePassword($field, $minlength, $maxlength)
     $isZero = checkIfLengthZero($field);
 
     if ($isZero) {
-        return 0;     
+        return 0;
     } else {
         return validateStringLength($field, $minlength, $maxlength);
     }
@@ -99,14 +100,16 @@ function checkIsEmail($field)
 function checkIsNonNumeric($field)
 {
     $charArray = str_split($field);
+    $lengthOfCharArray = count($charArray);
 
-    for ($i = 0; $i < count($charArray); $i ++) {
+    for ($i = 0; $i <= $lengthOfCharArray; $i ++) {
         if (is_numeric($charArray[$i]) == true) {
-            return "Must not contain any numbers";
-        } else {
-            return "";
+            return "Must not contain any numbers ";
         }
     }
+    
+    return "";
+    
 }
 
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
@@ -204,23 +207,6 @@ function createArrayOfUsableCharacters()
     }
 
     return $charArray;
-}
-
-//
-//
-
-function sanitiseInputs(&$username, &$firstname, &$surname, &$password, &$email, &$passowrd, &$number, &$DOB, $todaysDate, $connection)
-{
-    // adding '&' in front of a variable calls variable by reference so function can modify value +
-    
-    // take copies of the credentials the user submitted, and sanitise (clean) them:
-    $username = sanitise($_POST['username'], $connection);
-    $firstname = sanitise($_POST['firstname'], $connection); // +
-    $surname = sanitise($_POST['surname'], $connection); // +
-    $password = sanitise($_POST['password'], $connection);
-    $email = sanitise($_POST['email'], $connection);
-    $number = sanitise($_POST['number'], $connection); // +
-    $DOB = sanitise($_POST['DOB'], $connection); // +
 }
 
 ?>

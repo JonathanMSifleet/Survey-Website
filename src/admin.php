@@ -157,7 +157,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         $password = encryptInput($password);
 
         $errors = validateInputs($username, $password, $email, $firstname, $surname, $password, $number, $DOB, $todaysDate);
-        
+
         // check that all the validation tests passed before going to the database:
         if ($errors == "") {
 
