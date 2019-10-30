@@ -23,6 +23,16 @@ $email = "";
 $number = ""; // +
 $DOB = ""; // +
 
+// strings to hold any validation error messages:
+$username_val = "";
+$firstname_val = ""; // +
+$surname_val = ""; // +
+$password_val = "";
+$email_val = "";
+$number_val = ""; // +
+$DOB_val = ""; // +
+
+
 // global: +
 $todaysDate = date('Y-m-d'); // get current date: +
 
@@ -47,13 +57,14 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     }
 
     // SANITISATION (see helper.php for the function definition)
-    $arrayOfErrors = createArrayOfValidatedInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate);
+    sanitiseInputs($username, $firstname, $surname, $password, $email, $password, $number, $DOB, $todaysDate, $connection);
     
-    $numberOfErrors = count($arrayOfErrors);
-    
-    for ($i = 0; $i <= $numberOfErrors -1; $i ++) {
-        echo $arrayOfErrors[$i] . " ";
-    }
+    $username_val = validateStringLength($username, 1, 20); // +
+    $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
+    $firstname_val = validateString($firstname, 2, 16); // see line below +
+    $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+    $number_val = validatePhoneNumber($number); // +
+    $DOB_val = validateDate($DOB, $todaysDate); // +
     
     // this was created by me:
     $password_val = validatePassword($password, 12, 32); // +
@@ -67,11 +78,9 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $password = encryptInput($password);
     //////////
     
-    $errors ="";
-    for ($i = 0; $i <= $numberOfErrors -1; $i ++) {
-        $errors = $errors . $arrayOfErrors[$i];
-    }
-    
+    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
+    $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
+
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
 
@@ -103,7 +112,6 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // we're finished with the database, close the connection:
     mysqli_close($connection);
 } else {
-    /
 
     // just a normal visit to the page, show the signup form:
 
@@ -118,19 +126,19 @@ if ($show_signup_form) {
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
-      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $username_val
       <br>      
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[1]
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $firstname_val
       <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[2]
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $surname_val
       <br>
-      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[3]
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $password_val
       <br>
-      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[4]
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $email_val
       <br>
-      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
+      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $number_val
       <br>
-      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[6]
+      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $DOB_val
       <br>
       <input type="submit" value="Submit">
     </form>	

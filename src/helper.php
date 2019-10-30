@@ -205,18 +205,9 @@ function createArrayOfUsableCharacters()
 
     return $charArray;
 }
-/
-function createArrayOfValidatedInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate) {
-    $username_val = validateStringLength($username, 1, 20); // +
-    $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
-    $firstname_val = validateString($firstname, 2, 16); // see line below +
-    $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
-    $number_val = validatePhoneNumber($number); // +
-    $DOB_val = validateDate($DOB, $todaysDate); // +    
-    
-    return array($username_val, $email_val, $firstname_val, $surname_val, $number_val, $DOB_val);
-    
-}
+
+//
+//
 
 function sanitiseInputs(&$username, &$firstname, &$surname, &$password, &$email, &$passowrd, &$number, &$DOB, $todaysDate, $connection)
 {
