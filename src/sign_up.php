@@ -58,17 +58,18 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     
     
     // this was created by me:
-    $password_val = validatePassword($password, 12, 32);   
+    $password_val = validatePassword($password, 12, 32); // +
+    $password_plaintext = "";
+    
     if ($password_val == 0) {
-        $password = ecnryptInput(generateAlphanumericString()); // encrypts a randomly generated 32 character string
+        $password = generatePassword();
+        $password_plaintext = $password;
         $password_val = "";
-    } else if ($password_val = "") {
-        $password = ecnryptInput($password);
     }
+    $password = encryptInput($password);
     //////////
     
     // this was created by me:
-    $arrayOfErrors[] ="";
     $arrayOfErrors = createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate); //+
     $numberOfErrors = count($arrayOfErrors); //+
     
@@ -77,7 +78,6 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     for ($i = 0; $i < $numberOfErrors; $i ++) {
         $errors = $errors . $arrayOfErrors[$i];
     }
-    $errors = $errors . $password_val;
     ///////////
     
     // check that all the validation tests passed before going to the database:
@@ -90,7 +90,11 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            $message = "Signup was successful please sign in<br>";
+            if ($password_plaintext !== "") {
+                $message = "Signup was successful. Your password is " . $password_plaintext . " please sign in<br>";
+            } else {
+                $message = "Signup was successful. Please sign in<br>";                
+            }
         } else {
             // show the form:
             $show_signup_form = true;
@@ -125,7 +129,7 @@ if ($show_signup_form) {
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
       <br> 
-      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password (only use if browser saves login information automatically) $password_val
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $password_val
       <br>   
       First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[2]
       <br>
