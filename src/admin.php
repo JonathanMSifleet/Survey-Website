@@ -154,14 +154,6 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         $number = sanitise($_POST['number'], $connection);
         $DOB = sanitise($_POST['DOB'], $connection);
 
-        $username_val = validateStringLength($username, 1, 20);
-        $password_val = validatePassword($password, 12, 31);
-        $email_val = validateStringLength($email, 1, 64);
-        $firstname_val = validateString($firstname, 2, 16);
-        $surname_val = validateString($surname, 2, 20);
-        $number_val = validatePhoneNumber($number);
-        $DOB_val = validateDate($DOB, $todaysDate);
-
         $password_plaintext = "";
         if ($password_val == "Zero") {
             $password = generatePassword();
@@ -170,8 +162,8 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         }
         $password = encryptInput($password);
 
-        $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
-
+        $errors = validateInputs($username, $password, $email, $firstname, $surname, $password, $number, $DOB, $todaysDate);
+        
         // check that all the validation tests passed before going to the database:
         if ($errors == "") {
 
