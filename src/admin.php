@@ -146,13 +146,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     if (isset($_POST['username'])) {
         $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-        $username = sanitise($_POST['username'], $connection);
-        $firstname = sanitise($_POST['firstname'], $connection);
-        $surname = sanitise($_POST['surname'], $connection);
-        $password = sanitise($_POST['password'], $connection);
-        $email = sanitise($_POST['email'], $connection);
-        $number = sanitise($_POST['number'], $connection);
-        $DOB = sanitise($_POST['DOB'], $connection);
+        sanitiseInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate, $connection);
 
         $password_plaintext = "";
         if ($password_val == "Zero") {

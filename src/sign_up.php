@@ -23,9 +23,6 @@ $email = "";
 $number = ""; // +
 $DOB = ""; // +
 
-// global: +
-$todaysDate = date('Y-m-d'); // get current date: +
-
 // strings to hold any validation error messages:
 $username_val = "";
 $firstname_val = ""; // +
@@ -34,6 +31,10 @@ $password_val = "";
 $email_val = "";
 $number_val = ""; // +
 $DOB_val = ""; // +
+
+
+// global: +
+$todaysDate = date('Y-m-d'); // get current date: +
 
 // should we show the signup form?:
 $show_signup_form = false;
@@ -56,31 +57,30 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     }
 
     // SANITISATION (see helper.php for the function definition)
-
-    // take copies of the credentials the user submitted, and sanitise (clean) them:
-    $username = sanitise($_POST['username'], $connection);
-    $firstname = sanitise($_POST['firstname'], $connection); // +
-    $surname = sanitise($_POST['surname'], $connection); // +
-    $password = sanitise($_POST['password'], $connection);
-    $email = sanitise($_POST['email'], $connection);
-    $number = sanitise($_POST['number'], $connection); // +
-    $DOB = sanitise($_POST['DOB'], $connection); // +
+    sanitiseInputs($username, $firstname, $surname, $password, $email, $password, $number, $DOB, $todaysDate, $connection);
+    
+    $username_val = validateStringLength($username, 1, 20); // +
+    $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
+    $firstname_val = validateString($firstname, 2, 16); // see line below +
+    $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+    $number_val = validatePhoneNumber($number); // +
+    $DOB_val = validateDate($DOB, $todaysDate); // +
     
     // this was created by me:
+    $password_val = validatePassword($password, 12, 32); // +
     $password_plaintext = "";
-    if ($password_val == "Zero") {
+    
+    if ($password_val == 0) {
         $password = generatePassword();
         $password_plaintext = $password;
         $password_val = "";
     }
     $password = encryptInput($password);
-    // ///////
+    //////////
+    
+    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
+    $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
 
-    $errors = validateInputs($username, $password, $email, $firstname, $surname, $password, $number, $DOB, $todaysDate);
-    
-    echo $errors;
-    
-    
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
 

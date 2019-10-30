@@ -52,24 +52,22 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     } elseif (strlen($field) > $maxlength) {
         // wasn't a valid length, return a help message:
         return "Password length: " . strlen($field) . " Maximum length: " . $maxlength;
-    }
-
+    } else {
     // data was valid, return an empty string:
     return "";
+    }
 }
 
 // this function checks if an inputted password is equal to 0 chracters, then validates the string length and returns any error messages
 // this function is made by me:
 function validatePassword($field, $minlength, $maxlength)
 {
-    $errors = "";
-    $errors = checkIfLengthZero($field);
+    $isZero = checkIfLengthZero($field);
 
-    if ($errors == "Not Zero") {
-        $errors = "";
-        $errors = validateStringLength($field, $minlength, $maxlength);
+    if ($isZero) {
+        return 0;     
     } else {
-        return $errors;
+        return validateStringLength($field, $minlength, $maxlength);
     }
 }
 
@@ -79,9 +77,9 @@ function validatePassword($field, $minlength, $maxlength)
 function checkIfLengthZero($field)
 {
     if (strlen($field) == 0) {
-        return "Zero";
+        return true;
     } else {
-        return "Not Zero";
+        return false;
     }
 }
 
@@ -208,26 +206,21 @@ function createArrayOfUsableCharacters()
     return $charArray;
 }
 
-function validateInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate)
+//
+//
+
+function sanitiseInputs(&$username, &$firstname, &$surname, &$password, &$email, &$passowrd, &$number, &$DOB, $todaysDate, $connection)
 {
-
-    // VALIDATION (see helper.php for the function definitions)
-    // now validate the data (both strings must be between 1 and 16 characters long):
-    // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table for username and password)
-    // firstname is VARCHAR(32) and lastname is VARCHAR(64) in the DB
-    // email is VARCHAR(64) and telephone is VARCHAR(16) in the DB
-
-    // date of birth not validated as HTML form enforces validation arleady
-    $username_val = validateStringLength($username, 1, 20); // +
-    $password_val = validatePassword($password, 12, 32); // +
-    $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
-    $firstname_val = validateString($firstname, 2, 16); // see line below +
-    $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
-    $number_val = validatePhoneNumber($number); // +
-    $DOB_val = validateDate($DOB, $todaysDate); // +
-        
-    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-    return $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
+    // adding '&' in front of a variable calls variable by reference so function can modify value +
+    
+    // take copies of the credentials the user submitted, and sanitise (clean) them:
+    $username = sanitise($_POST['username'], $connection);
+    $firstname = sanitise($_POST['firstname'], $connection); // +
+    $surname = sanitise($_POST['surname'], $connection); // +
+    $password = sanitise($_POST['password'], $connection);
+    $email = sanitise($_POST['email'], $connection);
+    $number = sanitise($_POST['number'], $connection); // +
+    $DOB = sanitise($_POST['DOB'], $connection); // +
 }
 
 ?>
