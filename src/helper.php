@@ -102,14 +102,13 @@ function checkIsNonNumeric($field)
     $charArray = str_split($field);
     $lengthOfCharArray = count($charArray);
 
-    for ($i = 0; $i <= $lengthOfCharArray; $i ++) {
+    for ($i = 0; $i < $lengthOfCharArray; $i ++) {
         if (is_numeric($charArray[$i]) == true) {
             return "Must not contain any numbers ";
         }
     }
-    
+
     return "";
-    
 }
 
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
@@ -207,6 +206,25 @@ function createArrayOfUsableCharacters()
     }
 
     return $charArray;
+}
+
+function createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate)
+{
+    $username_val = validateStringLength($username, 1, 20); // +
+    $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
+    $firstname_val = validateName($firstname, 2, 16); // see line below +
+    $surname_val = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+    $number_val = validatePhoneNumber($number); // +
+    $DOB_val = validateDate($DOB, $todaysDate); // +
+
+    return array(
+        $username_val,
+        $email_val,
+        $firstname_val,
+        $surname_val,
+        $number_val,
+        $DOB_val
+    );
 }
 
 ?>
