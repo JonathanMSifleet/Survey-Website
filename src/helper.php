@@ -59,28 +59,14 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     }
 }
 
-// this function checks if an inputted password is equal to 0 chracters, then validates the string length and returns any error messages
+// UPDATE
 // this function is made by me:
 function validatePassword($field, $minlength, $maxlength)
 {
-    $isZero = checkIfLengthZero($field);
-
-    if ($isZero) {
+    if(strlen($field) == 0) {
         return 0;
     } else {
         return validateStringLength($field, $minlength, $maxlength);
-    }
-}
-
-// this function checks if an input is 0 chracters long and returns a message, if the input is larger than 0 characters
-// send a different message
-// this function is made by me:
-function checkIfLengthZero($field)
-{
-    if (strlen($field) == 0) {
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -152,7 +138,7 @@ function validateDate($field, $todaysDate)
     }
 }
 
-// this function encrypts a user input
+// this function encrypts a users input via bcrypt
 // this function is written by me:
 function encryptInput($input)
 {
@@ -161,7 +147,7 @@ function encryptInput($input)
 
 // this function generates 32 random alphanumeric characters, converts them to ascii, combines the combination of characters, then returns the combination
 // this function is written by me:
-function generatePassword()
+function generateAlphanumericString()
 {
     $charArray = createArrayOfUsableCharacters();
     $lengthOfCharArray = count($charArray) - 1;
@@ -180,6 +166,13 @@ function generatePassword()
     }
 
     return $finalPassword;
+}
+
+//
+//
+function generatePassword()
+{
+    return encryptInput(generateAlphanumericString());
 }
 
 // this function creates an array of all alphanumeric characters
@@ -208,10 +201,11 @@ function createArrayOfUsableCharacters()
     return $charArray;
 }
 
-function createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate)
+function createArrayOfValidatedInputs($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate)
 {
     $username_val = validateStringLength($username, 1, 20); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
+    $password_val = validatePassword($password, 6, 60); // +
     $firstname_val = validateName($firstname, 2, 16); // see line below +
     $surname_val = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
@@ -220,6 +214,7 @@ function createArrayOfValidatedInputs($username, $email, $firstname, $surname, $
     return array(
         $username_val,
         $email_val,
+        $password_val,
         $firstname_val,
         $surname_val,
         $number_val,

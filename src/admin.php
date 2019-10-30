@@ -165,7 +165,6 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         }
         $password = encryptInput($password);
 
-        // this was created by me:
         $arrayOfErrors = createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate); //+
         $numberOfErrors = count($arrayOfErrors); //+
         

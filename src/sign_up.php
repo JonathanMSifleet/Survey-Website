@@ -23,6 +23,9 @@ $surname = ""; // +
 $number = ""; // +
 $DOB = ""; // +
 
+// strings to hold any validation error messages:
+$password_val = "";
+
 // global: +
 $todaysDate = date('Y-m-d'); // get current date: +
 
@@ -56,22 +59,16 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $number = sanitise($_POST['number'], $connection); // +
     $DOB = sanitise($_POST['DOB'], $connection); // +
     
-    
     // this was created by me:
-    $password_val = validatePassword($password, 12, 32); // +
-    $password_plaintext = "";
-    
-    if ($password_val == 0) {
-        $password = generatePassword();
-        $password_plaintext = $password;
-        $password_val = "";
-    }
-    $password = encryptInput($password);
-    //////////
-    
-    // this was created by me:
-    $arrayOfErrors = createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate); //+
+    $arrayOfErrors = createArrayOfValidatedInputs($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate); //+
     $numberOfErrors = count($arrayOfErrors); //+
+    
+    if($arrayOfErrors[2] == 0) {
+        $password = generatePassword(); //+
+        $arrayOfErrors[2] = "";
+    }
+    
+    echo print_r($arrayOfErrors);
     
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
     $errors ="";
@@ -90,11 +87,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            if ($password_plaintext !== "") {
-                $message = "Signup was successful. Your password is " . $password_plaintext . " please sign in<br>";
-            } else {
-                $message = "Signup was successful. Please sign in<br>";                
-            }
+            $message = "Signup was successful. Please sign in<br>";
         } else {
             // show the form:
             $show_signup_form = true;
@@ -129,15 +122,15 @@ if ($show_signup_form) {
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
       <br> 
-      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $password_val
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password (only use if browser automatically saves passwords) $arrayOfErrors[2]
       <br>   
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[2]
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
       <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[3]
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
       <br>
-      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[4]
+      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
       <br>
-      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[5]
+      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>	
