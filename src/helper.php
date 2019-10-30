@@ -59,28 +59,14 @@ function validateStringLength($field, $minlength, $maxlength) // + edit function
     }
 }
 
-// this function checks if an inputted password is equal to 0 chracters, then validates the string length and returns any error messages
+// UPDATE
 // this function is made by me:
 function validatePassword($field, $minlength, $maxlength)
 {
-    $isZero = checkIfLengthZero($field);
-
-    if ($isZero) {
+    if (strlen($field) == 0) {
         return 0;
     } else {
         return validateStringLength($field, $minlength, $maxlength);
-    }
-}
-
-// this function checks if an input is 0 chracters long and returns a message, if the input is larger than 0 characters
-// send a different message
-// this function is made by me:
-function checkIfLengthZero($field)
-{
-    if (strlen($field) == 0) {
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -208,7 +194,7 @@ function createArrayOfUsableCharacters()
     return $charArray;
 }
 
-function createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate)
+function createArrayOfErrors($username, $email, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
     $username_val = validateStringLength($username, 1, 20); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
@@ -217,14 +203,13 @@ function createArrayOfValidatedInputs($username, $email, $firstname, $surname, $
     $number_val = validatePhoneNumber($number); // +
     $DOB_val = validateDate($DOB, $todaysDate); // +
 
-    return array(
-        $username_val,
-        $email_val,
-        $firstname_val,
-        $surname_val,
-        $number_val,
-        $DOB_val
-    );
+    $arrayOfErrors[]=$username_val;
+    $arrayOfErrors[]=$email_val;   
+    $arrayOfErrors[]=$firstname_val;   
+    $arrayOfErrors[]=$surname_val;  
+    $arrayOfErrors[]=$number_val; 
+    $arrayOfErrors[]=$DOB_val;
+    
 }
 
 ?>

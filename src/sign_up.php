@@ -59,22 +59,22 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     
     // this was created by me:
     $password_val = validatePassword($password, 12, 32); // +
-    $password_plaintext = "";
     
     if ($password_val == 0) {
         $password = generatePassword();
-        $password_plaintext = $password;
         $password_val = "";
     }
     $password = encryptInput($password);
     //////////
     
     // this was created by me:
-    $arrayOfErrors = createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate); //+
+    $arrayOfErrors[]="";
+    createArrayOfErrors($username, $email, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors); //+
     $numberOfErrors = count($arrayOfErrors); //+
     
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
     $errors ="";
+    
     for ($i = 0; $i < $numberOfErrors; $i ++) {
         $errors = $errors . $arrayOfErrors[$i];
     }
@@ -90,11 +90,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            if ($password_plaintext !== "") {
-                $message = "Signup was successful. Your password is " . $password_plaintext . " please sign in<br>";
-            } else {
-                $message = "Signup was successful. Please sign in<br>";                
-            }
+            $message = "Signup was successful. Please sign in<br>";                            
         } else {
             // show the form:
             $show_signup_form = true;
