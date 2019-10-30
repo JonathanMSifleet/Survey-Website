@@ -103,6 +103,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // we're finished with the database, close the connection:
     mysqli_close($connection);
 } else {
+    /
 
     // just a normal visit to the page, show the signup form:
 

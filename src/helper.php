@@ -205,7 +205,7 @@ function createArrayOfUsableCharacters()
 
     return $charArray;
 }
-
+/
 function createArrayOfValidatedInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate) {
     $username_val = validateStringLength($username, 1, 20); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...

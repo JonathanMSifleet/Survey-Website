@@ -27,7 +27,7 @@ else {
         if (isset($_GET['createAccount'])) {
             createAccount($dbhost, $dbuser, $dbpass, $dbname);
         } else {
-
+/
             // queries mysql table, outputs results to table
             // this is written by me:
             $query = "SELECT username FROM users"; // +
