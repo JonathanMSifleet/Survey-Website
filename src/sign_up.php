@@ -58,14 +58,17 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     
     
     // this was created by me:
-    $password_val = validatePassword($password, 12, 32); // +    
+    $password_val = validatePassword($password, 12, 32);   
     if ($password_val == 0) {
-        $password = generatePassword();
+        $password = ecnryptInput(generateAlphanumericString()); // encrypts a randomly generated 32 character string
         $password_val = "";
+    } else if ($password_val = "") {
+        $password = ecnryptInput($password);
     }
     //////////
     
     // this was created by me:
+    $arrayOfErrors[] ="";
     $arrayOfErrors = createArrayOfValidatedInputs($username, $email, $firstname, $surname, $number, $DOB, $todaysDate); //+
     $numberOfErrors = count($arrayOfErrors); //+
     
@@ -74,6 +77,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     for ($i = 0; $i < $numberOfErrors; $i ++) {
         $errors = $errors . $arrayOfErrors[$i];
     }
+    $errors = $errors . $password_val;
     ///////////
     
     // check that all the validation tests passed before going to the database:

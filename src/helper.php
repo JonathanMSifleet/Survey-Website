@@ -139,11 +139,11 @@ function validateDate($field, $todaysDate)
     }
 }
 
-// this function encrypts a user input
+// this function encrypts the input value and returns the cyphertext
 // this function is written by me:
-function generatePassword($input)
+function encryptInput($input)
 {
-    return password_hash(generateAlphanumericString(), PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
+    return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
 }
 
 // this function generates 32 random alphanumeric characters, converts them to ascii, combines the combination of characters, then returns the combination
