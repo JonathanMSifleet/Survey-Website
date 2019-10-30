@@ -147,16 +147,26 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
         sanitiseInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate, $connection);
-
+               
+        $username_val = validateStringLength($username, 1, 20); // +
+        $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
+        $firstname_val = validateString($firstname, 2, 16); // see line below +
+        $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+        $number_val = validatePhoneNumber($number); // +
+        $DOB_val = validateDate($DOB, $todaysDate); // +
+        
+        $password_val = validatePassword($password, 12, 32); // +
         $password_plaintext = "";
-        if ($password_val == "Zero") {
+        
+        if ($password_val == 0) {
             $password = generatePassword();
             $password_plaintext = $password;
             $password_val = "";
         }
         $password = encryptInput($password);
 
-        $errors = validateInputs($username, $password, $email, $firstname, $surname, $password, $number, $DOB, $todaysDate);
+        $errors = $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
+        
         
         // check that all the validation tests passed before going to the database:
         if ($errors == "") {
