@@ -208,27 +208,26 @@ function createArrayOfUsableCharacters()
     return $charArray;
 }
 
-function validateInputs($username, $password, $email, $firstname, $surnam, $password, $number, $DOB, $todaysDate) {
-    
+function validateInputs($username, $password, $email, $firstname, $surname, $number, $DOB, $todaysDate)
+{
+
     // VALIDATION (see helper.php for the function definitions)
     // now validate the data (both strings must be between 1 and 16 characters long):
     // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table for username and password)
     // firstname is VARCHAR(32) and lastname is VARCHAR(64) in the DB
     // email is VARCHAR(64) and telephone is VARCHAR(16) in the DB
-    
+
     // date of birth not validated as HTML form enforces validation arleady
-    
     $username_val = validateStringLength($username, 1, 20); // +
-    $password_val = validatePassword($password, 12, 31); // +
+    $password_val = validatePassword($password, 12, 32); // +
     $email_val = validateStringLength($email, 1, 64); // this line will validate the email as a string, but maybe you can do a better job...
     $firstname_val = validateString($firstname, 2, 16); // see line below +
     $surname_val = validateString($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
     $DOB_val = validateDate($DOB, $todaysDate); // +
-    
-    
+        
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-    return $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val; 
-} 
+    return $username_val . $password_val . $email_val . $firstname_val . $surname_val . $number_val . $DOB_val;
+}
 
 ?>

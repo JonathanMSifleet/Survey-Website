@@ -76,8 +76,10 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $password = encryptInput($password);
     // ///////
 
-    // date of birth not validated as HTML form enforces validation arleady
     $errors = validateInputs($username, $password, $email, $firstname, $surname, $password, $number, $DOB, $todaysDate);
+    
+    echo $errors;
+    
     
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
