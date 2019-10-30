@@ -214,4 +214,20 @@ function createArrayOfErrors($username, $email, $password, $firstname, $surname,
     $arrayOfErrors[6] = $DOB_val;
 }
 
+
+// this was created by me:
+function concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors) {
+    
+    createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors); // +
+    $numberOfErrors = count($arrayOfErrors); // +
+    
+    $errors = "";
+    for ($i = 0; $i < $numberOfErrors; $i ++) {
+        $errors = $errors . $arrayOfErrors[$i];
+    }
+    
+    return $errors;
+    
+}
+
 ?>

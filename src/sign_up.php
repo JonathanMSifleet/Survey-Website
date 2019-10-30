@@ -62,24 +62,20 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     if (checkIfLengthZero($password)) {
         $password = generateAlphanumericString();
     }
-    // ////////
+    // /////////
 
     // this was created by me:
     createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors); // +
     $numberOfErrors = count($arrayOfErrors); // +
 
-    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-    $errors = "";
-
-    for ($i = 0; $i < $numberOfErrors; $i ++) {
-        $errors = $errors . $arrayOfErrors[$i];
-    }
+    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
+    $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors);
     // /////////
 
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
-        
-        $password=encryptInput($password);
+
+        $password = encryptInput($password);
 
         // try to insert the new details:
         $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
