@@ -254,6 +254,8 @@ function returnCleanVariableToChange($variableToTrim)
     return $trimmedVariable;
 }
 
+//
+//
 function determineFieldType($trimmedSuperGlobal, &$minLength, &$maxLength)
 {
     switch ($trimmedSuperGlobal) {

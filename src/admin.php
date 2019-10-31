@@ -263,11 +263,12 @@ function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $
             if ($input_val == "") {
                 $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$username'";
                 $result = mysqli_query($connection, $query); // +
-            }
-            if ($result) {
-                echo $fieldToChange . " changed";
-            } else {
-                echo $fieldToChange . " failed to change";
+
+                if ($result) {
+                    echo $fieldToChange . " changed";
+                } else {
+                    echo $fieldToChange . " failed to change";
+                }
             }
         } // end of isset
     } // end of admin if
