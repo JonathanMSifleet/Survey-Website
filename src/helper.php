@@ -230,7 +230,6 @@ function concatValidationMessages($username, $email, $password, $firstname, $sur
     return $errors;
 }
 
-
 // this function finds the location of a character from a string passed into the function
 // this was created by me:
 function findCharacter($arrayOfChars, $charArrayLength, $charToFind)
@@ -244,18 +243,15 @@ function findCharacter($arrayOfChars, $charArrayLength, $charToFind)
 
 function returnCleanVariableToChange()
 {
-    $variableToChange = $_SERVER['REQUEST_URI'];
 
-    $arrayOfChars = str_split($variableToChange);
-    $charArrayLength = count($arrayOfChars);
+        $arrayOfChars = str_split($variableToChange);
+        $charArrayLength = count($arrayOfChars);
 
-    $locationOfAmpersand = findCharacter($arrayOfChars, $charArrayLength, '&');
-    
-    $variableToChange = substr($variableToChange, ($locationOfAmpersand + 7), $charArrayLength);
-    $variableToChange = substr($variableToChange, 0, strlen($variableToChange) - 5);
-    $variableToChange = strtolower($variableToChange);
-
-    return $variableToChange;
+        $locationOfAmpersand = findCharacter($arrayOfChars, $charArrayLength, '&');
+        $variableToChange = substr($variableToChange, ($locationOfAmpersand + 7), $charArrayLength);
+        $variableToChange = substr($variableToChange, 0, strlen($variableToChange) - 5);
+        $variableToChange = strtolower($variableToChange);
+        return $variableToChange;
 }
 
 ?>

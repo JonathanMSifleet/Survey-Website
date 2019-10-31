@@ -49,37 +49,41 @@ else {
             if (isset($_GET['username'])) {
                 printUserData($dbhost, $dbuser, $dbpass, $dbname);
 
-                $variableToChange = "";
-                $variableToChange = returnCleanVariableToChange();
+                $editAccount = isset($_GET['editAccountDetails']);
 
-                if ($variableToChange !== "") {
-                    switch ($variableToChange) {
-                        case $variableToChange == "email":
-                            $fieldType = "email";
-                            break;
-                        case $variableToChange == "password":
-                            $fieldType = "password";
-                            break;
-                        case 2:
-                            $fieldType = "text";
-                            break;
-                        case $variableToChange == "firstname":
-                            $fieldType = "text";
-                            break;
-                        case $variableToChange == "surname":
-                            $fieldType = "text";
-                            break;
-                        case $variableToChange == "number":
-                            $fieldType = "text";
-                            break;
-                        case $variableToChange == "dob":
-                            $fieldType = "date";
-                            break;
-                        default:
-                            $fieldType = "";
-                    } // end of switch
-                    changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $variableToChange, $fieldType);
-                } // end of if
+                if ($editAccount == true) {
+                    $variableToChange = $_SERVER['REQUEST_URI'];
+                    $variableToChange = returnCleanVariableToChange($variableToChange);
+
+                    if ($variableToChange !== "") {
+                        switch ($variableToChange) {
+                            case $variableToChange == "email":
+                                $fieldType = "email";
+                                break;
+                            case $variableToChange == "password":
+                                $fieldType = "password";
+                                break;
+                            case 2:
+                                $fieldType = "text";
+                                break;
+                            case $variableToChange == "firstname":
+                                $fieldType = "text";
+                                break;
+                            case $variableToChange == "surname":
+                                $fieldType = "text";
+                                break;
+                            case $variableToChange == "number":
+                                $fieldType = "text";
+                                break;
+                            case $variableToChange == "dob":
+                                $fieldType = "date";
+                                break;
+                            default:
+                                $fieldType = "";
+                        } // end of switch
+                        changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $variableToChange, $fieldType);
+                    } // end of if
+                }
             }
         }
 
@@ -114,21 +118,21 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname)
         echo "<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
     }
     echo "</table>";
-    
+
     echo "<br>";
-    echo "<a href =admin.php?username=$username&changeEmail=true>Change email</a>";
+    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeEmail=true>Change email</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&changePassword=true>Change password</a>";
+    echo "<a href =admin.php?username=$username&editAccountDetails=true&changePassword=true>Change password</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&changeFirstname=true>Change firstname</a>";
+    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeFirstname=true>Change firstname</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&changeSurname=true>Change surname</a>";
+    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeSurname=true>Change surname</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&changeNumber=true>Change number</a>";
+    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeNumber=true>Change number</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&changedob=true>Change date of birth</a>";
+    echo "<a href =admin.php?username=$username&editAccountDetails=true&changedob=true>Change date of birth</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&deleteAccount=true>Delete user account</a>";
+    echo "<a href =admin.php?username=$username&editAccountDetails=true&deleteAccount=true>Delete user account</a>";
 }
 
 function createAccount($dbhost, $dbuser, $dbpass, $dbname)
@@ -271,7 +275,7 @@ function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $
             $newPassword_val = validatePassword($newInput, 12, 31);
 
             if ($newPassword_val == "") {
-                $newPassword = encryptInput($newInput);
+                $newInput = encryptInput($newInput);
                 $query = "UPDATE users SET password='$newInput' WHERE username = '$username'";
                 $result = mysqli_query($connection, $query); // +
             }
