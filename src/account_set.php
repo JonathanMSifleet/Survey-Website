@@ -144,14 +144,22 @@ else {
 
 if ($show_account_form) {
 echo <<<_END
-
-    <!-- CLIENT-SIDE VALIDATION MISSING -->
     
     <form action="account_set.php" method="post">
       Update your profile info:<br>
       Username: {$_SESSION['username']}
       <br>
       Email address: <input type="text" name="email" value="$email">
+      <br>
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
+      <br>
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
+      <br>
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
+      <br>
+      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
+      <br>
+      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>	

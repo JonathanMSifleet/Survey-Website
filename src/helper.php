@@ -142,7 +142,6 @@ function validateDate($field, $todaysDate)
 // this function is written by me:
 function encryptInput($input)
 {
-    
     return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time +
 }
 
@@ -195,6 +194,8 @@ function createArrayOfUsableCharacters()
     return $charArray;
 }
 
+// this function validates all user inputs, and adds each validation message to an array of errors
+// this was created by me:
 function createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
     $username_val = validateStringLength($username, 1, 20); // +
@@ -214,20 +215,47 @@ function createArrayOfErrors($username, $email, $password, $firstname, $surname,
     $arrayOfErrors[6] = $DOB_val;
 }
 
-
+// this function concatenates each valuae in the array of errors to create one large error, then returns this value
 // this was created by me:
-function concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors) {
-    
+function concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors)
+{
     createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors); // +
     $numberOfErrors = count($arrayOfErrors); // +
-    
+
     $errors = "";
     for ($i = 0; $i < $numberOfErrors; $i ++) {
         $errors = $errors . $arrayOfErrors[$i];
     }
-    
+
     return $errors;
+}
+
+
+// this function finds the location of a character from a string passed into the function
+// this was created by me:
+function findCharacter($arrayOfChars, $charArrayLength, $charToFind)
+{
+    for ($i = 0; $i <= $charArrayLength; $i ++) {
+        if ($arrayOfChars[$i] == $charToFind) {
+            return $i;
+        }
+    }
+}
+
+function returnCleanVariableToChange()
+{
+    $variableToChange = $_SERVER['REQUEST_URI'];
+
+    $arrayOfChars = str_split($variableToChange);
+    $charArrayLength = count($arrayOfChars);
+
+    $locationOfAmpersand = findCharacter($arrayOfChars, $charArrayLength, '&');
     
+    $variableToChange = substr($variableToChange, ($locationOfAmpersand + 7), $charArrayLength);
+    $variableToChange = substr($variableToChange, 0, strlen($variableToChange) - 5);
+    $variableToChange = strtolower($variableToChange);
+
+    return $variableToChange;
 }
 
 ?>

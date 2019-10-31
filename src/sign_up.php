@@ -56,7 +56,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $firstname = sanitise($_POST['firstname'], $connection); // +
     $surname = sanitise($_POST['surname'], $connection); // +
     $number = sanitise($_POST['number'], $connection); // +
-    $DOB = sanitise($_POST['DOB'], $connection); // +
+    $dob = sanitise($_POST['dob'], $connection); // +
 
     // this was created by me:
     if (checkIfLengthZero($password)) {
@@ -65,11 +65,11 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // /////////
 
     // this was created by me:
-    createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors); // +
+    createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors); // +
     $numberOfErrors = count($arrayOfErrors); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-    $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors);
+    $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);
     // /////////
 
     // check that all the validation tests passed before going to the database:
@@ -78,7 +78,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         $password = encryptInput($password);
 
         // try to insert the new details:
-        $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
+        $query = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$dob')";
         $result = mysqli_query($connection, $query);
 
         // no data returned, we just test for true(success)/false(failure):
@@ -127,7 +127,7 @@ if ($show_signup_form) {
       <br>
       Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
       <br>
-      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[6]
+      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>	

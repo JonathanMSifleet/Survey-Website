@@ -6,7 +6,7 @@
 // execute the header script:
 require_once "header.php";
 
-$newPassword = "";
+$newInput = "";
 
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
@@ -19,10 +19,10 @@ else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
     if ($_SESSION['username'] == "admin") {
 
-        echo "Click to create a new account:";
+        echo "Click to create a new account: <br>";
 
         echo "<a href ={$_SERVER['REQUEST_URI']}?createAccount=true>Create user account</a>";
-        echo "<br>";
+        echo "<br><br>";
 
         if (isset($_GET['createAccount'])) {
             createAccount($dbhost, $dbuser, $dbpass, $dbname);
@@ -48,19 +48,44 @@ else {
             // print user's data
             if (isset($_GET['username'])) {
                 printUserData($dbhost, $dbuser, $dbpass, $dbname);
-            }
-            // //////////
 
-            if (isset($_GET['changePassword'])) {
-                changePassword($dbhost, $dbuser, $dbpass, $dbname);
-            }
+                $variableToChange = "";
+                $variableToChange = returnCleanVariableToChange();
 
-            if (isset($_GET['deleteAccount'])) {
-                deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
+                if ($variableToChange !== "") {
+                    switch ($variableToChange) {
+                        case $variableToChange == "email":
+                            $fieldType = "email";
+                            break;
+                        case $variableToChange == "password":
+                            $fieldType = "password";
+                            break;
+                        case 2:
+                            $fieldType = "text";
+                            break;
+                        case $variableToChange == "firstname":
+                            $fieldType = "text";
+                            break;
+                        case $variableToChange == "surname":
+                            $fieldType = "text";
+                            break;
+                        case $variableToChange == "number":
+                            $fieldType = "text";
+                            break;
+                        case $variableToChange == "dob":
+                            $fieldType = "date";
+                            break;
+                        default:
+                            $fieldType = "";
+                    } // end of switch
+                    changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $variableToChange, $fieldType);
+                } // end of if
             }
-            // //////////
         }
-        mysqli_close($connection);
+
+        if (isset($_GET['deleteAccount'])) {
+            deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
+        }
     } else {
         echo "You don't have permission to view this page...<br>";
     }
@@ -75,7 +100,6 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname)
 {
     $username = $_GET["username"];
 
-    echo "User selected: " . $username;
     echo "<br>";
 
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
@@ -84,17 +108,27 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname)
 
     echo "User's details:";
     echo "<table border ='1'>";
-    echo "<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>DOB</td></tr>";
+    echo "<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>dob</td></tr>";
 
     while ($row = mysqli_fetch_assoc($result)) {
-        echo "<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['DOB']}</td></tr>";
+        echo "<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
     }
     echo "</table>";
-
-    echo "<a href ={$_SERVER['REQUEST_URI']}&changePassword=true>Change password</a>";
+    
+    echo "<br>";
+    echo "<a href =admin.php?username=$username&changeEmail=true>Change email</a>";
     echo " ";
-
-    echo "<a href ={$_SERVER['REQUEST_URI']}&deleteAccount=true>Delete user account</a>";
+    echo "<a href =admin.php?username=$username&changePassword=true>Change password</a>";
+    echo " ";
+    echo "<a href =admin.php?username=$username&changeFirstname=true>Change firstname</a>";
+    echo " ";
+    echo "<a href =admin.php?username=$username&changeSurname=true>Change surname</a>";
+    echo " ";
+    echo "<a href =admin.php?username=$username&changeNumber=true>Change number</a>";
+    echo " ";
+    echo "<a href =admin.php?username=$username&changedob=true>Change date of birth</a>";
+    echo " ";
+    echo "<a href =admin.php?username=$username&deleteAccount=true>Delete user account</a>";
 }
 
 function createAccount($dbhost, $dbuser, $dbpass, $dbname)
@@ -108,7 +142,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     $password = "";
     $email = "";
     $number = ""; // +
-    $DOB = ""; // +
+    $dob = ""; // +
 
     // global: +
     $todaysDate = date('Y-m-d'); // get current date: +
@@ -120,7 +154,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     $firstname = ""; // +
     $surname = ""; // +
     $number = ""; // +
-    $DOB = ""; // +
+    $dob = ""; // +
 
     echo <<<_END
     <form action="sign_up.php" method="post">
@@ -137,7 +171,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
       <br>
       Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
       <br>
-      Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[6]
+      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>
@@ -157,7 +191,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         $firstname = sanitise($_POST['firstname'], $connection); // +
         $surname = sanitise($_POST['surname'], $connection); // +
         $number = sanitise($_POST['number'], $connection); // +
-        $DOB = sanitise($_POST['DOB'], $connection); // +
+        $dob = sanitise($_POST['dob'], $connection); // +
 
         // this was created by me:
         if (checkIfLengthZero($password)) {
@@ -166,11 +200,11 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         // /////////
 
         // this was created by me:
-        createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors); // +
+        createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors); // +
         $numberOfErrors = count($arrayOfErrors); // +
 
         // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-        $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors);
+        $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);
         // /////////
 
         // check that all the validation tests passed before going to the database:
@@ -179,7 +213,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
             $password = encryptInput($password);
 
             // try to insert the new details:
-            $query = "INSERT INTO users (username, firstname, surname, password, email, number, DOB) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$DOB')";
+            $query = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$dob')";
             $result = mysqli_query($connection, $query);
 
             // no data returned, we just test for true(success)/false(failure):
@@ -200,19 +234,18 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
         }
         // we're finished with the database, close the connection:
         mysqli_close($connection);
-        
     }
 }
 
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
 // then updates the user's password via an SQL query
 // this function is written by me
-function changePassword($dbhost, $dbuser, $dbpass, $dbname)
+function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $fieldType)
 {
     $username = $_GET["username"];
 
     if ($username == "admin") {
-        echo "The admin's password cannot be changed";
+        echo "The admin's " . $fieldToChange . " cannot be changed";
     } else {
         echo "<br>";
 
@@ -220,10 +253,12 @@ function changePassword($dbhost, $dbuser, $dbpass, $dbname)
 
         $currentURL = $_SERVER['REQUEST_URI'];
 
+        $fieldTypeToDisplay = ucfirst($fieldToChange);
+
         echo <<<_END
         <form action="$currentURL" method="post">
           Please fill in the following fields:<br>
-          Password: <input type="password" name="newPassword" minlength="12" maxlength="32">
+          $fieldTypeToDisplay: <input type="$fieldType" name="newInput" minlength="12" maxlength="32">
           <br>
           <input type="submit" value="Submit">
         </form>
@@ -232,12 +267,12 @@ function changePassword($dbhost, $dbuser, $dbpass, $dbname)
         if (isset($_POST['newPassword'])) {
             $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-            $newPassword = sanitise($_POST['newPassword'], $connection);
-            $newPassword_val = validatePassword($newPassword, 12, 31);
+            $newInput = sanitise($_POST['newInput'], $connection);
+            $newPassword_val = validatePassword($newInput, 12, 31);
 
             if ($newPassword_val == "") {
-                $newPassword = encryptInput($newPassword);
-                $query = "UPDATE users SET password='$newPassword' WHERE username = '$username'";
+                $newPassword = encryptInput($newInput);
+                $query = "UPDATE users SET password='$newInput' WHERE username = '$username'";
                 $result = mysqli_query($connection, $query); // +
             }
             if ($result) {
@@ -248,8 +283,6 @@ function changePassword($dbhost, $dbuser, $dbpass, $dbname)
         } // end of isset
     } // end of admin if
 }
-
-// end of function
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:
@@ -264,7 +297,7 @@ function deleteAccount($dbhost, $dbuser, $dbpass, $dbname)
         echo "are you sure you want to delete " . $username . "? ";
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
         echo " ";
-        echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=false>Cancel</a>";
+        echo "<a href =admin.php?username=$username>Cancel</a>";
 
         $shouldDeleteAccount = ""; // required to fix undefined index error
 
