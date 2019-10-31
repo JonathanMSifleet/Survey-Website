@@ -241,17 +241,15 @@ function findCharacter($arrayOfChars, $charArrayLength, $charToFind)
     }
 }
 
-function returnCleanVariableToChange()
+function returnCleanVariableToChange($variableToChange)
 {
+    $arrayOfChars = str_split($variableToChange);
+    $charArrayLength = count($arrayOfChars);
 
-        $arrayOfChars = str_split($variableToChange);
-        $charArrayLength = count($arrayOfChars);
-
-        $locationOfAmpersand = findCharacter($arrayOfChars, $charArrayLength, '&');
-        $variableToChange = substr($variableToChange, ($locationOfAmpersand + 7), $charArrayLength);
-        $variableToChange = substr($variableToChange, 0, strlen($variableToChange) - 5);
-        $variableToChange = strtolower($variableToChange);
-        return $variableToChange;
+    $locationOfAmpersand = findCharacter($arrayOfChars, $charArrayLength, '&');
+    $variableToChange = substr($variableToChange, $locationOfAmpersand + 1, $charArrayLength);
+    // $variableToChange = strtolower($variableToChange);
+    return $variableToChange;
 }
 
 ?>

@@ -53,7 +53,12 @@ else {
 
                 if ($editAccount == true) {
                     $variableToChange = $_SERVER['REQUEST_URI'];
+
                     $variableToChange = returnCleanVariableToChange($variableToChange);
+                    $variableToChange = returnCleanVariableToChange($variableToChange);
+                    $variableToChange = substr($variableToChange, 6, strlen($variableToChange));
+                    $variableToChange = substr($variableToChange, 0, strlen($variableToChange)-5);
+                    
 
                     if ($variableToChange !== "") {
                         switch ($variableToChange) {
