@@ -6,7 +6,9 @@
 // execute the header script:
 require_once "header.php";
 
-$newInput = "";
+$newInput = null; // +
+$shouldDeleteAccount = null; // +
+$todaysDate = date('Y-m-d'); // get current date: +
 
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
@@ -64,32 +66,14 @@ else {
                         $trimmedSuperGlobal = substr($superGlobalToTrim, 0, strlen($superGlobalToTrim) - 5);
 
                         if ($trimmedSuperGlobal !== "") {
-                            switch ($trimmedSuperGlobal) {
-                                case $trimmedSuperGlobal == "email":
-                                    $fieldType = "email";
-                                    break;
-                                case $trimmedSuperGlobal == "password":
-                                    $fieldType = "password";
-                                    break;
-                                case 2:
-                                    $fieldType = "text";
-                                    break;
-                                case $trimmedSuperGlobal == "firstname":
-                                    $fieldType = "text";
-                                    break;
-                                case $trimmedSuperGlobal == "surname":
-                                    $fieldType = "text";
-                                    break;
-                                case $trimmedSuperGlobal == "number":
-                                    $fieldType = "text";
-                                    break;
-                                case $trimmedSuperGlobal == "dob":
-                                    $fieldType = "date";
-                                    break;
-                                default:
-                                    $fieldType = "";
-                            } // end of switch
-                            changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $trimmedSuperGlobal, $fieldType);
+
+                            // required to edit values
+                            $minLength = null;
+                            $maxLength = null;
+                            // ///
+
+                            $fieldType = determineFieldType($trimmedSuperGlobal, $minLength, $maxLength);
+                            changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $trimmedSuperGlobal, $fieldType, $minLength, $maxLength);
                         } // end of if
                     }
                 }
@@ -152,9 +136,6 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     $email = "";
     $number = ""; // +
     $dob = ""; // +
-
-    // global: +
-    $todaysDate = date('Y-m-d'); // get current date: +
 
     // strings to hold any validation error messages:
     $username = "";
@@ -249,7 +230,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
 // then updates the user's password via an SQL query
 // this function is written by me
-function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $fieldType)
+function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $fieldType, $minLength, $maxLength)
 {
     $username = $_GET["username"];
 
@@ -262,33 +243,31 @@ function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $
         // $password_val
 
         $currentURL = $_SERVER['REQUEST_URI'];
-
         $fieldTypeToDisplay = ucfirst($fieldToChange);
 
         echo <<<_END
         <form action="$currentURL" method="post">
           Please fill in the following fields:<br>
-          $fieldTypeToDisplay: <input type="$fieldType" name="newInput" minlength="12" maxlength="32">
+          $fieldTypeToDisplay: <input type="$fieldType" name="newInput">
           <br>
           <input type="submit" value="Submit">
         </form>
         _END;
 
-        if (isset($_POST['newPassword'])) {
+        if (isset($_POST['newInput'])) {
             $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
             $newInput = sanitise($_POST['newInput'], $connection);
-            $newPassword_val = validatePassword($newInput, 12, 31);
+            $input_val = validateInput($newInput, $fieldType);
 
-            if ($newPassword_val == "") {
-                $newInput = encryptInput($newInput);
-                $query = "UPDATE users SET password='$newInput' WHERE username = '$username'";
+            if ($input_val == "") {
+                $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$username'";
                 $result = mysqli_query($connection, $query); // +
             }
             if ($result) {
-                echo "Password changed";
+                echo $fieldToChange . " changed";
             } else {
-                echo "Password failed to change";
+                echo $fieldToChange . " failed to change";
             }
         } // end of isset
     } // end of admin if
@@ -309,11 +288,7 @@ function deleteAccount($dbhost, $dbuser, $dbpass, $dbname)
         echo " ";
         echo "<a href =admin.php?username=$username>Cancel</a>";
 
-        $shouldDeleteAccount = ""; // required to fix undefined index error
-
-        $shouldDeleteAccount = $_GET["confirmDeletion"];
-
-        if ($shouldDeleteAccount == "true") {
+        if ($_GET["confirmDeletion"] == "true") {
             $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
             $query = "DELETE FROM users WHERE username = '$username'";
             $result = mysqli_query($connection, $query); // +

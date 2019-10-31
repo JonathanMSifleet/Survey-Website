@@ -241,6 +241,8 @@ function findCharacter($arrayOfChars, $charArrayLength, $charToFind)
     }
 }
 
+//
+//
 function returnCleanVariableToChange($variableToTrim)
 {
     $arrayOfChars = str_split($variableToTrim);
@@ -250,6 +252,59 @@ function returnCleanVariableToChange($variableToTrim)
     $trimmedVariable = substr($variableToTrim, $locationOfAmpersand + 1, $charArrayLength);
     // $variableToChange = strtolower($variableToChange);
     return $trimmedVariable;
+}
+
+function determineFieldType($trimmedSuperGlobal, &$minLength, &$maxLength)
+{
+    switch ($trimmedSuperGlobal) {
+        case $trimmedSuperGlobal == "email":
+            $minLength = 3;
+            $maxLength = 64;
+            return "email";
+        case $trimmedSuperGlobal == "password":
+            $maxLength = 32;
+            return "password";
+        case $trimmedSuperGlobal == "firstname":
+            $minLength = 2;
+            $maxLength = 16;
+            return "text";
+        case $trimmedSuperGlobal == "surname":
+            $minLength = 3;
+            $maxLength = 24;
+            return "text";
+        case $trimmedSuperGlobal == "number":
+            $minLength = 11;
+            $maxLength = 11;
+            return "text";
+        case $trimmedSuperGlobal == "dob":
+            return "date";
+        default:
+            return "";
+    }
+}
+
+//
+//
+function validateInput($input, $inputType)
+{
+    $todaysDate = date('Y-m-d');
+
+    switch ($inputType) {
+        case $inputType == "email":
+            return validateStringLength($input, 3, 64);
+        case $inputType == "password":
+            return validateStringLength($input, 12, 64);
+        case $inputType == "firstname":
+            return validateName($input, 2, 16);
+        case $inputType == "surname":
+            return validateName($input, 2, 20);
+        case $inputType == "number":
+            return validateNumber($input);
+        case $inputType == "dob":
+            return validateDate($input, $todaysDate); // "email";
+        default:
+            return "";
+    }
 }
 
 ?>
