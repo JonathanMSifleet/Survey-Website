@@ -241,15 +241,15 @@ function findCharacter($arrayOfChars, $charArrayLength, $charToFind)
     }
 }
 
-function returnCleanVariableToChange($variableToChange)
+function returnCleanVariableToChange($variableToTrim)
 {
-    $arrayOfChars = str_split($variableToChange);
+    $arrayOfChars = str_split($variableToTrim);
     $charArrayLength = count($arrayOfChars);
 
     $locationOfAmpersand = findCharacter($arrayOfChars, $charArrayLength, '&');
-    $variableToChange = substr($variableToChange, $locationOfAmpersand + 1, $charArrayLength);
+    $trimmedVariable = substr($variableToTrim, $locationOfAmpersand + 1, $charArrayLength);
     // $variableToChange = strtolower($variableToChange);
-    return $variableToChange;
+    return $trimmedVariable;
 }
 
 ?>

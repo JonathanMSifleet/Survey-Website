@@ -49,51 +49,51 @@ else {
             if (isset($_GET['username'])) {
                 printUserData($dbhost, $dbuser, $dbpass, $dbname);
 
-                $editAccount = isset($_GET['editAccountDetails']);
+                if (isset($_GET['deleteAccount'])) {
+                    deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
+                } else {
 
-                if ($editAccount == true) {
-                    $variableToChange = $_SERVER['REQUEST_URI'];
+                    $editAccount = isset($_GET['editAccountDetails']);
 
-                    $variableToChange = returnCleanVariableToChange($variableToChange);
-                    $variableToChange = returnCleanVariableToChange($variableToChange);
-                    $variableToChange = substr($variableToChange, 6, strlen($variableToChange));
-                    $variableToChange = substr($variableToChange, 0, strlen($variableToChange)-5);
-                    
+                    if ($editAccount == true) {
+                        $currentURL = $_SERVER['REQUEST_URI'];
 
-                    if ($variableToChange !== "") {
-                        switch ($variableToChange) {
-                            case $variableToChange == "email":
-                                $fieldType = "email";
-                                break;
-                            case $variableToChange == "password":
-                                $fieldType = "password";
-                                break;
-                            case 2:
-                                $fieldType = "text";
-                                break;
-                            case $variableToChange == "firstname":
-                                $fieldType = "text";
-                                break;
-                            case $variableToChange == "surname":
-                                $fieldType = "text";
-                                break;
-                            case $variableToChange == "number":
-                                $fieldType = "text";
-                                break;
-                            case $variableToChange == "dob":
-                                $fieldType = "date";
-                                break;
-                            default:
-                                $fieldType = "";
-                        } // end of switch
-                        changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $variableToChange, $fieldType);
-                    } // end of if
+                        $superGlobalToTrim = returnCleanVariableToChange($currentURL);
+                        $superGlobalToTrim = returnCleanVariableToChange($superGlobalToTrim);
+                        $superGlobalToTrim = substr($superGlobalToTrim, 6, strlen($superGlobalToTrim));
+                        $trimmedSuperGlobal = substr($superGlobalToTrim, 0, strlen($superGlobalToTrim) - 5);
+
+                        if ($trimmedSuperGlobal !== "") {
+                            switch ($trimmedSuperGlobal) {
+                                case $trimmedSuperGlobal == "email":
+                                    $fieldType = "email";
+                                    break;
+                                case $trimmedSuperGlobal == "password":
+                                    $fieldType = "password";
+                                    break;
+                                case 2:
+                                    $fieldType = "text";
+                                    break;
+                                case $trimmedSuperGlobal == "firstname":
+                                    $fieldType = "text";
+                                    break;
+                                case $trimmedSuperGlobal == "surname":
+                                    $fieldType = "text";
+                                    break;
+                                case $trimmedSuperGlobal == "number":
+                                    $fieldType = "text";
+                                    break;
+                                case $trimmedSuperGlobal == "dob":
+                                    $fieldType = "date";
+                                    break;
+                                default:
+                                    $fieldType = "";
+                            } // end of switch
+                            changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $trimmedSuperGlobal, $fieldType);
+                        } // end of if
+                    }
                 }
             }
-        }
-
-        if (isset($_GET['deleteAccount'])) {
-            deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
         }
     } else {
         echo "You don't have permission to view this page...<br>";
@@ -254,6 +254,7 @@ function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $
     $username = $_GET["username"];
 
     if ($username == "admin") {
+        echo "<br>";
         echo "The admin's " . $fieldToChange . " cannot be changed";
     } else {
         echo "<br>";
