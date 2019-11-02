@@ -60,20 +60,19 @@ else {
                     if ($editAccount == true) {
                         $currentURL = $_SERVER['REQUEST_URI'];
 
-                        $superGlobalToTrim = returnCleanVariableToChange($currentURL);
-                        $superGlobalToTrim = returnCleanVariableToChange($superGlobalToTrim);
-                        $superGlobalToTrim = substr($superGlobalToTrim, 6, strlen($superGlobalToTrim));
-                        $trimmedSuperGlobal = substr($superGlobalToTrim, 0, strlen($superGlobalToTrim) - 5);
-
-                        if ($trimmedSuperGlobal !== "") {
+                        $superGlobalName = getSuperGlobalName($currentURL);                       
+                        
+                        echo "<br>";
+                        
+                        if ($superGlobalName !== "") {
 
                             // required to edit values
                             $minLength = null;
                             $maxLength = null;
                             // ///
 
-                            $fieldType = determineFieldType($trimmedSuperGlobal, $minLength, $maxLength);
-                            changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $trimmedSuperGlobal, $fieldType, $minLength, $maxLength);
+                            $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
+                            changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $superGlobalName, $fieldType, $minLength, $maxLength);
                         } // end of if
                     }
                 }
@@ -159,7 +158,7 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
       <br>
-      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
+      Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfErrors[5]
       <br>
       Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
       <br>
@@ -244,11 +243,11 @@ function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $
 
         $currentURL = $_SERVER['REQUEST_URI'];
         $fieldTypeToDisplay = ucfirst($fieldToChange);
-
+       
         echo <<<_END
         <form action="$currentURL" method="post">
           Please fill in the following fields:<br>
-          $fieldTypeToDisplay: <input type="$fieldType" name="newInput">
+          $fieldTypeToDisplay: <input type="$fieldType" $ name="newInput">
           <br>
           <input type="submit" value="Submit">
         </form>

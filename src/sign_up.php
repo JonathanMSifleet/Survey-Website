@@ -125,7 +125,7 @@ if ($show_signup_form) {
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
       <br>
-      Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
+      Phone number: <input type="text" name="number" minlength="11" maxlength="11" value="$number" required> $arrayOfErrors[5]
       <br>
       Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
       <br>

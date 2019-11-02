@@ -230,28 +230,58 @@ function concatValidationMessages($username, $email, $password, $firstname, $sur
     return $errors;
 }
 
-// this function finds the location of a character from a string passed into the function
-// this was created by me:
-function findCharacter($arrayOfChars, $charArrayLength, $charToFind)
+//
+//
+function getSuperGlobalName($inputURL)
 {
-    for ($i = 0; $i <= $charArrayLength; $i ++) {
-        if ($arrayOfChars[$i] == $charToFind) {
-            return $i;
+    $tempString = $inputURL;
+    
+    while (containsAmpersand($tempString)) {
+        $tempString = removeAmpersand($tempString);
+    }
+    
+    // $superGlobalName = substr($tempURL, 6, strlen($tempURL));
+    $tempString = substr($tempString, 0, strlen($tempString) - 5); // removes '=true' from end of string
+    return substr($tempString, 6, strlen($tempString)); // removes 'change' from beginning of string
+}
+
+function containsAmpersand($inputString)
+{
+    $arrayOfChars = str_split($inputString);
+    $inputLength = count($arrayOfChars);
+    
+    for ($i = 0; $i < $inputLength; $i ++) {
+        if ($arrayOfChars[$i] == '&') {
+            return true;
         }
     }
+    return false;
 }
 
 //
 //
-function returnCleanVariableToChange($variableToTrim)
+function removeAmpersand($inputString)
 {
-    $arrayOfChars = str_split($variableToTrim);
-    $charArrayLength = count($arrayOfChars);
+    $stringLength = strlen($inputString);
 
-    $locationOfAmpersand = findCharacter($arrayOfChars, $charArrayLength, '&');
-    $trimmedVariable = substr($variableToTrim, $locationOfAmpersand + 1, $charArrayLength);
-    // $variableToChange = strtolower($variableToChange);
-    return $trimmedVariable;
+    $locationOfAmpersand = getAmpersandLocation($inputString);
+
+    return substr($inputString, $locationOfAmpersand + 1, $stringLength); // trim variable
+}
+
+//
+//
+function getAmpersandLocation($inputString)
+{
+    $arrayOfChars = str_split($inputString);
+    $inputLength = count($arrayOfChars);
+    
+    for ($i = 0; $i <= $inputLength; $i ++) {
+        if ($arrayOfChars[$i] == '&') {
+            return $i;
+        }
+    }
+    return 127;
 }
 
 //
