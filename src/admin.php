@@ -27,7 +27,7 @@ else {
         echo "<br><br>";
 
         if (isset($_GET['createAccount'])) {
-            createAccount($dbhost, $dbuser, $dbpass, $dbname);
+            createAccount($connection);
         } else {
 
             // queries mysql table, outputs results to table
@@ -49,38 +49,30 @@ else {
 
             // print user's data
             if (isset($_GET['username'])) {
-                printUserData($dbhost, $dbuser, $dbpass, $dbname);
+                printUserData($connection);
 
                 if (isset($_GET['deleteAccount'])) {
-                    deleteAccount($dbhost, $dbuser, $dbpass, $dbname);
+                    deleteAccount($connection);
                 } else {
 
                     $editAccount = isset($_GET['editAccountDetails']);
 
                     if ($editAccount == true) {
-                        $currentURL = $_SERVER['REQUEST_URI'];
+                        $fieldToChange = getSuperGlobalName($_SERVER['REQUEST_URI']);
 
-                        $superGlobalName = getSuperGlobalName($currentURL);                       
-                        
                         echo "<br>";
-                        
-                        if ($superGlobalName !== "") {
 
-                            // required to edit values
-                            $minLength = null;
-                            $maxLength = null;
-                            // ///
-
-                            $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
-                            changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $superGlobalName, $fieldType, $minLength, $maxLength);
+                        if ($fieldToChange !== "") {
+                            changeUserDetails($connection, $fieldToChange);
                         } // end of if
                     }
                 }
             }
         }
     } else {
-        echo "You don't have permission to view this page...<br>";
+        echo "You don't have permission to view this page <br>";
     }
+    mysqli_close($connection);
 }
 // finish off the HTML for this page:
 require_once "footer.php";
@@ -88,13 +80,12 @@ require_once "footer.php";
 // this function gets the username of the selected user from the session superglobal, gets all their information using an SQL query, displays it in a table
 // then shows the options to either change the password or delete the account
 // this function is written by me:
-function printUserData($dbhost, $dbuser, $dbpass, $dbname)
+function printUserData($connection)
 {
     $username = $_GET["username"];
 
     echo "<br>";
 
-    $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
     $query = "SELECT * FROM users WHERE username = '$username'"; // +
     $result = mysqli_query($connection, $query); // +
 
@@ -123,9 +114,8 @@ function printUserData($dbhost, $dbuser, $dbpass, $dbname)
     echo "<a href =admin.php?username=$username&editAccountDetails=true&deleteAccount=true>Delete user account</a>";
 }
 
-function createAccount($dbhost, $dbuser, $dbpass, $dbname)
+function createAccount($connection)
 {
-    $currentURL = $_SERVER['REQUEST_URI'];
 
     // default values we show in the form:
     $username = "";
@@ -169,8 +159,6 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
     if (isset($_POST['username'])) {
 
         // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
-        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
         // SANITISATION (see helper.php for the function definition)
         // cannot be put into function as _POST requires superglobals
 
@@ -222,55 +210,80 @@ function createAccount($dbhost, $dbuser, $dbpass, $dbname)
             $message = "Sign up failed, please check the errors shown above and try again<br>";
         }
         // we're finished with the database, close the connection:
-        mysqli_close($connection);
     }
 }
 
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
 // then updates the user's password via an SQL query
 // this function is written by me
-function changeUserDetails($dbhost, $dbuser, $dbpass, $dbname, $fieldToChange, $fieldType, $minLength, $maxLength)
+function changeUserDetails($connection, $fieldToChange)
 {
     $username = $_GET["username"];
 
-    if ($username == "admin") {
-        echo "<br>";
-        echo "The admin's " . $fieldToChange . " cannot be changed";
-    } else {
-        echo "<br>";
+    $input_val = "Not Valid";
 
-        // $password_val
+    echo "change user details";
 
-        $currentURL = $_SERVER['REQUEST_URI'];
-        $fieldTypeToDisplay = ucfirst($fieldToChange);
-       
+    $currentURL = $_SERVER['REQUEST_URI'];
+    $fieldTypeToDisplay = ucfirst($fieldToChange);
+
+    // //
+    $minLength = null;
+    $maxLength = null;
+    $fieldType = determineFieldType($fieldToChange, $minLength, $maxLength);
+    $input_val = validateInput($newInput, $fieldType, $minLength, $maxLength);
+    // /
+
+    // add client-side validation:
+
+    if ($input_val = "") {
         echo <<<_END
         <form action="$currentURL" method="post">
           Please fill in the following fields:<br>
-          $fieldTypeToDisplay: <input type="$fieldType" $ name="newInput">
+          $fieldTypeToDisplay: <input type="$fieldType" name="newInput">
           <br>
           <input type="submit" value="Submit">
         </form>
         _END;
+    } else {
+        echo $input_val;
+    }
 
-        if (isset($_POST['newInput'])) {
-            $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+    if (isset($_POST['newInput'])) {
+        // admin just tried to update a user's field
 
-            $newInput = sanitise($_POST['newInput'], $connection);
-            $input_val = validateInput($newInput, $fieldType);
+        $newInput = sanitise($_POST['newInput'], $connection);
 
-            if ($input_val == "") {
-                $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$username'";
-                $result = mysqli_query($connection, $query); // +
+        // /
+        $minLength = null;
+        $maxLength = null;
 
-                if ($result) {
-                    echo $fieldToChange . " changed";
-                } else {
-                    echo $fieldToChange . " failed to change";
-                }
+        echo "<br>";
+        echo "Min length: " . $minLength . ", max length: " . $maxLength;
+        echo "<br>";
+
+        $fieldType = determineFieldType($fieldToChange, $minLength, $maxLength);
+        $input_val = validateInput($newInput, $fieldType, $minLength, $maxLength);
+        // /
+
+        echo "<br>";
+        echo "Error message: '" . $input_val . "'";
+        echo "<br>";
+
+        if ($input_val == "") {
+            if ($fieldType == "password") {
+                $newInput = encryptInput($newInput);
             }
-        } // end of isset
-    } // end of admin if
+            $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$username'";
+            $result = mysqli_query($connection, $query); // +
+
+            if ($result) {
+                echo $fieldToChange . " changed";
+            }
+        } else {
+            echo $input_val;
+        }
+    }
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query

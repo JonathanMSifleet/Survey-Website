@@ -23,6 +23,28 @@ function sanitise($str, $connection)
     return $str;
 }
 
+//
+//
+function validateInput($input, $inputType, $minLength, $maxLength)
+{  
+    switch ($inputType) {
+        case $inputType == "email":
+            return validateStringLength($input, $minLength, $maxLength);
+        case $inputType == "password":
+            return validateStringLength($input, $minLength, $maxLength);
+        case $inputType == "firstname":
+            return validateName($input, $minLength, $maxLength);
+        case $inputType == "surname":
+            return validateName($input, $minLength, $maxLength);
+        case $inputType == "number":
+            return validateNumber($input);
+        case $inputType == "dob":
+            return validateDate($input); // "email";
+        default:
+            return "";
+    }
+}
+
 // if the input is contains only non-numbers and is the correct length then return an empty string, if the data is invalid return a help message
 // this entire function is made by me:
 function validateName($field, $minlength, $maxlength) // master function +
@@ -118,8 +140,11 @@ function validatePhoneNumber($field)
 
 // if the input date is less than 13 years ago or more than 120, return an empty string, if the data is invalid return a help message
 // this function is written by me:
-function validateDate($field, $todaysDate)
+function validateDate($field)
 {
+    
+    $todaysDate = date('Y-m-d');
+        
     $inputYear = substr($field, 0, 4);
     $inputYear = (int) $inputYear;
 
@@ -204,7 +229,7 @@ function createArrayOfErrors($username, $email, $password, $firstname, $surname,
     $firstname_val = validateName($firstname, 2, 16); // see line below +
     $surname_val = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $number_val = validatePhoneNumber($number); // +
-    $DOB_val = validateDate($DOB, $todaysDate); // +
+    $DOB_val = validateDate($DOB); // +
 
     $arrayOfErrors[0] = $username_val;
     $arrayOfErrors[1] = $email_val;
@@ -240,7 +265,6 @@ function getSuperGlobalName($inputURL)
         $tempString = removeAmpersand($tempString);
     }
     
-    // $superGlobalName = substr($tempURL, 6, strlen($tempURL));
     $tempString = substr($tempString, 0, strlen($tempString) - 5); // removes '=true' from end of string
     return substr($tempString, 6, strlen($tempString)); // removes 'change' from beginning of string
 }
@@ -263,9 +287,7 @@ function containsAmpersand($inputString)
 function removeAmpersand($inputString)
 {
     $stringLength = strlen($inputString);
-
     $locationOfAmpersand = getAmpersandLocation($inputString);
-
     return substr($inputString, $locationOfAmpersand + 1, $stringLength); // trim variable
 }
 
@@ -310,30 +332,6 @@ function determineFieldType($trimmedSuperGlobal, &$minLength, &$maxLength)
             return "text";
         case $trimmedSuperGlobal == "dob":
             return "date";
-        default:
-            return "";
-    }
-}
-
-//
-//
-function validateInput($input, $inputType)
-{
-    $todaysDate = date('Y-m-d');
-
-    switch ($inputType) {
-        case $inputType == "email":
-            return validateStringLength($input, 3, 64);
-        case $inputType == "password":
-            return validateStringLength($input, 12, 64);
-        case $inputType == "firstname":
-            return validateName($input, 2, 16);
-        case $inputType == "surname":
-            return validateName($input, 2, 20);
-        case $inputType == "number":
-            return validateNumber($input);
-        case $inputType == "dob":
-            return validateDate($input, $todaysDate); // "email";
         default:
             return "";
     }
