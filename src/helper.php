@@ -25,20 +25,20 @@ function sanitise($str, $connection)
 
 //
 //
-function validateInput($input, $inputType, $minLength, $maxLength)
+function validateInput($input, $fieldToChange, $minLength, $maxLength)
 {
-    switch ($inputType) {
-        case $inputType == "email":
+    switch ($fieldToChange) {
+        case $fieldToChange == "email":
             return validateStringLength($input, 1, 64);
-        case $inputType == "password":
-            return validateStringLength($input, 12, 32);
-        case $inputType == "firstname":
+        case $fieldToChange == "password":
+            return validatePassword($input, 12, 32);
+        case $fieldToChange == "firstname":
             return validateName($input, 2, 16);
-        case $inputType == "surname":
+        case $fieldToChange == "surname":
             return validateName($input, 2, 20);
-        case $inputType == "number":
+        case $fieldToChange == "number":
             return validateNumber($input);
-        case $inputType == "dob":
+        case $fieldToChange == "dob":
             return validateDate($input); // "email";
         default:
             return "";
@@ -52,7 +52,6 @@ function validateName($field, $minlength, $maxlength) // master function +
     $errors = "";
     $errors = $errors . checkIsNonNumeric($field);
     $errors = $errors . validateStringLength($field, $minlength, $maxlength);
-
     return $errors;
 }
 
@@ -69,12 +68,13 @@ function validateEmail($field, $minLength, $maxLength)
 // if the data is valid return an empty string, if the data is invalid return a help message
 function validateStringLength($field, $minlength, $maxlength) // + edit function name
 {
+    // echo "String length: " . strlen($field);
     if (strlen($field) < $minlength) {
         // wasn't a valid length, return a help message:
-        return "Minimum length: " . $minlength;
+        return "Input length: " . strlen($field) . ", minimum length: " . $minlength;
     } elseif (strlen($field) > $maxlength) {
         // wasn't a valid length, return a help message:
-        return "Password length: " . strlen($field) . " Maximum length: " . $maxlength;
+        return "Input length: " . strlen($field) . ", maximum length: " . $maxlength;
     } else {
         // data was valid, return an empty string:
         return "";
@@ -162,6 +162,17 @@ function validateDate($field)
     }
 }
 
+//
+//
+function validatePassword($field, $minLength, $maxLength)
+{
+    if (strlen($field) == 0) {
+        return "Generate random password";
+    } else {
+        return validateStringLength($field, $minLength, $maxLength);
+    }
+}
+
 // this function encrypts a user input
 // this function is written by me:
 function encryptInput($input)
@@ -224,7 +235,7 @@ function createArrayOfErrors($username, $email, $password, $firstname, $surname,
 {
     $arrayOfErrors[0] = validateStringLength($username, 1, 20); // +
     $arrayOfErrors[1] = validateStringLength($email, 1, 64);
-    $arrayOfErrors[2] = validateStringLength($password, 12, 32);
+    $arrayOfErrors[2] = validatePassword($password, 12, 32);
     $arrayOfErrors[3] = validateName($firstname, 2, 16); // see line below +
     $arrayOfErrors[4] = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
     $arrayOfErrors[5] = validatePhoneNumber($number); // +
@@ -329,10 +340,12 @@ function determineFieldType($superGlobalName, &$minLength, &$maxLength)
     }
 }
 
+//
+//
 function echoVariable($variableToEcho)
 {
     echo "<br>";
-    echo $variableToEcho;
+    echo "Variable value: " . $variableToEcho;
     echo "<br>";
 }
 

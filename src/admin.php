@@ -230,32 +230,37 @@ function createAccount($connection)
 function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, $maxLength)
 {
     if (isset($_POST['newInput'])) {
-        
-        $currentUsername=$_GET['username'];
 
-        echo "change user details";
+        $currentUsername = $_GET['username'];
+
+        echo "Change user details:";
+        echo "<br>";
 
         $newInput = sanitise($_POST['newInput'], $connection);
+        $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength);
 
-        echoVariable($newInput);
-
-        $input_val = validateInput($newInput, $fieldType, $minLength, $maxLength);
-
-        echoVariable($input_val);
+        if ($input_val == "Generate random password") {
+            $newInput = generateAlphanumericString();
+            $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength);
+        }
 
         if ($input_val == "") {
             if ($fieldType == "password") {
                 $newInput = encryptInput($newInput);
+                echo "<br>";
+                echo "Insert a new password if your browser hasn't automatically saved your password";
             }
             $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
             $result = mysqli_query($connection, $query); // +
 
             if ($result) {
-                echo $fieldToChange . " changed";
+                echo "<br>";
+                echo ucfirst($fieldToChange) . " changed";
             }
             //
         } else {
-            echo $input_val;
+            echo "<br>";
+            echo "Updating field failed: " . $input_val;
         }
     } else {
 
