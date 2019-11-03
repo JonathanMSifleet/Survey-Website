@@ -198,8 +198,7 @@ function createAccount($connection)
         // we're finished with the database, close the connection:
     } else {
 
-        // error_reporting(0);
-
+        error_reporting(0);
         $currentURL = $_SERVER['REQUEST_URI'];
 
         echo <<<_END
@@ -222,7 +221,7 @@ function createAccount($connection)
           <input type="submit" value="Submit">
         </form>
         _END;
-        // error_reporting(1);
+        error_reporting(1);
     }
 }
 
