@@ -23,7 +23,7 @@ $surname = ""; // +
 $number = ""; // +
 $dob = ""; // +
 
-$arrayOfErrors;
+$arrayOfErrors ="";
 initEmptyArray($arrayOfErrors, 6);
 
 // global: +
