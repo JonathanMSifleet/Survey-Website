@@ -114,9 +114,9 @@ if ($show_signup_form) {
 
     $minDate = calcEarliestDate($todaysDate);
     $maxDate = calcLatestDate($todaysDate);
-    
+
     echo "<br>";
-    
+
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>

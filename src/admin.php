@@ -8,7 +8,6 @@ require_once "header.php";
 
 $newInput = null; // +
 $shouldDeleteAccount = null; // +
-$todaysDate = date('Y-m-d'); // get current date: +
 
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
@@ -127,6 +126,7 @@ function printUserData($connection)
 
 function createAccount($connection)
 {
+    $todaysDate = date('Y-m-d'); // get current date: +
 
     // default values we show in the form:
     $username = "";
@@ -236,8 +236,9 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
         echo "Change user details:";
         echo "<br>";
 
+        $todaysDate = date('Y-m-d'); // get current date: +
         $newInput = sanitise($_POST['newInput'], $connection);
-        $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength);
+        $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength, $todaysDate);
 
         if ($input_val == "Generate random password") {
             $newInput = generateAlphanumericString();
@@ -270,21 +271,33 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
 function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
 {
     $currentURL = $_SERVER['REQUEST_URI'];
-    
-    determineMinMaxVals($fieldToChange, $minLength, $maxLength)
-    
     $fieldToDisplay = ucfirst($fieldToChange);
-    
-    
 
-    echo <<<_END
-    <form action="$currentURL" method="post">
-      Please fill in the following fields:<br>
-      $fieldToDisplay: <input type="$fieldType" name="newInput">
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
+    if ($fieldToDisplay == "Dob") {
+
+        $todaysDate = date('Y-m-d'); // get current date: +
+
+        $minDate = calcEarliestDate($todaysDate);
+        $maxDate = calcLatestDate($todaysDate);
+
+        echo <<<_END
+        <form action="$currentURL" method="post">
+          Please fill in the following fields:<br>
+          $fieldToDisplay: <input type="$fieldType" min=$minDate max=$maxDate name="newInput">
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+        _END;
+    } else {
+        echo <<<_END
+        <form action="$currentURL" method="post">
+          Please fill in the following fields:<br>
+          $fieldToDisplay: <input type="$fieldType" name="newInput">
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+        _END;
+    }
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query

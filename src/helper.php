@@ -25,7 +25,7 @@ function sanitise($str, $connection)
 
 //
 //
-function validateInput($input, $fieldToChange, $minLength, $maxLength)
+function validateInput($input, $fieldToChange, $minLength, $maxLength, $todaysDate)
 {
     switch ($fieldToChange) {
         case $fieldToChange == "email":
@@ -340,7 +340,7 @@ function determineFieldType($superGlobalName, &$minLength, &$maxLength)
     }
 }
 
-function determineMinMaxVals($field, &$minLength, &$maxLength)
+function determineMinMaxVals($field, &$minLength, &$maxLength, $todaysDate)
 {
     switch ($field) {
         case $field == "email":
@@ -363,6 +363,8 @@ function determineMinMaxVals($field, &$minLength, &$maxLength)
             $maxLength = 11;
             return "text";
         case $field == "dob":
+            $minLength = calcEarliestDate($todaysDate);
+            $maxLength = calcLatestDate($todaysDate);
             return "date";
         default:
             return "";
@@ -384,8 +386,8 @@ function calcEarliestDate($todaysDate)
 
 //
 //
-function calcLatestDate($todaysDate) {
-    
+function calcLatestDate($todaysDate)
+{
     $maxDate = $todaysDate;
     $maxDate = substr($todaysDate, 0, 4);
     $maxDate = (int) $maxDate;
