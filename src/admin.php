@@ -286,7 +286,7 @@ function deleteAccount($connection)
         echo " ";
         echo "<a href =admin.php?username=$username>Cancel</a>";
 
-        if ($_GET["confirmDeletion"] == "true") {
+        if (isset($_GET["confirmDeletion"])) {
             $query = "DELETE FROM users WHERE username = '$username'";
             $result = mysqli_query($connection, $query); // +
             
