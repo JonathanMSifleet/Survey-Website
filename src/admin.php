@@ -9,10 +9,6 @@ require_once "header.php";
 $newInput = null; // +
 $shouldDeleteAccount = null; // +
 
-
-$arrayOfErrors[]="";
-initEmptyArray($arrayOfErrors, 6);
-
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
