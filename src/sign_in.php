@@ -54,8 +54,8 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
     // now validate the data (both strings must be between 1 and 16 characters long):
     // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table)
-    $username_val = validateString($username, 1, 16);
-    $password_val = validateString($password, 1, 16);
+    $username_val = validateStringLength($username, 3, 16); // +
+    $password_val = validateStringLength($password, 6, 32); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
     $errors = $username_val . $password_val;
@@ -65,27 +65,29 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
         // currently only barryg, mandyb, or timmy can sign in... each with ANY password
         // you need to replace this code with code that checks the username and password against the relevant database table...
-        if ($username == "barrym" || $username == "mandyb" || $username == "timmy") {
-            // fake a match with the database table:
-            $n = 1;
-        } else {
-            $n = 0;
-        }
+
+        $query = "SELECT * FROM users WHERE username='$username'"; // +
+        $result = mysqli_query($connection, $query); // +
 
         // if there was a match then set the session variables and display a success message:
-        if ($n > 0) {
-            // set a session variable to record that this user has successfully logged in:
-            $_SESSION['loggedInSkeleton'] = true;
-            // and copy their username into the session data for use by our other scripts:
-            $_SESSION['username'] = $username;
+        if (mysqli_num_rows($result) > 0) { //+
+            while ($row = mysqli_fetch_array($result)) { //+ 
+                if (password_verify($password, $row['password'])) { //+
+                    // set a session variable to record that this user has successfully logged in:
+                    $_SESSION['loggedInSkeleton'] = true;
+                    // and copy their username into the session data for use by our other scripts:
+                    $_SESSION['username'] = $username;
 
-            // show a successful signin message:
-            $message = "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
-        } else {
-            // no matching credentials found so redisplay the signin form with a failure message:
-            $show_signin_form = true;
-            // show an unsuccessful signin message:
-            $message = "Sign in failed, please try again<br>";
+                    // show a successful signin message:
+                    $message = "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
+                    // setcookie(session_name(), '', time()-2592000, '/'); // maybe add https +
+                } else {
+                    // no matching credentials found so redisplay the signin form with a failure message:
+                    $show_signin_form = true;
+                    // show an unsuccessful signin message:
+                    $message = "No credentials found<br>";
+                }
+            }
         }
     } else {
         // validation failed, show the form again with guidance:
@@ -108,12 +110,12 @@ if ($show_signin_form) {
     echo <<<_END
     <form action="sign_in.php" method="post">
       Please enter your username and password:<br>
-      Username: <input type="text" name="username" maxlength="16" value="$username" required> $username_val
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $username_val
       <br>
-      Password: <input type="password" name="password" maxlength="16" value="$password" required> $password_val
+      Password: <input type="password" name="password" minlength="6" maxlength="32" value="$password" required> $password_val
       <br>
       <input type="submit" value="Submit">
-    </form>	
+    </form>
     _END;
 }
 

@@ -13,7 +13,7 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, proceed with ending the session
-// and clearing session cookies and any others you may have added
+  // and clearing session cookies and any others you may have added
 else {
     // user just clicked to logout, so destroy the session data:
     // first clear the session superglobal array:

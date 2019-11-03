@@ -31,8 +31,7 @@ $message = "";
 if (! isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
-} 
-elseif (isset($_POST['email'])) {
+} elseif (isset($_POST['email'])) {
     // user just tried to update their profile
 
     // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
@@ -101,8 +100,7 @@ elseif (isset($_POST['email'])) {
 
     // we're finished with the database, close the connection:
     mysqli_close($connection);
-} 
-else {
+} else {
     // user has arrived at the page for the first time, show any data already in the table:
 
     // read the username from the session:
@@ -143,19 +141,27 @@ else {
 }
 
 if ($show_account_form) {
-echo <<<_END
-
-    <!-- CLIENT-SIDE VALIDATION MISSING -->
-    
-    <form action="account_set.php" method="post">
-      Update your profile info:<br>
-      Username: {$_SESSION['username']}
-      <br>
-      Email address: <input type="text" name="email" value="$email">
-      <br>
-      <input type="submit" value="Submit">
-    </form>	
-_END;
+    echo <<<_END
+        
+        <form action="account_set.php" method="post">
+          Update your profile info:<br>
+          Username: {$_SESSION['username']}
+          <br>
+          Email address: <input type="text" name="email" value="$email">
+          <br>
+          Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
+          <br>
+          First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
+          <br>
+          Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
+          <br>
+          Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
+          <br>
+          Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[6]
+          <br>
+          <input type="submit" value="Submit">
+        </form>	
+    _END;
 }
 
 // display our message to the user:

@@ -16,13 +16,17 @@ require_once "header.php";
 
 // default values we show in the form:
 $username = "";
-$password = "";
 $email = "";
+$password = "";
+$firstname = ""; // +
+$surname = ""; // +
+$number = ""; // +
+$DOB = ""; // +
 
-// strings to hold any validation error messages:
-$username_val = "";
-$password_val = "";
-$email_val = "";
+$arrayOfErrors;
+
+// global: +
+$todaysDate = date('Y-m-d'); // get current date: +
 
 // should we show the signup form?:
 $show_signup_form = false;
@@ -45,36 +49,42 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     }
 
     // SANITISATION (see helper.php for the function definition)
-
-    // take copies of the credentials the user submitted, and sanitise (clean) them:
+    // cannot be put into function as _POST requires superglobals
     $username = sanitise($_POST['username'], $connection);
-    $password = sanitise($_POST['password'], $connection);
     $email = sanitise($_POST['email'], $connection);
+    $password = sanitise($_POST['password'], $connection);
+    $firstname = sanitise($_POST['firstname'], $connection); // +
+    $surname = sanitise($_POST['surname'], $connection); // +
+    $number = sanitise($_POST['number'], $connection); // +
+    $dob = sanitise($_POST['dob'], $connection); // +
 
-    // VALIDATION (see helper.php for the function definitions)
-    // now validate the data (both strings must be between 1 and 16 characters long):
-    // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table for username and password)
-    // firstname is VARCHAR(32) and lastname is VARCHAR(64) in the DB
-    // email is VARCHAR(64) and telephone is VARCHAR(16) in the DB
-    $username_val = validateString($username, 1, 16);
-    $password_val = validateString($password, 1, 16);
-    // the following line will validate the email as a string, but maybe you can do a better job...
-    $email_val = validateString($email, 1, 64);
+    // this was created by me:
+    if (checkIfLengthZero($password)) {
+        $password = generateAlphanumericString();
+    }
+    // /////////
 
-    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-    $errors = $username_val . $password_val . $email_val;
+    // this was created by me:
+    createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors); // +
+    $numberOfErrors = count($arrayOfErrors); // +
+
+    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
+    $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);
+    // /////////
 
     // check that all the validation tests passed before going to the database:
     if ($errors == "") {
 
+        $password = encryptInput($password);
+
         // try to insert the new details:
-        $query = "INSERT INTO users (username, password, email) VALUES ('$username', '$password', '$email');";
+        $query = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$dob')";
         $result = mysqli_query($connection, $query);
 
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            $message = "Signup was successful, please sign in<br>";
+            $message = "Signup was successful. Please sign in<br>";
         } else {
             // show the form:
             $show_signup_form = true;
@@ -100,16 +110,29 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 if ($show_signup_form) {
 
     // show the form that allows users to sign up
-
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
+
+    $minDate = calcEarliestDate($todaysDate);
+    $maxDate = calcLatestDate($todaysDate);
+
+    echo "<br>";
+
     echo <<<_END
     <form action="sign_up.php" method="post">
-      Please choose a username and password:<br>
-      Username: <input type="text" name="username" maxlength="16" value="$username" required> $username_val
+      Please fill in the following fields:<br>
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
       <br>
-      Password: <input type="password" name="password" maxlength="16" value="$password" required> $password_val
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
+      <br> 
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
+      <br>   
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
       <br>
-      Email: <input type="email" name="email" maxlength="64" value="$email" required> $email_val
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
+      <br>
+      Phone number: <input type="text" name="number" minlength="11" maxlength="11" value="$number" required> $arrayOfErrors[5]
+      <br>
+      Date of birth: <input type="date" name="dob" min=$minDate max="$maxDate" value="$dob" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>	
