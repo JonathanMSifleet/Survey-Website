@@ -39,6 +39,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // this allows us to display the admin tools to them only
     if ($_SESSION['username'] == "admin") {
         echo " || <a href='admin.php'>Admin Tools</a>";
+	echo " || <a href='create_data.php'>Create Data </a>";
     }
 } else {
     // THIS PERSON IS NOT LOGGED IN
@@ -49,8 +50,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     <body>
     <a href='about.php'>About</a> ||
     <a href='sign_up.php'>Sign Up</a> ||
-    <a href='sign_in.php'>Sign In</a> ||
-    <a href='create_data.php'>Create data (testing purposes only)</a> <!-- + -->
+    <a href='sign_in.php'>Sign In</a>
     _END;
 }
  
