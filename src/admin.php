@@ -146,6 +146,7 @@ function createAccount($connection)
     $number = ""; // +
     $dob = ""; // +
 
+    error_reporting(0);
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
@@ -166,6 +167,7 @@ function createAccount($connection)
       <input type="submit" value="Submit">
     </form>
     _END;
+    error_reporting(1);
 
     if (isset($_POST['username'])) {
 
