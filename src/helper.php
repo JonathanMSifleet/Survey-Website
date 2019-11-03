@@ -371,7 +371,7 @@ function determineMinMaxVals($field, &$minLength, &$maxLength)
 
 //
 //
-function calcMinDate($todaysDate)
+function calcEarliestDate($todaysDate)
 {
     $minDate = $todaysDate;
     $minDate = substr($todaysDate, 0, 4);
@@ -380,6 +380,19 @@ function calcMinDate($todaysDate)
     $minDate = substr($todaysDate, 4, strlen($todaysDate));
     $minDate = $minYear . $minDate;
     return $minDate;
+}
+
+//
+//
+function calcLatestDate($todaysDate) {
+    
+    $maxDate = $todaysDate;
+    $maxDate = substr($todaysDate, 0, 4);
+    $maxDate = (int) $maxDate;
+    $maxYear = $maxDate - 13;
+    $maxDate = substr($todaysDate, 4, strlen($todaysDate));
+    $maxDate = $maxYear . $maxDate;
+    return $maxDate;
 }
 
 //
