@@ -87,10 +87,14 @@ if (isset($_SESSION['loggedInSkeleton'])) {
             // show a successful signup message:
             $message = "Signup was successful. Please sign in<br>";
         } else {
+            // show the form:
+            $show_signup_form = true;
             // show an unsuccessful signup message:
             $message = "Sign up failed, please try again<br>";
         }
     } else {
+        // validation failed, show the form again with guidance:
+        $show_signup_form = true;
         // show an unsuccessful signin message:
         $message = "Sign up failed, please check the errors shown above and try again<br>";
     }
@@ -100,21 +104,29 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 } else {
 
     // just a normal visit to the page, show the signup form:
-    
+
+    $show_signup_form = true;
+}
+
+if ($show_signup_form) {
+
+    // show the form that allows users to sign up
+    // Note we use an HTTP POST request to avoid their password appearing in the URL:
+
     $minDate = calcEarliestDate($todaysDate);
     $maxDate = calcLatestDate($todaysDate);
-    
+
     echo "<br>";
-    
+
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
       Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
-      <br>
+      <br> 
       Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
-      <br>
+      <br>   
       First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
@@ -124,7 +136,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
       Date of birth: <input type="date" name="dob" min=$minDate max="$maxDate" value="$dob" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
-    </form>
+    </form>	
     _END;
 }
 
