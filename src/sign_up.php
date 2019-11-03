@@ -25,7 +25,7 @@ $dob = ""; // +
 
 $arrayOfErrors;
 initEmptyArray($arrayOfErrors, 6);
-//
+
 // global: +
 $todaysDate = date('Y-m-d'); // get current date: +
 

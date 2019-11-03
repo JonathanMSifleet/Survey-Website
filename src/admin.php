@@ -9,9 +9,6 @@ require_once "header.php";
 $newInput = null; // +
 $shouldDeleteAccount = null; // +
 
-$arrayOfErrors = "";
-initEmptyArray($arrayOfErrors, 6);
-
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
@@ -149,6 +146,27 @@ function createAccount($connection)
     $number = ""; // +
     $dob = ""; // +
 
+    echo <<<_END
+    <form action="sign_up.php" method="post">
+      Please fill in the following fields:<br>
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
+      <br>
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
+      <br>
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
+      <br>
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
+      <br>
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
+      <br>
+      Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfErrors[5]
+      <br>
+      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+
     if (isset($_POST['username'])) {
 
         // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
@@ -202,28 +220,7 @@ function createAccount($connection)
             // show an unsuccessful signin message:
             $message = "Sign up failed, please check the errors shown above and try again<br>";
         }
-    } else {
-
-        echo <<<_END
-        <form action="sign_up.php" method="post">
-          Please fill in the following fields:<br>
-          Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
-          <br>
-          Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
-          <br>
-          Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
-          <br>
-          First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
-          <br>
-          Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
-          <br>
-          Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfErrors[5]
-          <br>
-          Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
+        // we're finished with the database, close the connection:
     }
 }
 
