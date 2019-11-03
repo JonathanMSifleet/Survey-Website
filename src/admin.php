@@ -263,7 +263,6 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
             echo "Updating field failed: " . $input_val;
         }
     } else {
-
         showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength);
     }
 }
@@ -271,7 +270,12 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
 function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
 {
     $currentURL = $_SERVER['REQUEST_URI'];
+    
+    determineMinMaxVals($fieldToChange, $minLength, $maxLength)
+    
     $fieldToDisplay = ucfirst($fieldToChange);
+    
+    
 
     echo <<<_END
     <form action="$currentURL" method="post">

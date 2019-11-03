@@ -112,6 +112,10 @@ if ($show_signup_form) {
     // show the form that allows users to sign up
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
 
+    $minDate = calcMinDate($todaysDate);
+    
+    echo "<br>";
+    
     echo <<<_END
     <form action="sign_up.php" method="post">
       Please fill in the following fields:<br>
@@ -127,7 +131,7 @@ if ($show_signup_form) {
       <br>
       Phone number: <input type="text" name="number" minlength="11" maxlength="11" value="$number" required> $arrayOfErrors[5]
       <br>
-      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
+      Date of birth: <input type="date" name="dob" min=$minDate max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>	

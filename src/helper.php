@@ -340,6 +340,48 @@ function determineFieldType($superGlobalName, &$minLength, &$maxLength)
     }
 }
 
+function determineMinMaxVals($field, &$minLength, &$maxLength)
+{
+    switch ($field) {
+        case $field == "email":
+            $minLength = 3;
+            $maxLength = 64;
+            return "email";
+        case $field == "password":
+            $maxLength = 32;
+            return "password";
+        case $field == "firstname":
+            $minLength = 2;
+            $maxLength = 16;
+            return "text";
+        case $field == "surname":
+            $minLength = 3;
+            $maxLength = 24;
+            return "text";
+        case $field == "number":
+            $minLength = 11;
+            $maxLength = 11;
+            return "text";
+        case $field == "dob":
+            return "date";
+        default:
+            return "";
+    }
+}
+
+//
+//
+function calcMinDate($todaysDate)
+{
+    $minDate = $todaysDate;
+    $minDate = substr($todaysDate, 0, 4);
+    $minDate = (int) $minDate;
+    $minYear = $minDate - 120;
+    $minDate = substr($todaysDate, 4, strlen($todaysDate));
+    $minDate = $minYear . $minDate;
+    return $minDate;
+}
+
 //
 //
 function echoVariable($variableToEcho)
