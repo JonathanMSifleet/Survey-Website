@@ -140,15 +140,6 @@ function createAccount($connection)
     $number = ""; // +
     $dob = ""; // +
 
-    // strings to hold any validation error messages:
-    $username = "";
-    $email = "";
-    $password = "";
-    $firstname = ""; // +
-    $surname = ""; // +
-    $number = ""; // +
-    $dob = ""; // +
-
     if (isset($_POST['username'])) {
 
         // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
