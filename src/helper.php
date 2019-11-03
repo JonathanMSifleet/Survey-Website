@@ -26,16 +26,16 @@ function sanitise($str, $connection)
 //
 //
 function validateInput($input, $inputType, $minLength, $maxLength)
-{  
+{
     switch ($inputType) {
         case $inputType == "email":
-            return validateStringLength($input, $minLength, $maxLength);
+            return validateStringLength($input, 1, 64);
         case $inputType == "password":
-            return validateStringLength($input, $minLength, $maxLength);
+            return validateStringLength($input, 12, 32);
         case $inputType == "firstname":
-            return validateName($input, $minLength, $maxLength);
+            return validateName($input, 2, 16);
         case $inputType == "surname":
-            return validateName($input, $minLength, $maxLength);
+            return validateName($input, 2, 20);
         case $inputType == "number":
             return validateNumber($input);
         case $inputType == "dob":
@@ -142,9 +142,8 @@ function validatePhoneNumber($field)
 // this function is written by me:
 function validateDate($field)
 {
-    
     $todaysDate = date('Y-m-d');
-        
+
     $inputYear = substr($field, 0, 4);
     $inputYear = (int) $inputYear;
 
@@ -223,21 +222,13 @@ function createArrayOfUsableCharacters()
 // this was created by me:
 function createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
-    $username_val = validateStringLength($username, 1, 20); // +
-    $email_val = validateStringLength($email, 1, 64);
-    $password_val = validateStringLength($password, 12, 32);
-    $firstname_val = validateName($firstname, 2, 16); // see line below +
-    $surname_val = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
-    $number_val = validatePhoneNumber($number); // +
-    $DOB_val = validateDate($DOB); // +
-
-    $arrayOfErrors[0] = $username_val;
-    $arrayOfErrors[1] = $email_val;
-    $arrayOfErrors[2] = $password_val;
-    $arrayOfErrors[3] = $firstname_val;
-    $arrayOfErrors[4] = $surname_val;
-    $arrayOfErrors[5] = $number_val;
-    $arrayOfErrors[6] = $DOB_val;
+    $arrayOfErrors[0] = validateStringLength($username, 1, 20); // +
+    $arrayOfErrors[1] = validateStringLength($email, 1, 64);
+    $arrayOfErrors[2] = validateStringLength($password, 12, 32);
+    $arrayOfErrors[3] = validateName($firstname, 2, 16); // see line below +
+    $arrayOfErrors[4] = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
+    $arrayOfErrors[5] = validatePhoneNumber($number); // +
+    $arrayOfErrors[6] = validateDate($DOB); // +
 }
 
 // this function concatenates each valuae in the array of errors to create one large error, then returns this value
@@ -260,22 +251,21 @@ function concatValidationMessages($username, $email, $password, $firstname, $sur
 function getSuperGlobalName($inputURL)
 {
     $tempString = $inputURL;
-    
+
     while (containsAmpersand($tempString)) {
-        $tempString = removeAmpersand($tempString);        
+        $tempString = removeAmpersand($tempString);
     }
-    
+
     $tempString = substr($tempString, 0, strlen($tempString) - 5); // removes '=true' from end of string
     $tempString = substr($tempString, 6, strlen($tempString)); // removes 'change' from beginning of string
     return strtolower($tempString);
-        
 }
 
 function containsAmpersand($inputString)
 {
     $arrayOfChars = str_split($inputString);
     $inputLength = count($arrayOfChars);
-    
+
     for ($i = 0; $i < $inputLength; $i ++) {
         if ($arrayOfChars[$i] == '&') {
             return true;
@@ -299,7 +289,7 @@ function getAmpersandLocation($inputString)
 {
     $arrayOfChars = str_split($inputString);
     $inputLength = count($arrayOfChars);
-    
+
     for ($i = 0; $i <= $inputLength; $i ++) {
         if ($arrayOfChars[$i] == '&') {
             return $i;
@@ -339,7 +329,8 @@ function determineFieldType($superGlobalName, &$minLength, &$maxLength)
     }
 }
 
-function echoVariable($variableToEcho) {
+function echoVariable($variableToEcho)
+{
     echo "<br>";
     echo $variableToEcho;
     echo "<br>";

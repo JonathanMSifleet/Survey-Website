@@ -229,18 +229,25 @@ function createAccount($connection)
 // this function is written by me
 function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, $maxLength)
 {
-    if (isset($_POST['username'])) {
+    if (isset($_POST['newInput'])) {
+        
+        $currentUsername=$_GET['username'];
 
         echo "change user details";
 
         $newInput = sanitise($_POST['newInput'], $connection);
+
+        echoVariable($newInput);
+
         $input_val = validateInput($newInput, $fieldType, $minLength, $maxLength);
+
+        echoVariable($input_val);
 
         if ($input_val == "") {
             if ($fieldType == "password") {
                 $newInput = encryptInput($newInput);
             }
-            $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$username'";
+            $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
             $result = mysqli_query($connection, $query); // +
 
             if ($result) {
@@ -289,7 +296,7 @@ function deleteAccount($connection)
         if (isset($_GET["confirmDeletion"])) {
             $query = "DELETE FROM users WHERE username = '$username'";
             $result = mysqli_query($connection, $query); // +
-            
+
             echo "<br>";
             echo "Account deleted";
         }
