@@ -19,6 +19,12 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 else {
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
+    // if the connection fails, we need to know, so allow this exit:
+    if (! $connection) {
+        die("Connection failed: " . $mysqli_connect_error);
+    }
+
     if ($_SESSION['username'] == "admin") {
 
         echo "Click to create a new account: <br>";
@@ -58,12 +64,17 @@ else {
                     $editAccount = isset($_GET['editAccountDetails']);
 
                     if ($editAccount == true) {
-                        $fieldToChange = getSuperGlobalName($_SERVER['REQUEST_URI']);
+
+                        $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
+
+                        $minLength = null;
+                        $maxLength = null;
+                        $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
 
                         echo "<br>";
 
-                        if ($fieldToChange !== "") {
-                            changeUserDetails($connection, $fieldToChange);
+                        if ($superGlobalName !== "") {
+                            changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
                         } // end of if
                     }
                 }
@@ -216,59 +227,14 @@ function createAccount($connection)
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
 // then updates the user's password via an SQL query
 // this function is written by me
-function changeUserDetails($connection, $fieldToChange)
+function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, $maxLength)
 {
-    $username = $_GET["username"];
+    if (isset($_POST['username'])) {
 
-    $input_val = "Not Valid";
-
-    echo "change user details";
-
-    $currentURL = $_SERVER['REQUEST_URI'];
-    $fieldTypeToDisplay = ucfirst($fieldToChange);
-
-    // //
-    $minLength = null;
-    $maxLength = null;
-    $fieldType = determineFieldType($fieldToChange, $minLength, $maxLength);
-    $input_val = validateInput($newInput, $fieldType, $minLength, $maxLength);
-    // /
-
-    // add client-side validation:
-
-    if ($input_val = "") {
-        echo <<<_END
-        <form action="$currentURL" method="post">
-          Please fill in the following fields:<br>
-          $fieldTypeToDisplay: <input type="$fieldType" name="newInput">
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
-    } else {
-        echo $input_val;
-    }
-
-    if (isset($_POST['newInput'])) {
-        // admin just tried to update a user's field
+        echo "change user details";
 
         $newInput = sanitise($_POST['newInput'], $connection);
-
-        // /
-        $minLength = null;
-        $maxLength = null;
-
-        echo "<br>";
-        echo "Min length: " . $minLength . ", max length: " . $maxLength;
-        echo "<br>";
-
-        $fieldType = determineFieldType($fieldToChange, $minLength, $maxLength);
         $input_val = validateInput($newInput, $fieldType, $minLength, $maxLength);
-        // /
-
-        echo "<br>";
-        echo "Error message: '" . $input_val . "'";
-        echo "<br>";
 
         if ($input_val == "") {
             if ($fieldType == "password") {
@@ -280,10 +246,29 @@ function changeUserDetails($connection, $fieldToChange)
             if ($result) {
                 echo $fieldToChange . " changed";
             }
+            //
         } else {
             echo $input_val;
         }
+    } else {
+
+        showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength);
     }
+}
+
+function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
+{
+    $currentURL = $_SERVER['REQUEST_URI'];
+    $fieldToDisplay = ucfirst($fieldToChange);
+
+    echo <<<_END
+    <form action="$currentURL" method="post">
+      Please fill in the following fields:<br>
+      $fieldToDisplay: <input type="$fieldType" name="newInput">
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query

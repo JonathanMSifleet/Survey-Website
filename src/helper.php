@@ -262,11 +262,13 @@ function getSuperGlobalName($inputURL)
     $tempString = $inputURL;
     
     while (containsAmpersand($tempString)) {
-        $tempString = removeAmpersand($tempString);
+        $tempString = removeAmpersand($tempString);        
     }
     
     $tempString = substr($tempString, 0, strlen($tempString) - 5); // removes '=true' from end of string
-    return substr($tempString, 6, strlen($tempString)); // removes 'change' from beginning of string
+    $tempString = substr($tempString, 6, strlen($tempString)); // removes 'change' from beginning of string
+    return strtolower($tempString);
+        
 }
 
 function containsAmpersand($inputString)
@@ -308,33 +310,39 @@ function getAmpersandLocation($inputString)
 
 //
 //
-function determineFieldType($trimmedSuperGlobal, &$minLength, &$maxLength)
+function determineFieldType($superGlobalName, &$minLength, &$maxLength)
 {
-    switch ($trimmedSuperGlobal) {
-        case $trimmedSuperGlobal == "email":
+    switch ($superGlobalName) {
+        case $superGlobalName == "email":
             $minLength = 3;
             $maxLength = 64;
             return "email";
-        case $trimmedSuperGlobal == "password":
+        case $superGlobalName == "password":
             $maxLength = 32;
             return "password";
-        case $trimmedSuperGlobal == "firstname":
+        case $superGlobalName == "firstname":
             $minLength = 2;
             $maxLength = 16;
             return "text";
-        case $trimmedSuperGlobal == "surname":
+        case $superGlobalName == "surname":
             $minLength = 3;
             $maxLength = 24;
             return "text";
-        case $trimmedSuperGlobal == "number":
+        case $superGlobalName == "number":
             $minLength = 11;
             $maxLength = 11;
             return "text";
-        case $trimmedSuperGlobal == "dob":
+        case $superGlobalName == "dob":
             return "date";
         default:
             return "";
     }
+}
+
+function echoVariable($variableToEcho) {
+    echo "<br>";
+    echo $variableToEcho;
+    echo "<br>";
 }
 
 ?>
