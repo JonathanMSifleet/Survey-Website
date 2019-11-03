@@ -273,7 +273,7 @@ function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:
-function deleteAccount($dbhost, $dbuser, $dbpass, $dbname)
+function deleteAccount($connection)
 {
     $username = $_GET["username"];
 
@@ -281,16 +281,16 @@ function deleteAccount($dbhost, $dbuser, $dbpass, $dbname)
         echo "The admin account cannot be deleted";
     } else {
         echo "<br>";
-        echo "are you sure you want to delete " . $username . "? ";
+        echo "Are you sure you want to delete the account " . $username . "? ";
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
         echo " ";
         echo "<a href =admin.php?username=$username>Cancel</a>";
 
         if ($_GET["confirmDeletion"] == "true") {
-            $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
             $query = "DELETE FROM users WHERE username = '$username'";
             $result = mysqli_query($connection, $query); // +
-
+            
+            echo "<br>";
             echo "Account deleted";
         }
     }
