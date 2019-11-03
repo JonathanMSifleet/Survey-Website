@@ -22,7 +22,7 @@ $firstname = ""; // +
 $surname = ""; // +
 $number = ""; // +
 $dob = ""; // +
-
+//
 $arrayOfErrors;
 initEmptyArray($arrayOfErrors, 6);
 
