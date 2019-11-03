@@ -28,140 +28,157 @@ $message = "";
 
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
-if (! isset($_SESSION['loggedInSkeleton'])) {
+if (!isset($_SESSION['loggedInSkeleton']))
+{
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
-} elseif (isset($_POST['email'])) {
-    // user just tried to update their profile
+}
 
+
+elseif (isset($_POST['email']))
+{
+    // user just tried to update their profile
+    
     // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
+    
     // if the connection fails, we need to know, so allow this exit:
-    if (! $connection) {
+    if (!$connection)
+    {
         die("Connection failed: " . $mysqli_connect_error);
     }
-
+    
     // SANITISATION CODE MISSING:
-
+    
     // ...
     // Add your santitisation code around here
     // ...
-
+    
+    
     $email = $_POST['email'];
-
+    
+    
     // SERVER-SIDE VALIDATION CODE MISSING:
-
+    
     // ...
     // Add your santitisation code around here
     // ...
-
+    
     $errors = "";
-
+    
     // check that all the validation tests passed before going to the database:
-    if ($errors == "") {
+    if ($errors == "")
+    {
         // read their username from the session:
         $username = $_SESSION["username"];
-
+        
         // now write the new data to our database table...
-
+        
         // check to see if this user already had a favourite:
         $query = "SELECT * FROM users WHERE username='$username'";
-
+        
         // this query can return data ($result is an identifier):
         $result = mysqli_query($connection, $query);
-
+        
         // how many rows came back? (can only be 1 or 0 because username is the primary key in our table):
         $n = mysqli_num_rows($result);
-
+        
         // if there was a match then UPDATE their profile data, otherwise INSERT it:
-        if ($n > 0) {
+        if ($n > 0)
+        {
             // we need an UPDATE:
             $query = "UPDATE users SET email='$email' WHERE username='$username'";
             $result = mysqli_query($connection, $query);
         }
-
+        
+        
         // no data returned, we just test for true(success)/false(failure):
-        if ($result) {
+        if ($result)
+        {
             // show a successful update message:
             $message = "Profile successfully updated<br>";
-        } else {
+        }
+        else
+        {
             // show the set profile form:
             $show_account_form = true;
             // show an unsuccessful update message:
             $message = "Update failed<br>";
         }
-    } else {
+    }
+    else
+    {
         // validation failed, show the form again with guidance:
         $show_account_form = true;
         // show an unsuccessful update message:
         $message = "Update failed, please check the errors above and try again<br>";
     }
-
+    
     // we're finished with the database, close the connection:
     mysqli_close($connection);
-} else {
-    // user has arrived at the page for the first time, show any data already in the table:
+    
+}
 
+else
+{
+    // user has arrived at the page for the first time, show any data already in the table:
+    
     // read the username from the session:
     $username = $_SESSION["username"];
-
+    
     // now read their profile data from the table...
-
+    
     // connect directly to our database (notice 4th argument):
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
+    
     // if the connection fails, we need to know, so allow this exit:
-    if (! $connection) {
+    if (!$connection)
+    {
         die("Connection failed: " . $mysqli_connect_error);
     }
-
+    
     // check for a row in our profiles table with a matching username:
     $query = "SELECT * FROM users WHERE username='$username'";
-
+    
     // this query can return data ($result is an identifier):
     $result = mysqli_query($connection, $query);
-
+    
     // how many rows came back? (can only be 1 or 0 because username is the primary key in our table):
     $n = mysqli_num_rows($result);
-
+    
     // if there was a match then extract their profile data:
-    if ($n > 0) {
+    if ($n > 0)
+    {
         // use the identifier to fetch one row as an associative array (elements named after columns):
         $row = mysqli_fetch_assoc($result);
         // extract their profile data for use in the HTML:
         $email = $row['email'];
+        
     }
-
+    
     // show the set profile form:
     $show_account_form = true;
-
+    
     // we're finished with the database, close the connection:
     mysqli_close($connection);
+    
 }
 
-if ($show_account_form) {
+if ($show_account_form)
+{
     echo <<<_END
-        
-        <form action="account_set.php" method="post">
-          Update your profile info:<br>
-          Username: {$_SESSION['username']}
-          <br>
-          Email address: <input type="text" name="email" value="$email">
-          <br>
-          Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
-          <br>
-          First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
-          <br>
-          Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
-          <br>
-          Phone number: <input type="text" name="number" min="11" max="11" value="$number" required> $arrayOfErrors[5]
-          <br>
-          Date of birth: <input type="date" name="DOB" max="$todaysDate" value="$DOB" required> $arrayOfErrors[6]
-          <br>
-          <input type="submit" value="Submit">
-        </form>	
-    _END;
+    
+    <!-- CLIENT-SIDE VALIDATION MISSING -->
+    
+    <form action="account_set.php" method="post">
+      Update your profile info:<br>
+      Username: {$_SESSION['username']}
+      <br>
+      Email address: <input type="text" name="email" value="$email">
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+_END;
 }
 
 // display our message to the user:
