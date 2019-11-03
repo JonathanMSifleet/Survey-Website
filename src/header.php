@@ -31,17 +31,16 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     <a href='account.php'>My Account</a> ||
     <a href='surveys_manage.php'>My Surveys</a> ||
     <a href='competitors.php'>Design and Analysis</a> ||
-    <a href='account_set.php'>Account</a> ||
     <a href='sign_out.php'>Sign Out ({$_SESSION['username']})</a>
     _END;
 
     // add an extra menu option if this was the admin:
     // this allows us to display the admin tools to them only
     if ($_SESSION['username'] == "admin") {
-        echo " || <a href='admin.php'>Admin Tools</a>";
-	echo " || <a href='create_data.php'>Create Data </a>";
+        echo " |||| <a href='admin.php'>Admin Tools</a>";
     }
-} else {
+} 
+else {
     // THIS PERSON IS NOT LOGGED IN
     // show the logged out menu options:
     echo <<<_END
@@ -53,7 +52,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     <a href='sign_in.php'>Sign In</a>
     _END;
 }
- 
+
 echo <<<_END
 <br>
 <h1>2CWK50: A Survey Website</h1>
