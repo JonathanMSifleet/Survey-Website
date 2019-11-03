@@ -399,8 +399,9 @@ function calcLatestDate($todaysDate)
 
 //
 //
-function initEmptyArray(&$array, $size) {
-    for($i =0; $i <= $size; $i++) {
+function initEmptyArray(&$array, $size)
+{
+    for ($i = 0; $i <= $size; $i ++) {
         $array[$i] = "";
     }
 }

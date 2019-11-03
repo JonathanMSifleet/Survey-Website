@@ -9,6 +9,9 @@ require_once "header.php";
 $newInput = null; // +
 $shouldDeleteAccount = null; // +
 
+$arrayOfErrors;
+initEmptyArray($arrayOfErrors, 6);
+
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
@@ -146,29 +149,6 @@ function createAccount($connection)
     $number = ""; // +
     $dob = ""; // +
 
-    error_reporting(0);
-    echo <<<_END
-    <form action="sign_up.php" method="post">
-      Please fill in the following fields:<br>
-      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
-      <br>
-      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
-      <br>
-      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
-      <br>
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
-      <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
-      <br>
-      Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfErrors[5]
-      <br>
-      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-    error_reporting(1);
-
     if (isset($_POST['username'])) {
 
         // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
@@ -209,20 +189,40 @@ function createAccount($connection)
             // no data returned, we just test for true(success)/false(failure):
             if ($result) {
                 // show a successful signup message:
-                $message = "Signup was successful. Please sign in<br>";
+                echo "Signup was successful. Please sign in<br>";
             } else {
-                // show the form:
-                $show_signup_form = true;
-                // show an unsuccessful signup message:
-                $message = "Sign up failed, please try again<br>";
+
+                echo "Sign up failed, please try again<br>";
             }
-        } else {
-            // validation failed, show the form again with guidance:
-            $show_signup_form = true;
-            // show an unsuccessful signin message:
-            $message = "Sign up failed, please check the errors shown above and try again<br>";
         }
         // we're finished with the database, close the connection:
+    } else {
+
+        // error_reporting(0);
+
+        $currentURL = $_SERVER['REQUEST_URI'];
+
+        echo <<<_END
+        <form action="$currentURL" method="post">
+          Please fill in the following fields:<br>
+          Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
+          <br>
+          Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
+          <br>
+          Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
+          <br>
+          First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
+          <br>
+          Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
+          <br>
+          Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfErrors[5]
+          <br>
+          Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+        _END;
+        // error_reporting(1);
     }
 }
 
@@ -260,7 +260,6 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
                 echo "<br>";
                 echo ucfirst($fieldToChange) . " changed";
             }
-            //
         } else {
             echo "<br>";
             echo "Updating field failed: " . $input_val;
