@@ -26,19 +26,24 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 
     printUserData($connection, "edit_account_details.php", $username);
 
-    if (isset($_GET['editAccountDetails'])) {
+    if (isset($_GET['deleteAccount'])) {
+        deleteAccount($connection, $_GET["username"]);
+    } else {
 
-        $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
+        if (isset($_GET['editAccountDetails'])) {
 
-        $minLength = null;
-        $maxLength = null;
-        $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
+            $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
 
-        echo "<br>";
+            $minLength = null;
+            $maxLength = null;
+            $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
 
-        if ($superGlobalName !== "") {
-            changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
-        } // end of if
+            echo "<br>";
+
+            if ($superGlobalName !== "") {
+                changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
+            } // end of if
+        }
     }
 
     mysqli_close($connection);
