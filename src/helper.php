@@ -428,12 +428,11 @@ function printUserData($connection, $origin, $username)
     $currentURL = $_SERVER['REQUEST_URI'];
     $currentURL = substr($currentURL, 1, strlen($currentURL));
     
-    printDataToTable($origin, $username);
 }
 
 //
 //
-function printDataToTable($origin, $username)
+function printOptionsToEdit($origin, $username)
 {
     
     $URL = $origin . "?username=" . $username;
@@ -559,6 +558,7 @@ function deleteAccount($connection, $username)
 function displayDetailsAndEditOptions($connection, $origin, $username)
 {
     printUserData($connection, $origin, $username);
+    printOptionsToEdit($origin, $username);
 
     if (isset($_GET['deleteAccount'])) {
         deleteAccount($connection, $_GET["username"]);
