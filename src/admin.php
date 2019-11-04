@@ -54,27 +54,7 @@ else {
 
             // print user's data
             if (isset($_GET['username'])) {
-                printUserData($connection, "admin.php", $_GET['username']);
-
-                if (isset($_GET['deleteAccount'])) {
-                    deleteAccount($connection, $_GET["username"]);
-                } else {
-
-                    if (isset($_GET['editAccountDetails'])) {
-
-                        $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
-
-                        $minLength = null;
-                        $maxLength = null;
-                        $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
-
-                        echo "<br>";
-
-                        if ($superGlobalName !== "") {
-                            changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
-                        } // end of if
-                    }
-                }
+                displayDetailsAndEditOptions($connection, "admin.php", $_GET['username']);
             }
         }
     } else {

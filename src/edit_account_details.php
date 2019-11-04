@@ -20,31 +20,9 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
 } else {
-    $username = $_SESSION["username"];
-
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    printUserData($connection, "edit_account_details.php", $username);
-
-    if (isset($_GET['deleteAccount'])) {
-        deleteAccount($connection, $_GET["username"]);
-    } else {
-
-        if (isset($_GET['editAccountDetails'])) {
-
-            $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
-
-            $minLength = null;
-            $maxLength = null;
-            $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
-
-            echo "<br>";
-
-            if ($superGlobalName !== "") {
-                changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
-            } // end of if
-        }
-    }
+    displayDetailsAndEditOptions($connection, "edit_account_details.php", $_SESSION["username"]);
 
     mysqli_close($connection);
 }
