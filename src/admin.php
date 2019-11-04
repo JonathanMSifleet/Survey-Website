@@ -90,43 +90,6 @@ else {
 // finish off the HTML for this page:
 require_once "footer.php";
 
-// this function gets the username of the selected user from the session superglobal, gets all their information using an SQL query, displays it in a table
-// then shows the options to either change the password or delete the account
-// this function is written by me:
-function printUserData($connection)
-{
-    $username = $_GET["username"];
-
-    echo "<br>";
-
-    $query = "SELECT * FROM users WHERE username = '$username'"; // +
-    $result = mysqli_query($connection, $query); // +
-
-    echo "User's details:";
-    echo "<table border ='1'>";
-    echo "<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>dob</td></tr>";
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
-    }
-    echo "</table>";
-
-    echo "<br>";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeEmail=true>Change email</a>";
-    echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changePassword=true>Change password</a>";
-    echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeFirstname=true>Change firstname</a>";
-    echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeSurname=true>Change surname</a>";
-    echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeNumber=true>Change number</a>";
-    echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changedob=true>Change date of birth</a>";
-    echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&deleteAccount=true>Delete user account</a>";
-}
-
 function createAccount($connection)
 {
     $todaysDate = date('Y-m-d'); // get current date: +

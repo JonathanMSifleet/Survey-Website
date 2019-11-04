@@ -16,7 +16,6 @@
 
 // execute the header script:
 require_once "header.php";
-start_session();
 
 // default values we show in the form:
 $username = "";
@@ -83,10 +82,9 @@ if (isset($_SESSION['loggedInSkeleton'])) {
                     $message = "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
                     // setcookie(session_name(), '', time()-2592000, '/'); // maybe add https +
                 } else {
-                    // no matching credentials found so redisplay the signin form with a failure message:
                     $show_signin_form = true;
                     // show an unsuccessful signin message:
-                    $message = "No credentials found<br>";
+                    $message = "Username not found or password is wrong<br>";
                 }
             }
         }

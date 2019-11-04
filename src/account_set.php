@@ -31,23 +31,12 @@ $message = "";
 if (! isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
-} 
-elseif (isset($_POST['email'])) {
-    $username = $_GET["username"];
+} else {
+    $username = $_SESSION["username"];
 
-    echo "<br>";
+    $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    $query = "SELECT * FROM users WHERE username = '$username'"; // +
-    $result = mysqli_query($connection, $query); // +
-
-    echo "User's details:";
-    echo "<table border ='1'>";
-    echo "<tr><td>username</td><td>firstname</td><td>surname</td><td>password</td><td>email</td><td>number</td><td>dob</td></tr>";
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<tr><td>{$row['username']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['password']}</td><td>{$row['email']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
-    }
-    echo "</table>";
+    printUserData($connection);
 }
 
 // display our message to the user:
