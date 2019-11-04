@@ -410,24 +410,24 @@ function initEmptyArray(&$array, $size)
 // then shows the options to either change the password or delete the account
 // this function is written by me:
 function printUserData($connection, $origin, $username)
-{    
+{
     echo "<br>";
-    
+
     $query = "SELECT * FROM users WHERE username = '$username'"; // +
     $result = mysqli_query($connection, $query); // +
-    
+
     echo "User's details:";
     echo "<table border ='1'>";
     echo "<tr><td>username</td><td>email</td><td>password</td>><td>firstname</td><td>surname</td><td>number</td><td>dob</td></tr>";
-    
+
     while ($row = mysqli_fetch_assoc($result)) {
         echo "<tr><td>{$row['username']}</td><td>{$row['email']}</td><td>{$row['password']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
     }
     echo "</table>";
-    
+
     $currentURL = $_SERVER['REQUEST_URI'];
     $currentURL = substr($currentURL, 1, strlen($currentURL));
-    
+
     echo "<br>";
     echo "<a href =$origin?username=$username&editAccountDetails=true&changeEmail=true>Change email</a>";
     echo " ";
@@ -444,7 +444,80 @@ function printUserData($connection, $origin, $username)
     echo "<a href =$origin?username=$username&editAccountDetails=true&deleteAccount=true>Delete user account</a>";
 }
 
+// this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
+// then updates the user's password via an SQL query
+// this function is written by me
+function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, $maxLength)
+{
+    if (isset($_POST['newInput'])) {
 
+        $currentUsername = $_GET['username'];
+
+        echo "Change user details:";
+        echo "<br>";
+
+        $todaysDate = date('Y-m-d'); // get current date: +
+        $newInput = sanitise($_POST['newInput'], $connection);
+        $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength, $todaysDate);
+
+        if ($input_val == "Generate random password") {
+            $newInput = generateAlphanumericString();
+            $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength);
+        }
+
+        if ($input_val == "") {
+            if ($fieldType == "password") {
+                $newInput = encryptInput($newInput);
+                echo "<br>";
+                echo "Insert a new password if your browser hasn't automatically saved your password";
+            }
+            $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
+            $result = mysqli_query($connection, $query); // +
+
+            if ($result) {
+                echo "<br>";
+                echo ucfirst($fieldToChange) . " changed";
+            }
+        } else {
+            echo "<br>";
+            echo "Updating field failed: " . $input_val;
+        }
+    } else {
+        showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength);
+    }
+}
+
+function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
+{
+    $currentURL = $_SERVER['REQUEST_URI'];
+    $fieldToDisplay = ucfirst($fieldToChange);
+
+    if ($fieldToDisplay == "Dob") {
+
+        $todaysDate = date('Y-m-d'); // get current date: +
+
+        $minDate = calcEarliestDate($todaysDate);
+        $maxDate = calcLatestDate($todaysDate);
+
+        echo <<<_END
+        <form action="$currentURL" method="post">
+          Please fill in the following fields:<br>
+          $fieldToDisplay: <input type="$fieldType" min=$minDate max=$maxDate name="newInput">
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+        _END;
+    } else {
+        echo <<<_END
+        <form action="$currentURL" method="post">
+          Please fill in the following fields:<br>
+          $fieldToDisplay: <input type="$fieldType" name="newInput">
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+        _END;
+    }
+}
 
 //
 //

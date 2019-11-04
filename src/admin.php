@@ -63,9 +63,7 @@ else {
                     deleteAccount($connection);
                 } else {
 
-                    $editAccount = isset($_GET['editAccountDetails']);
-
-                    if ($editAccount == true) {
+                    if (isset($_GET['editAccountDetails'])) {
 
                         $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
 
@@ -188,80 +186,6 @@ function createAccount($connection)
     }
 }
 
-// this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
-// then updates the user's password via an SQL query
-// this function is written by me
-function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, $maxLength)
-{
-    if (isset($_POST['newInput'])) {
-
-        $currentUsername = $_GET['username'];
-
-        echo "Change user details:";
-        echo "<br>";
-
-        $todaysDate = date('Y-m-d'); // get current date: +
-        $newInput = sanitise($_POST['newInput'], $connection);
-        $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength, $todaysDate);
-
-        if ($input_val == "Generate random password") {
-            $newInput = generateAlphanumericString();
-            $input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength);
-        }
-
-        if ($input_val == "") {
-            if ($fieldType == "password") {
-                $newInput = encryptInput($newInput);
-                echo "<br>";
-                echo "Insert a new password if your browser hasn't automatically saved your password";
-            }
-            $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
-            $result = mysqli_query($connection, $query); // +
-
-            if ($result) {
-                echo "<br>";
-                echo ucfirst($fieldToChange) . " changed";
-            }
-        } else {
-            echo "<br>";
-            echo "Updating field failed: " . $input_val;
-        }
-    } else {
-        showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength);
-    }
-}
-
-function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
-{
-    $currentURL = $_SERVER['REQUEST_URI'];
-    $fieldToDisplay = ucfirst($fieldToChange);
-
-    if ($fieldToDisplay == "Dob") {
-
-        $todaysDate = date('Y-m-d'); // get current date: +
-
-        $minDate = calcEarliestDate($todaysDate);
-        $maxDate = calcLatestDate($todaysDate);
-
-        echo <<<_END
-        <form action="$currentURL" method="post">
-          Please fill in the following fields:<br>
-          $fieldToDisplay: <input type="$fieldType" min=$minDate max=$maxDate name="newInput">
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
-    } else {
-        echo <<<_END
-        <form action="$currentURL" method="post">
-          Please fill in the following fields:<br>
-          $fieldToDisplay: <input type="$fieldType" name="newInput">
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
-    }
-}
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
 // this function is written by me:

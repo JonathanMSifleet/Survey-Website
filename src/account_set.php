@@ -38,6 +38,22 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 
     printUserData($connection, "account_set.php", $username);
     
+    if (isset($_GET['editAccountDetails'])) {
+        
+        $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
+        
+        $minLength = null;
+        $maxLength = null;
+        $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
+        
+        echo "<br>";
+        
+        if ($superGlobalName !== "") {
+            changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
+        } // end of if
+    }
+    
+    
     mysqli_close($connection);
 }
 
