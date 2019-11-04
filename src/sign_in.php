@@ -16,6 +16,7 @@
 
 // execute the header script:
 require_once "header.php";
+start_session();
 
 // default values we show in the form:
 $username = "";
