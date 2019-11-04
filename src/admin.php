@@ -57,7 +57,7 @@ else {
 
             // print user's data
             if (isset($_GET['username'])) {
-                printUserData($connection);
+                printUserData($connection, "admin.php", $_GET['username']);
 
                 if (isset($_GET['deleteAccount'])) {
                     deleteAccount($connection);

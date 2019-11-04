@@ -409,10 +409,8 @@ function initEmptyArray(&$array, $size)
 // this function gets the username of the selected user from the session superglobal, gets all their information using an SQL query, displays it in a table
 // then shows the options to either change the password or delete the account
 // this function is written by me:
-function printUserData($connection)
-{
-    $username = $_GET["username"];
-    
+function printUserData($connection, $origin, $username)
+{    
     echo "<br>";
     
     $query = "SELECT * FROM users WHERE username = '$username'"; // +
@@ -427,20 +425,23 @@ function printUserData($connection)
     }
     echo "</table>";
     
+    $currentURL = $_SERVER['REQUEST_URI'];
+    $currentURL = substr($currentURL, 1, strlen($currentURL));
+    
     echo "<br>";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeEmail=true>Change email</a>";
+    echo "<a href =$origin?username=$username&editAccountDetails=true&changeEmail=true>Change email</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changePassword=true>Change password</a>";
+    echo "<a href =$origin?username=$username&editAccountDetails=true&changePassword=true>Change password</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeFirstname=true>Change firstname</a>";
+    echo "<a href =$origin?username=$username&editAccountDetails=true&changeFirstname=true>Change firstname</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeSurname=true>Change surname</a>";
+    echo "<a href =$origin?username=$username&editAccountDetails=true&changeSurname=true>Change surname</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changeNumber=true>Change number</a>";
+    echo "<a href =$origin?username=$username&editAccountDetails=true&changeNumber=true>Change number</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&changedob=true>Change date of birth</a>";
+    echo "<a href =$origin?username=$username&editAccountDetails=true&changedob=true>Change date of birth</a>";
     echo " ";
-    echo "<a href =admin.php?username=$username&editAccountDetails=true&deleteAccount=true>Delete user account</a>";
+    echo "<a href =$origin?username=$username&editAccountDetails=true&deleteAccount=true>Delete user account</a>";
 }
 
 

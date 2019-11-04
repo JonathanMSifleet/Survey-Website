@@ -36,7 +36,9 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    printUserData($connection);
+    printUserData($connection, "account_set.php", $username);
+    
+    mysqli_close($connection);
 }
 
 // display our message to the user:
