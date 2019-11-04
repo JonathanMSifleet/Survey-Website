@@ -31,7 +31,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     <a href='account.php'>My Account</a> ||
     <a href='surveys_manage.php'>My Surveys</a> ||
     <a href='competitors.php'>Design and Analysis</a> ||
-    <a href='account_set.php'>Account</a> ||
+    <a href='edit_account_details.php'>Edit Account Details</a> ||
     <a href='sign_out.php'>Sign Out ({$_SESSION['username']})</a>
     _END;
 
