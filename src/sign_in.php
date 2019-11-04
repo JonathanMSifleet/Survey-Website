@@ -70,6 +70,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         $result = mysqli_query($connection, $query); // +
 
         // if there was a match then set the session variables and display a success message:
+        
         if (mysqli_num_rows($result) > 0) { // +
             while ($row = mysqli_fetch_array($result)) { // +
                 if (password_verify($password, $row['password'])) { // +
@@ -79,25 +80,28 @@ if (isset($_SESSION['loggedInSkeleton'])) {
                     $_SESSION['username'] = $username;
 
                     // show a successful signin message:
-                    $message = "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
+                    echo "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
                     // setcookie(session_name(), '', time()-2592000, '/'); // maybe add https +
                 } else {
                     $show_signin_form = true;
                     // show an unsuccessful signin message:
-                    $message = "Username not found or password is wrong<br>";
+                    echo "Username not found or password is wrong<br>";
                 }
-            }
+            } // end of while
+        } else {
+            echo "Username not found or password is wrong<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
         $show_signin_form = true;
         // show an unsuccessful signin message:
-        $message = "Sign in failed, please check the errors shown above and try again<br>";
+        echo "Sign in failed, please check the errors shown above and try again<br>";
     }
 
     // we're finished with the database, close the connection:
     mysqli_close($connection);
 } else {
+
     // user has arrived at the page for the first time, just show them the form:
     // show signin form:
     $show_signin_form = true;
@@ -117,9 +121,6 @@ if ($show_signin_form) {
     </form>
     _END;
 }
-
-// display our message to the user:
-echo $message;
 
 // finish off the HTML for this page:
 require_once "footer.php";
