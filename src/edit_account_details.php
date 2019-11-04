@@ -14,18 +14,6 @@
 // execute the header script:
 require_once "header.php";
 
-// default values we show in the form:
-$email = "";
-
-// strings to hold any validation error messages:
-$email_val = "";
-
-// should we show the set profile form?:
-$show_account_form = false;
-
-// message to output to user:
-$message = "";
-
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
@@ -55,9 +43,6 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 
     mysqli_close($connection);
 }
-
-// display our message to the user:
-echo $message;
 
 // finish of the HTML for this page:
 require_once "footer.php";

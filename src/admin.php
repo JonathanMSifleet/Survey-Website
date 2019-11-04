@@ -6,10 +6,7 @@
 // execute the header script:
 require_once "header.php";
 
-$newInput = null; // +
-$shouldDeleteAccount = null; // +
-
-$arrayOfErrors;
+$arrayOfErrors = array();
 initEmptyArray($arrayOfErrors, 6);
 
 // checks the session variable named 'loggedInSkeleton'
@@ -131,6 +128,7 @@ function createAccount($connection)
         // /////////
 
         // this was created by me:
+        // "should" return array, but instead edits array reference
         createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors); // +
         $numberOfErrors = count($arrayOfErrors); // +
 

@@ -418,7 +418,7 @@ function printUserData($connection, $origin, $username)
 
     echo "User's details:";
     echo "<table border ='1'>";
-    echo "<tr><td>username</td><td>email</td><td>password</td>><td>firstname</td><td>surname</td><td>number</td><td>dob</td></tr>";
+    echo "<tr><td>username</td><td>email</td><td>password</td><td>firstname</td><td>surname</td><td>number</td><td>dob</td></tr>";
 
     while ($row = mysqli_fetch_assoc($result)) {
         echo "<tr><td>{$row['username']}</td><td>{$row['email']}</td><td>{$row['password']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
@@ -487,6 +487,8 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
     }
 }
 
+//
+//
 function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
 {
     $currentURL = $_SERVER['REQUEST_URI'];
