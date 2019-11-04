@@ -36,7 +36,7 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    printUserData($connection, "account_set.php", $username);
+    printUserData($connection, "edit_account_details.php", $username);
 
     if (isset($_GET['editAccountDetails'])) {
 
