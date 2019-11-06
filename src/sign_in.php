@@ -70,7 +70,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         $result = mysqli_query($connection, $query); // +
 
         // if there was a match then set the session variables and display a success message:
-        
+
         if (mysqli_num_rows($result) > 0) { // +
             while ($row = mysqli_fetch_array($result)) { // +
                 if (password_verify($password, $row['password'])) { // +

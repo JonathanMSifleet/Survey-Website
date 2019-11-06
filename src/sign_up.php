@@ -22,8 +22,8 @@ $firstname = ""; // +
 $surname = ""; // +
 $number = ""; // +
 $dob = ""; // +
-//
-$arrayOfErrors;
+
+$arrayOfErrors = array();
 initEmptyArray($arrayOfErrors, 6);
 
 // global: +
@@ -65,9 +65,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     }
     // /////////
 
-    // this was created by me:
     createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors); // +
-    $numberOfErrors = count($arrayOfErrors); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
     $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);

@@ -427,16 +427,14 @@ function printUserData($connection, $origin, $username)
 
     $currentURL = $_SERVER['REQUEST_URI'];
     $currentURL = substr($currentURL, 1, strlen($currentURL));
-    
 }
 
 //
 //
 function printOptionsToEdit($origin, $username)
 {
-    
     $URL = $origin . "?username=" . $username;
-    
+
     echo "<br>";
     echo "<a href =$URL&editAccountDetails=true&changeEmail=true>Change email</a>";
     echo " ";
@@ -559,25 +557,28 @@ function displayDetailsAndEditOptions($connection, $origin, $username)
 {
     printUserData($connection, $origin, $username);
     printOptionsToEdit($origin, $username);
+    enactEdit($connection);
+}
 
+//
+//
+function enactEdit($connection)
+{
     if (isset($_GET['deleteAccount'])) {
-        deleteAccount($connection, $_GET["username"]);
-    } else {
+        deleteAccount($connection, $_GET['username']);
+    } elseif (isset($_GET['editAccountDetails'])) {
 
-        if (isset($_GET['editAccountDetails'])) {
+        $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
 
-            $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
+        $minLength = null;
+        $maxLength = null;
+        $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
 
-            $minLength = null;
-            $maxLength = null;
-            $fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
+        echo "<br>";
 
-            echo "<br>";
-
-            if ($superGlobalName !== "") {
-                changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
-            } // end of if
-        }
+        if ($superGlobalName !== "") {
+            changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
+        } // end of if
     }
 }
 

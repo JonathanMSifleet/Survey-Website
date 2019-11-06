@@ -52,7 +52,7 @@ if (mysqli_query($connection, $sql)) {
 // make our table:
 // notice that the username field is a PRIMARY KEY and so must be unique in each record
 $sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(60), email VARCHAR(64), number VARCHAR(11), dob DATE, PRIMARY KEY(username))"; // +
-// phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
+                                                                                                                                                                                              // phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
 
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql)) {
@@ -133,14 +133,14 @@ $dobs[] = '1997-11-19';
 
 // loop through the arrays above and add rows to the table:
 for ($i = 0; $i < count($usernames); $i ++) {
-    
+
     // this is made by me:
     if ($i == 0) {
         $passwords[$i] = 'secret'; // manually overrides admin password
     } else {
         $passwords[$i] = encryptInput(generateAlphanumericString());
     }
-    /////////
+    // ///////
 
     $passwords[$i] = encryptInput($passwords[$i]); // encrypt password before entering DB +
 
