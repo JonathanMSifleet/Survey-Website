@@ -636,7 +636,7 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
       <br>
       Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
       <br>
-      Date of birth: <input type="date" name="dob" min="$minDate max="$maxDate" value="$dob" required> $arrayOfAccountErrors[6]
+      Date of birth: <input type="date" name="dob" min="$minDate" max="$maxDate" value="$dob" required> $arrayOfAccountErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>
