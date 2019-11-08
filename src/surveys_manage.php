@@ -21,34 +21,32 @@ else {
 
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    echo "<a href = create_survey.php>Create a survey</a>";
-    echo "<br>";
-    echo "<br>";
-    
-    $username = $_SESSION['username'];
-    
-    if ($username == "admin") {
-        echo "User surveys:";
-    } else {
-        echo "Your surveys";
-    }
-    
-    printUserSurveys($connection);
-}
-
-function printUserSurveys($connection)
-{
-    // connect to database:
-
     // if the connection fails, we need to know, so allow this exit:
     if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    // get surveys:
+    echo "<a href = create_survey.php>Create a survey</a>";
+    echo "<br>";
+    echo "<br>";
 
-    if ($username = "admin") {
-        $query = "SELECT surveyID, title, type, topic FROM surveys";
+    $username = $_SESSION['username'];
+
+    if ($username == "admin") {
+        echo "User surveys:";
+        $userIsAdmin = true;
+    } else {
+        echo "Your surveys";
+        $userIsAdmin = false;
+    }
+
+    printSurveys($connection, $username, $userIsAdmin);
+}
+
+function printSurveys($connection, $username, $userIsAdmin)
+{
+    if ($userIsAdmin) {
+        $query = "SELECT surveyID, username, title, type, topic FROM surveys";
     } else {
         $query = "SELECT surveyID, title, type, topic FROM surveys where username='$username'";
     }
@@ -58,10 +56,17 @@ function printUserSurveys($connection)
     if ($result !== null) {
 
         echo "<table border ='1'>";
-        echo "<tr><td>surveyID</td><td>title</td><td>type</td><td>topic</td></tr>";
 
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td></tr>";
+        if ($userIsAdmin) {
+            echo "<tr><td>surveyID</td><td>username</td><td>title</td><td>type</td><td>topic</td></tr>";
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td></tr>";
+            }
+        } else {
+            echo "<tr><td>surveyID</td><td>title</td><td>type</td><td>topic</td></tr>";
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td></tr>";
+            }
         }
         echo "</table>";
     } else {
