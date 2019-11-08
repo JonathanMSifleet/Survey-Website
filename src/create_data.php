@@ -12,18 +12,20 @@ require_once "credentials.php";
 // connect to the host:
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass);
 
-createDatabase($connection);
+createDatabase($connection, $dbname);
 
 createUserTable($connection);
 
 createSurveyTable($connection);
+
+createSurveyResponseTable($connection);
 
 insertDefaultUsers($connection);
 
 // we're finished, close the connection:
 mysqli_close($connection);
 
-function createDatabase($connection)
+function createDatabase($connection, $dbname)
 {
     // exit the script with a useful message if there was an error:
     if (! $connection) {
@@ -88,6 +90,10 @@ function createSurveyTable($connection)
     } else {
         die("Error creating table: " . mysqli_error($connection));
     }
+}
+
+function createSurveyResponseTable($connection) {
+    
 }
 
 function insertDefaultUsers($connection)

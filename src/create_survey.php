@@ -45,26 +45,6 @@ function initNewSurvey($connection)
     }
 }
 
-function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors)
-{
-    echo "Input survey details:";
-
-    //max number of questions length to be compatible with MYSQL smallint max value
-    
-    echo <<<_END
-    <form action="create_survey.php" method="post">
-      Please fill in the following fields:<br>
-      Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
-      <br>
-      Instructions: <input type="text" name="instructions" minlength="2" maxlength="$maxInstructionLength" value="$instructions" required> $arrayOfSurveyErrors[1]
-      <br>
-      Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="32767" value="$noOfQuestions"> $arrayOfSurveyErrors[2]
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-}
-
 function createSurvey($connection, $title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors)
 {
     createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
@@ -90,6 +70,26 @@ function createSurvey($connection, $title, $instructions, $noOfQuestions, $maxIn
         // validation failed, show the form again with guidance:
         displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
     }
+}
+
+function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors)
+{
+    echo "Input survey details:";
+    
+    //max number of questions length to be compatible with MYSQL smallint max value
+    
+    echo <<<_END
+    <form action="create_survey.php" method="post">
+      Please fill in the following fields:<br>
+      Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
+      <br>
+      Instructions: <input type="text" name="instructions" minlength="2" maxlength="$maxInstructionLength" value="$instructions" required> $arrayOfSurveyErrors[1]
+      <br>
+      Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="32767" value="$noOfQuestions"> $arrayOfSurveyErrors[2]
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
 }
 
 ?>
