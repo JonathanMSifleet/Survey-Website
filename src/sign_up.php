@@ -14,17 +14,8 @@
 // execute the header script:
 require_once "header.php";
 
-// default values we show in the form:
-$username = "";
-$email = "";
-$password = "";
-$firstname = ""; // +
-$surname = ""; // +
-$number = ""; // +
-$dob = ""; // +
-
-$arrayOfSignUpErrors = array();
-initEmptyArray($arrayOfSignUpErrors, 6);
+$arrayOfAccountCreationErrors = array();
+initEmptyArray($arrayOfAccountCreationErrors, 6);
 
 // global: +
 $todaysDate = date('Y-m-d'); // get current date: +
@@ -35,105 +26,50 @@ $todaysDate = date('Y-m-d'); // get current date: +
 if (isset($_SESSION['loggedInSkeleton'])) {
     // user is already logged in, just display a message:
     echo "You are already logged in, please log out if you wish to create a new account<br>";
-} elseif (isset($_POST['username'])) {
-    // user just tried to sign up:
-
-    // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
-    $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-    // if the connection fails, we need to know, so allow this exit:
-    if (! $connection) {
-        die("Connection failed: " . $mysqli_connect_error);
-    }
-
-    // SANITISATION (see helper.php for the function definition)
-    // cannot be put into function as _POST requires superglobals
-    $username = sanitise($_POST['username'], $connection);
-    $email = sanitise($_POST['email'], $connection);
-    $password = sanitise($_POST['password'], $connection);
-    $firstname = sanitise($_POST['firstname'], $connection); // +
-    $surname = sanitise($_POST['surname'], $connection); // +
-    $number = sanitise($_POST['number'], $connection); // +
-    $dob = sanitise($_POST['dob'], $connection); // +
-
-    // this was created by me:
-    if (checkIfLengthZero($password)) {
-        $password = generateAlphanumericString();
-    }
-    // /////////
-
-    createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors); // +
-
-    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-    $errors = concatValidationMessages($arrayOfSignUpErrors);
-    // /////////
-
-    // check that all the validation tests passed before going to the database:
-    if ($errors == "") {
-
-        $password = encryptInput($password);
-
-        // try to insert the new details:
-        $query = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$dob')";
-        $result = mysqli_query($connection, $query);
-
-        // no data returned, we just test for true(success)/false(failure):
-        if ($result) {
-            // show a successful signup message:
-            echo "Signup was successful. Please sign in<br>";
-        } else {
-            // show the form:
-            showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors);
-            // show an unsuccessful signup message:
-            echo "Sign up failed, please try again<br>";
-        }
-    } else {
-        // validation failed, show the form again with guidance:
-        showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors);
-        // show an unsuccessful signin message:
-        echo "Sign up failed, please check the errors shown above and try again<br>";
-    }
-
-    // we're finished with the database, close the connection:
-    mysqli_close($connection);
 } else {
 
-    // just a normal visit to the page, show the signup form:
-    showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors);
+    $arrayOfAccountErrors = array();
+    initEmptyArray($arrayOfAccountErrors, 6);
+
+    // default values we show in the form:
+    $username = "";
+    $email = "";
+    $password = "";
+    $firstname = ""; // +
+    $surname = ""; // +
+    $number = ""; // +
+    $dob = ""; // +
+
+    if (isset($_POST['username'])) {
+        // user just tried to sign up:
+
+        // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
+        $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
+        // if the connection fails, we need to know, so allow this exit:
+        if (! $connection) {
+            die("Connection failed: " . $mysqli_connect_error);
+        }
+
+        // SANITISATION (see helper.php for the function definition)
+        // cannot be put into function as _POST requires superglobals
+        $username = sanitise($_POST['username'], $connection);
+        $email = sanitise($_POST['email'], $connection);
+        $password = sanitise($_POST['password'], $connection);
+        $firstname = sanitise($_POST['firstname'], $connection); // +
+        $surname = sanitise($_POST['surname'], $connection); // +
+        $number = sanitise($_POST['number'], $connection); // +
+        $dob = sanitise($_POST['dob'], $connection); // +
+
+        createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
+    } else {
+
+        // just a normal visit to the page, show the signup form:
+        displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors);
+    }
 }
 
 // finish off the HTML for this page:
 require_once "footer.php";
-
-function showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors)
-{
-    // show the form that allows users to sign up
-    // Note we use an HTTP POST request to avoid their password appearing in the URL:
-    $minDate = calcEarliestDate($todaysDate);
-    $maxDate = calcLatestDate($todaysDate);
-
-    echo "<br>";
-
-    echo <<<_END
-    <form action="sign_up.php" method="post">
-      Please fill in the following fields:<br>
-      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
-      <br>
-      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
-      <br>
-      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
-      <br>
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
-      <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
-      <br>
-      Phone number: <input type="text" name="number" minlength="11" maxlength="11" value="$number" required> $arrayOfErrors[5]
-      <br>
-      Date of birth: <input type="date" name="dob" min=$minDate max="$maxDate" value="$dob" required> $arrayOfErrors[6]
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-}
 
 ?>

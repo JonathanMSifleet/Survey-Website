@@ -65,8 +65,8 @@ require_once "footer.php";
 
 function createAccount($connection)
 {
-    $arrayOfAccountErrors = array();
-    initEmptyArray($arrayOfAccountErrors, 6);
+    $arrayOfAccountCreationErrors = array();
+    initEmptyArray($arrayOfAccountCreationErrors, 6);
 
     $todaysDate = date('Y-m-d'); // get current date: +
 
@@ -79,21 +79,10 @@ function createAccount($connection)
     $number = ""; // +
     $dob = ""; // +
 
-    // strings to hold any validation error messages:
-    $username = "";
-    $email = "";
-    $password = "";
-    $firstname = ""; // +
-    $surname = ""; // +
-    $number = ""; // +
-    $dob = ""; // +
-
     if (isset($_POST['username'])) {
 
-        // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
         // SANITISATION (see helper.php for the function definition)
         // cannot be put into function as _POST requires superglobals
-
         $username = sanitise($_POST['username'], $connection);
         $email = sanitise($_POST['email'], $connection);
         $password = sanitise($_POST['password'], $connection);
@@ -102,68 +91,10 @@ function createAccount($connection)
         $number = sanitise($_POST['number'], $connection); // +
         $dob = sanitise($_POST['dob'], $connection); // +
 
-        // this was created by me:
-        if (checkIfLengthZero($password)) {
-            $password = generateAlphanumericString();
-        }
-        // /////////
-
-        // this was created by me:
-        // "should" return array, but instead edits array reference
-        createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors); // +
-                                                                                                                                           // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-        $errors = concatValidationMessages($arrayOfAccountErrors);
-        // /////////
-
-        // check that all the validation tests passed before going to the database:
-        if ($errors == "") {
-
-            $password = encryptInput($password);
-
-            // try to insert the new details:
-            $query = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$dob')";
-            $result = mysqli_query($connection, $query);
-
-            // no data returned, we just test for true(success)/false(failure):
-            if ($result) {
-                // show a successful signup message:
-                echo "Signup was successful. Please sign in<br>";
-            } else {
-                echo "Sign up failed, please try again<br>";
-            }
-        } else {
-            displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors);
-        }
-        // we're finished with the database, close the connection:
+        createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
     } else {
-        displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors);
+        displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
     }
-}
-
-function displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors)
-{
-    $currentURL = $_SERVER['REQUEST_URI'];
-
-    echo <<<_END
-    <form action="$currentURL" method="post">
-      Please fill in the following fields:<br>
-      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfAccountErrors[0]
-      <br>
-      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
-      <br>
-      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfAccountErrors[2]
-      <br>
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfAccountErrors[3]
-      <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfAccountErrors[4]
-      <br>
-      Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
-      <br>
-      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfAccountErrors[6]
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
 }
 
 ?>

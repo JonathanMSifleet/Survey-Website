@@ -125,7 +125,7 @@ function checkOnlyNumeric($field)
 {
     $charArray = str_split($field);
     $lengthOfCharArray = count($charArray);
-    
+
     for ($i = 0; $i < $lengthOfCharArray; $i ++) {
         if (is_numeric($charArray[$i]) == false) {
             return "Must not contain any characters ";
@@ -627,6 +627,85 @@ function enactEdit($connection)
             changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
         } // end of if
     }
+}
+
+function displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors)
+{
+
+    // show the form that allows users to sign up
+    // Note we use an HTTP POST request to avoid their password appearing in the URL:
+    $minDate = calcEarliestDate($todaysDate);
+    $maxDate = calcLatestDate($todaysDate);
+
+    $currentURL = $_SERVER['REQUEST_URI'];
+
+    echo <<<_END
+    <form action="$currentURL" method="post">
+      Please fill in the following fields:<br>
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfAccountErrors[0]
+      <br>
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
+      <br>
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfAccountErrors[2]
+      <br>
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfAccountErrors[3]
+      <br>
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfAccountErrors[4]
+      <br>
+      Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
+      <br>
+      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfAccountErrors[6]
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+}
+
+//
+//
+function createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors)
+{
+    // this was created by me:
+    if (checkIfLengthZero($password)) {
+        $password = generateAlphanumericString();
+    }
+    // /////////
+
+    // this was created by me:
+    // "should" return array, but instead edits array reference
+    createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors); // +
+
+    // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
+    $errors = concatValidationMessages($arrayOfAccountCreationErrors);
+    // /////////
+
+    // check that all the validation tests passed before going to the database:
+    if ($errors == "") {
+
+        $password = encryptInput($password);
+
+        // try to insert the new details:
+        $query = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$dob')";
+        $result = mysqli_query($connection, $query);
+
+        // no data returned, we just test for true(success)/false(failure):
+        if ($result) {
+            // show a successful signup message:
+            echo "Account creation was successful<br>";
+        } else {
+            // validation failed, show the form again with guidance:
+            displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
+            // show an unsuccessful signup message:
+            echo "Account creation failed, please try again<br>";
+        }
+    } else {
+        // validation failed, show the form again with guidance:
+        displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
+        // show an unsuccessful signin message:
+        echo "Account creation failed, please check the errors shown above and try again<br>";
+    }
+    // we're finished with the database, close the connection:
+    mysqli_close($connection);
 }
 
 //
