@@ -490,13 +490,13 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
             echo "Updating field failed: " . $input_val;
         }
     } else {
-        showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength);
+        showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLength);
     }
 }
 
 //
 //
-function showFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
+function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
 {
     $currentURL = $_SERVER['REQUEST_URI'];
     $fieldToDisplay = ucfirst($fieldToChange);

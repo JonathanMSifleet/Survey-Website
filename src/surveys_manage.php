@@ -19,6 +19,10 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 } // the user must be signed-in, show them suitable page content
 else {
     echo "Use this space to allow your users to create and manage their surveys<br>";
+    
+    echo "<a href = create_survey.php>Create a survey</a>";
+    echo "<br>";
+    
     echo "At present, there are no surveys to display<br>";
 
     // a little extra text that only the admin will see:

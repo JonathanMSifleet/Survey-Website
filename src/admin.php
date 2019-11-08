@@ -16,14 +16,15 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, show them suitable page content
 else {
-    // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
+    // creates connection to MYSQLi DB:
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
     // if the connection fails, we need to know, so allow this exit:
     if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
-
+    
+    // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
     if ($_SESSION['username'] == "admin") {
 
         echo "Click to create a new account: <br>";
@@ -137,9 +138,10 @@ function createAccount($connection)
         // we're finished with the database, close the connection:
     } else {
 
-        error_reporting(0);
         $currentURL = $_SERVER['REQUEST_URI'];
-
+        
+        // error reporting turned off and re-enabled to hide undefined array of errors variable
+        error_reporting(0);
         echo <<<_END
         <form action="$currentURL" method="post">
           Please fill in the following fields:<br>
