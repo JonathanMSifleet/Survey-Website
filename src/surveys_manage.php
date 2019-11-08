@@ -39,6 +39,31 @@ else {
     }
 
     printSurveys($connection, $username, $userIsAdmin);
+
+    if (isset($_GET['deleteSurvey'])) {
+        echo "<br>";
+        echo "Are you sure you want to delete the survey " . $_GET['surveyID'] . "? ";
+        echo "<br>";
+        echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
+        echo " ";
+        echo "<a href =surveys_manage.php>Cancel</a>";
+
+        if (isset($_GET["confirmDeletion"])) {
+
+            $surveyID = $_GET['surveyID'];
+
+            $query = "DELETE FROM surveys WHERE surveyID = '$surveyID'";
+            $result = mysqli_query($connection, $query); // +
+
+            echo "<br>";
+            
+            if ($result) {
+                echo "Survey deleted";
+            } else {
+                echo "Error";
+            }
+        }
+    }
 }
 
 function printSurveys($connection, $username, $userIsAdmin)
@@ -70,11 +95,6 @@ function printSurveys($connection, $username, $userIsAdmin)
     } else {
         echo "At present, there are no surveys to display<br>";
     }
-    
-    if($_GET['deleteSurvey'] == true) {
-        echo "delete survey";
-    }
-    
 }
 
 // finish off the HTML for this page:

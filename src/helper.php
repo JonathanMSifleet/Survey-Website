@@ -519,9 +519,11 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
             $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
             $result = mysqli_query($connection, $query); // +
 
+            echo "<br>";
             if ($result) {
-                echo "<br>";
                 echo ucfirst($fieldToChange) . " changed";
+            } else {
+                echo "Error";
             }
         } else {
             echo "<br>";
@@ -571,7 +573,7 @@ function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLengt
 function deleteAccount($connection, $username)
 {
     echo "<br>";
-    
+
     if ($username == "admin") {
         echo "The admin account cannot be deleted";
     } else {
@@ -585,7 +587,11 @@ function deleteAccount($connection, $username)
             $result = mysqli_query($connection, $query); // +
 
             echo "<br>";
-            echo "Account deleted";
+            if ($result) {
+                echo "Account deleted";
+            } else {
+                echo "Error";
+            }
         }
     }
 }
