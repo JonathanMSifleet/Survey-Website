@@ -3,9 +3,6 @@
 // execute the header script:
 require_once "header.php";
 
-$arrayOfSurveyErrors = array();
-initEmptyArray($arrayOfSurveyErrors, 2);
-
 if (! isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
@@ -19,6 +16,17 @@ else {
     if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
+
+    initNewSurvey();
+}
+
+// finish of the HTML for this page:
+require_once "footer.php";
+
+function initNewSurvey($connection)
+{
+    $arrayOfSurveyErrors = array();
+    initEmptyArray($arrayOfSurveyErrors, 2);
 
     $title = "";
     $instructions = "";
@@ -38,23 +46,17 @@ else {
 
         createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
         $errors = concatValidationMessages($arrayOfSurveyErrors);
-        
+
         if ($errors == "") {
-            echo "No errors";
+            return true;
+
+            // code to do stuff
         } else {
             displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
         }
-        
     } else {
         displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
     }
-}
-
-// finish of the HTML for this page:
-require_once "footer.php";
-
-function createSurvey($connection) {
-    
 }
 
 function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors)

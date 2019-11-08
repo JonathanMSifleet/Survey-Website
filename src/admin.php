@@ -6,9 +6,6 @@
 // execute the header script:
 require_once "header.php";
 
-$arrayOfAccountErrors = array();
-initEmptyArray($arrayOfAccountErrors, 6);
-
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (! isset($_SESSION['loggedInSkeleton'])) {
@@ -68,6 +65,9 @@ require_once "footer.php";
 
 function createAccount($connection)
 {
+    $arrayOfAccountErrors = array();
+    initEmptyArray($arrayOfAccountErrors, 6);
+
     $todaysDate = date('Y-m-d'); // get current date: +
 
     // default values we show in the form:
@@ -144,8 +144,6 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
 {
     $currentURL = $_SERVER['REQUEST_URI'];
 
-    // error reporting turned off and re-enabled to hide undefined array of errors variable
-    error_reporting(0);
     echo <<<_END
     <form action="$currentURL" method="post">
       Please fill in the following fields:<br>
@@ -166,7 +164,6 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
       <input type="submit" value="Submit">
     </form>
     _END;
-    error_reporting(1);
 }
 
 ?>
