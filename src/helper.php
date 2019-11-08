@@ -600,15 +600,6 @@ function deleteAccount($connection, $username)
 
 //
 //
-function displayDetailsAndEditOptions($connection, $origin, $username)
-{
-    printUserData($connection, $origin, $username);
-    printOptionsToEdit($origin, $username);
-    enactEdit($connection);
-}
-
-//
-//
 function enactEdit($connection)
 {
     if (isset($_GET['deleteAccount'])) {
@@ -654,7 +645,7 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
       <br>
       Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
       <br>
-      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfAccountErrors[6]
+      Date of birth: <input type="date" name="dob" min="$minDate max="$maxDate" value="$dob" required> $arrayOfAccountErrors[6]
       <br>
       <input type="submit" value="Submit">
     </form>
@@ -706,6 +697,20 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
     }
     // we're finished with the database, close the connection:
     mysqli_close($connection);
+}
+
+//
+//
+function sanitiseUserData($connection, &$username, &$email, &$password, &$firstname, &$surname, &$number, &$dob) {
+    // SANITISATION (see helper.php for the function definition)
+    // cannot be put into function as _POST requires superglobals
+    $username = sanitise($_POST['username'], $connection);
+    $email = sanitise($_POST['email'], $connection);
+    $password = sanitise($_POST['password'], $connection);
+    $firstname = sanitise($_POST['firstname'], $connection); // +
+    $surname = sanitise($_POST['surname'], $connection); // +
+    $number = sanitise($_POST['number'], $connection); // +
+    $dob = sanitise($_POST['dob'], $connection); // +
 }
 
 //

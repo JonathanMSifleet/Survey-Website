@@ -33,6 +33,15 @@ else {
             initCreateAccount($connection);
         } else {
             displayListOfUsers($connection);
+            if (isset($_GET['username'])) {
+
+                $origin = "admin.php";
+                $username = $_GET['username'];
+
+                printUserData($connection, $origin, $username);
+                printOptionsToEdit($origin, $username);
+                enactEdit($connection);
+            }
         }
     } else {
         echo "You don't have permission to view this page <br>";
@@ -58,17 +67,8 @@ function initCreateAccount($connection)
     $dob = ""; // +
 
     if (isset($_POST['username'])) {
-
-        // SANITISATION (see helper.php for the function definition)
-        // cannot be put into function as _POST requires superglobals
-        $username = sanitise($_POST['username'], $connection);
-        $email = sanitise($_POST['email'], $connection);
-        $password = sanitise($_POST['password'], $connection);
-        $firstname = sanitise($_POST['firstname'], $connection); // +
-        $surname = sanitise($_POST['surname'], $connection); // +
-        $number = sanitise($_POST['number'], $connection); // +
-        $dob = sanitise($_POST['dob'], $connection); // +
-
+        // account tried to be created
+        sanitiseUserData($connection, $username, $email, $password, $firstname, $surname, $number, $dob);
         createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
     } else {
         // show the sign up form
@@ -94,11 +94,6 @@ function displayListOfUsers($connection)
         echo "<tr><td><a href =?username={$row['username']}>{$row['username']}</a></td></tr>"; // turns row result into hyperlink
     }
     echo "</table>";
-
-    // print user's data
-    if (isset($_GET['username'])) {
-        displayDetailsAndEditOptions($connection, "admin.php", $_GET['username']);
-    }
 }
 
 ?>
