@@ -30,7 +30,7 @@ else {
         echo "<br><br>";
 
         if (isset($_GET['createAccount'])) {
-            initCreateAccount($connection, $firstname, $surname, $password, $email, $number, $dob);
+            initCreateAccount($connection);
         } else {
             displayListOfUsers($connection);
             if (isset($_GET['username'])) {

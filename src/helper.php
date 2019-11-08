@@ -496,7 +496,7 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
 {
     if (isset($_POST['newInput'])) {
 
-        $currentUsername = $_GET['username'];
+        $currentUsername = $_SESSION['username'];
 
         echo "Change user details:";
         echo "<br>";
