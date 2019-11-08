@@ -49,6 +49,8 @@ function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInst
 {
     echo "Input survey details:";
 
+    //max number of questions length to be compatible with MYSQL smallint max value
+    
     echo <<<_END
     <form action="create_survey.php" method="post">
       Please fill in the following fields:<br>
@@ -56,7 +58,7 @@ function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInst
       <br>
       Instructions: <input type="text" name="instructions" minlength="2" maxlength="$maxInstructionLength" value="$instructions" required> $arrayOfSurveyErrors[1]
       <br>
-      Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="32" value="$noOfQuestions"> $arrayOfSurveyErrors[2]
+      Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="32767" value="$noOfQuestions"> $arrayOfSurveyErrors[2]
       <br>
       <input type="submit" value="Submit">
     </form>

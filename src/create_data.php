@@ -156,6 +156,29 @@ for ($i = 0; $i < count($usernames); $i ++) {
     }
 }
 
+// /////////////
+// survey table:
+
+// if there's an old version of our table, then drop it:
+$sql = "DROP TABLE IF EXISTS surveys";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql)) {
+    echo "Dropped existing table: surveys<br>";
+} else {
+    die("Error checking for existing table: " . mysqli_error($connection));
+}
+
+// make our table:
+$sql = "CREATE TABLE surveys (UID VARCHAR(32), username VARCHAR(16), title VARCHAR(64), Instructions VARCHAR(65534), NoOfQuestions SMALLINT, PRIMARY KEY (UID))";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql)) {
+    echo "Table created successfully: surveys<br>";
+} else {
+    die("Error creating table: " . mysqli_error($connection));
+}
+
 // we're finished, close the connection:
 mysqli_close($connection);
 ?>
