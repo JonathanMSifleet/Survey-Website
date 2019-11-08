@@ -18,16 +18,46 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, show them suitable page content
 else {
-    echo "Use this space to allow your users to create and manage their surveys<br>";
-    
+
+    $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
     echo "<a href = create_survey.php>Create a survey</a>";
     echo "<br>";
-    
-    echo "At present, there are no surveys to display<br>";
+    echo "<br>";
+    printUserSurveys($connection);
 
     // a little extra text that only the admin will see:
     if ($_SESSION['username'] == "admin") {
         echo "[admin sees more!]<br>";
+    }
+}
+
+function printUserSurveys($connection)
+{
+    // connect to database:
+
+    // if the connection fails, we need to know, so allow this exit:
+    if (! $connection) {
+        die("Connection failed: " . $mysqli_connect_error);
+    }
+
+    $username = $_SESSION['username'];
+
+    // get all surveys:
+    $query = "SELECT surveyID, title, type, topic FROM surveys where username='$username'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result !== null) {
+
+        echo "<table border ='1'>";
+        echo "<tr><td>surveyID</td><td>title</td><td>type</td><td>topic</td></tr>";
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td></tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "At present, there are no surveys to display<br>";
     }
 }
 

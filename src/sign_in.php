@@ -26,8 +26,6 @@ $password_val = "";
 
 // should we show the signin form:
 $show_signin_form = false;
-// message to output to user:
-$message = "";
 
 // checks the session variable named 'loggedInSkeleton'
 if (isset($_SESSION['loggedInSkeleton'])) {
@@ -70,7 +68,6 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         $result = mysqli_query($connection, $query); // +
 
         // if there was a match then set the session variables and display a success message:
-
         if (mysqli_num_rows($result) > 0) { // +
             while ($row = mysqli_fetch_array($result)) { // +
                 if (password_verify($password, $row['password'])) { // +
