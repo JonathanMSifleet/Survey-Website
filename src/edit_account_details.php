@@ -21,8 +21,13 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
     echo "You must be logged in to view this page.<br>";
 } else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-    displayDetailsAndEditOptions($connection, "edit_account_details.php", $_SESSION["username"]);
+    
+    $origin = "edit_account_details.php";
+    $username = $_SESSION["username"];
+        
+    printUserData($connection, $origin, $username);
+    printOptionsToEdit($origin, $username);
+    enactEdit($connection);
 
     mysqli_close($connection);
 }
