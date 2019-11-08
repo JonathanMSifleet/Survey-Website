@@ -18,7 +18,7 @@ createUserTable($connection);
 
 createSurveyTable($connection);
 
-createSurveyResponseTable($connection);
+createResponseTable($connection);
 
 insertDefaultUsers($connection);
 
@@ -82,7 +82,7 @@ function createSurveyTable($connection)
     }
 
     // make our table:
-    $sql = "CREATE TABLE surveys (UID VARCHAR(32), username VARCHAR(16), title VARCHAR(64), Instructions VARCHAR(65534), NoOfQuestions SMALLINT, PRIMARY KEY (UID))";
+    $sql = "CREATE TABLE surveys (UID VARCHAR(32), username VARCHAR(16), title VARCHAR(64), instructions VARCHAR(65534), numQuestions SMALLINT, type VARCHAR(16), topic VARCHAR(12), FOREIGN KEY (username) REFERENCES users(username), PRIMARY KEY (UID))";
 
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
@@ -92,7 +92,7 @@ function createSurveyTable($connection)
     }
 }
 
-function createSurveyResponseTable($connection) {
+function createResponseTable($connection) {
     
 }
 
