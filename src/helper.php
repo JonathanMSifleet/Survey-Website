@@ -570,10 +570,11 @@ function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLengt
 // this function is written by me:
 function deleteAccount($connection, $username)
 {
+    echo "<br>";
+    
     if ($username == "admin") {
         echo "The admin account cannot be deleted";
     } else {
-        echo "<br>";
         echo "Are you sure you want to delete the account " . $username . "? ";
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
         echo " ";

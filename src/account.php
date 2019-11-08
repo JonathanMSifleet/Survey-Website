@@ -27,7 +27,12 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 
     printUserData($connection, $origin, $username);
     printOptionsToEdit($origin, $username);
-    enactEdit($connection);
+
+    $currentURL = $_SERVER['REQUEST_URI'];
+
+    if ($currentURL !== "/account.php") {
+        enactEdit($connection);
+    }
 
     mysqli_close($connection);
 }
