@@ -12,6 +12,8 @@ require_once "credentials.php";
 // connect to the host:
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass);
 
+$time_pre = microtime(true);
+
 dropDatabase($connection, $dbname);
 
 createDatabase($connection, $dbname);
@@ -26,8 +28,24 @@ createResponseTable($connection);
 
 insertDefaultUsers($connection);
 
+$time_post = microtime(true);
+
+$timeTaken = calculateTimeTaken($time_pre, $time_post);
+
+echo "<br>Time taken: " . $timeTaken . " seconds";
+
 // we're finished, close the connection:
 mysqli_close($connection);
+
+function calculateTimeTaken($time_pre, $time_post) {
+    $timeTaken = $time_post - $time_pre;
+    $timeTaken = $timeTaken * 1000;
+    $timeTaken = floor($timeTaken);
+    $timeTaken = $timeTaken / 1000;
+    
+    return $timeTaken;
+    
+}
 
 function dropDatabase($connection, $dbname)
 {
@@ -127,7 +145,30 @@ function createQuestionTable($connection)
     }
 
     // make our table:
-    $sql = "CREATE TABLE questions (surveyID VARCHAR(32), questionID INT AUTO_INCREMENT, type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (questionID))";
+    $sql = "CREATE TABLE questions (surveyID VARCHAR(32), questionID VARCHAR(32), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (surveyID, questionID))";
+
+    // no data returned, we just test for true(success)/false(failure):
+    if (mysqli_query($connection, $sql)) {
+        echo "Table created successfully: questions<br>";
+    } else {
+        die("Error creating table: " . mysqli_error($connection));
+    }
+}
+
+function createResponseTable($connection)
+{
+    // if there's an old version of our table, then drop it:
+    $sql = "DROP TABLE IF EXISTS responses";
+
+    // no data returned, we just test for true(success)/false(failure):
+    if (mysqli_query($connection, $sql)) {
+        echo "Dropped existing table: responses<br>";
+    } else {
+        die("Error checking for existing table: " . mysqli_error($connection));
+    }
+
+    // make our table:
+    $sql = "CREATE TABLE responses (surveyID VARCHAR(32), questionID INT AUTO_INCREMENT, type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (questionID))";
 
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
