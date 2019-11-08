@@ -1,8 +1,6 @@
 <?php
 
 // Things to notice:
-// This is the page where each user can MANAGE their surveys
-// As a suggestion, you may wish to consider using this page to LIST the surveys they have created
 // Listing the available surveys for each user will probably involve accessing the contents of another TABLE in your database
 // Give users options such as to CREATE a new survey, EDIT a survey, ANALYSE a survey, or DELETE a survey, might be a nice idea
 // You will probably want to make some additional PHP scripts that let your users CREATE and EDIT surveys and the questions they contain
@@ -46,9 +44,9 @@ else {
 function printSurveys($connection, $username, $userIsAdmin)
 {
     if ($userIsAdmin) {
-        $query = "SELECT surveyID, username, title, type, topic FROM surveys";
+        $query = "SELECT surveyID, username, title, type, topic FROM surveys ORDER BY username ASC";
     } else {
-        $query = "SELECT surveyID, title, type, topic FROM surveys where username='$username'";
+        $query = "SELECT surveyID, title, type, topic FROM surveys where username='$username' ORDER BY username ASC";
     }
 
     $result = mysqli_query($connection, $query);
@@ -58,9 +56,9 @@ function printSurveys($connection, $username, $userIsAdmin)
         echo "<table border ='1'>";
 
         if ($userIsAdmin) {
-            echo "<tr><td>surveyID</td><td>username</td><td>title</td><td>type</td><td>topic</td></tr>";
+            echo "<tr><td>surveyID</td><td>username</td><td>title</td><td>type</td><td>topic</td><td>Delete Survey</td></tr>";
             while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td></tr>";
+                echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
             }
         } else {
             echo "<tr><td>surveyID</td><td>title</td><td>type</td><td>topic</td></tr>";
@@ -72,6 +70,11 @@ function printSurveys($connection, $username, $userIsAdmin)
     } else {
         echo "At present, there are no surveys to display<br>";
     }
+    
+    if($_GET['deleteSurvey'] == true) {
+        echo "delete survey";
+    }
+    
 }
 
 // finish off the HTML for this page:

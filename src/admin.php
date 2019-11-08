@@ -63,7 +63,7 @@ function initCreateAccount($connection)
     $email = "";
     $number = ""; // +
     $dob = ""; // +
-    
+
     $todaysDate = date('Y-m-d'); // get current date: +
 
     if (isset($_POST['username'])) {

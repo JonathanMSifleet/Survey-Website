@@ -37,7 +37,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    // if the connection fails, we need to know, so allow this exit:
+        // if the connection fails, we need to know, so allow this exit:
     if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
