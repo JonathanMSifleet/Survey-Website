@@ -22,7 +22,7 @@ if (! isset($_SESSION['loggedInSkeleton'])) {
 } else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    $origin = "edit_account_details.php";
+    $origin = "account.php";
     $username = $_SESSION["username"];
 
     printUserData($connection, $origin, $username);
