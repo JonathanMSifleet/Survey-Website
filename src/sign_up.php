@@ -23,16 +23,13 @@ $surname = ""; // +
 $number = ""; // +
 $dob = ""; // +
 
-$arrayOfErrors = array();
-initEmptyArray($arrayOfErrors, 6);
+$arrayOfSignUpErrors = array();
+initEmptyArray($arrayOfSignUpErrors, 6);
 
 // global: +
 $todaysDate = date('Y-m-d'); // get current date: +
 
-// should we show the signup form?:
-$show_signup_form = false;
 // message to output to user:
-$message = "";
 
 // checks the session variable named 'loggedInSkeleton'
 if (isset($_SESSION['loggedInSkeleton'])) {
@@ -65,10 +62,10 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     }
     // /////////
 
-    createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors); // +
+    createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-    $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);
+    $errors = concatValidationMessages($arrayOfSignUpErrors);
     // /////////
 
     // check that all the validation tests passed before going to the database:
@@ -83,18 +80,18 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // no data returned, we just test for true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            $message = "Signup was successful. Please sign in<br>";
+            echo "Signup was successful. Please sign in<br>";
         } else {
             // show the form:
-            $show_signup_form = true;
+            showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors);
             // show an unsuccessful signup message:
-            $message = "Sign up failed, please try again<br>";
+            echo "Sign up failed, please try again<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
-        $show_signup_form = true;
+        showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors);
         // show an unsuccessful signin message:
-        $message = "Sign up failed, please check the errors shown above and try again<br>";
+        echo "Sign up failed, please check the errors shown above and try again<br>";
     }
 
     // we're finished with the database, close the connection:
@@ -102,15 +99,16 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 } else {
 
     // just a normal visit to the page, show the signup form:
-
-    $show_signup_form = true;
+    showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);
 }
 
-if ($show_signup_form) {
+// finish off the HTML for this page:
+require_once "footer.php";
 
+function showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors)
+{
     // show the form that allows users to sign up
     // Note we use an HTTP POST request to avoid their password appearing in the URL:
-
     $minDate = calcEarliestDate($todaysDate);
     $maxDate = calcLatestDate($todaysDate);
 
@@ -122,9 +120,9 @@ if ($show_signup_form) {
       Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
-      <br> 
+      <br>
       Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
-      <br>   
+      <br>
       First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
       <br>
       Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
@@ -134,14 +132,8 @@ if ($show_signup_form) {
       Date of birth: <input type="date" name="dob" min=$minDate max="$maxDate" value="$dob" required> $arrayOfErrors[6]
       <br>
       <input type="submit" value="Submit">
-    </form>	
+    </form>
     _END;
 }
-
-// display our message to the user:
-echo $message;
-
-// finish off the HTML for this page:
-require_once "footer.php";
 
 ?>

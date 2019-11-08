@@ -149,7 +149,7 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
     echo <<<_END
     <form action="$currentURL" method="post">
       Please fill in the following fields:<br>
-      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfAccountErrors[0]
       <br>
       Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
       <br>
