@@ -246,9 +246,9 @@ function createArrayOfAccountErrors($username, $email, $password, $firstname, $s
 //
 function createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $maxInstructionLength, &$arrayOfSurveyErrors)
 {
-    $arrayOfErrors[0] = validateStringLength($title, 4, 64); // +
-    $arrayOfErrors[1] = validateStringLength($instructions, 1, $maxInstructionLength);
-    $arrayOfErrors[2] = validateNumberOfQuestion($noOfQuestions, 12, 32);
+    $arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
+    $arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, $maxInstructionLength);
+    $arrayOfSurveyErrors[2] = validateNumberOfQuestion($noOfQuestions, 1, 32);
 }
 
 //
@@ -258,13 +258,14 @@ function validateNumberOfQuestion($input, $minNo, $maxNo)
     $errors = "";
     $errors = checkIsNonNumeric($input);
     $errors = $errors . validateIntSize($input, $minNo, $maxNo);
-    
+    return $errors;
 }
-    
-function validateIntSize($input, $minNo, $maxNo) {
+
+function validateIntSize($input, $minNo, $maxNo)
+{
     if ($input < $minNo) {
         // wasn't a valid length, return a help message:
-        return "Input length: " . $input. ", minimum length: " . $minNo;
+        return "Input length: " . $input . ", minimum length: " . $minNo;
     } elseif ($input > $maxNo) {
         // wasn't a valid length, return a help message:
         return "Input length: " . $input . ", maximum length: " . $maxNo;
@@ -273,8 +274,6 @@ function validateIntSize($input, $minNo, $maxNo) {
         return "";
     }
 }
-    
-
 
 // this function concatenates each valuae in the array of errors to create one large error, then returns this value
 // this was created by me:

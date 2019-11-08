@@ -99,7 +99,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 } else {
 
     // just a normal visit to the page, show the signup form:
-    showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);
+    showSignUpForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfSignUpErrors);
 }
 
 // finish off the HTML for this page:
