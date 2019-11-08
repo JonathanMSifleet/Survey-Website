@@ -24,7 +24,7 @@ createSurveyTable($connection);
 
 createQuestionTable($connection);
 
-// createResponseTable($connection);
+createResponseTable($connection);
 
 insertDefaultUsers($connection);
 
@@ -145,7 +145,7 @@ function createQuestionTable($connection)
     }
 
     // make our table:
-    $sql = "CREATE TABLE questions (questionID INT, surveyID VARCHAR(32), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (surveyID, questionID) AS 'surveyID_questionID')";
+    $sql = "CREATE TABLE questions (questionID INT AUTO_INCREMENT, surveyID VARCHAR(32), questionName VARCHAR(128), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (questionID))";
 
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
@@ -168,7 +168,7 @@ function createResponseTable($connection)
     }
 
     // make our table:
-    $sql = "CREATE TABLE ";
+    $sql = "CREATE TABLE responses (questionID INT, username VARCHAR(20), responseID INT AUTO_INCREMENT,  response VARCHAR(65533), FOREIGN KEY (username) REFERENCES users(username), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (responseID))";
 
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
