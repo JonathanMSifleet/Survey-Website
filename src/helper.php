@@ -679,7 +679,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
         $query = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$username','$firstname','$surname','$password','$email','$number', '$dob')";
         $result = mysqli_query($connection, $query);
 
-        // no data returned, we just test for true(success)/false(failure):
+        // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
             echo "Account creation was successful<br>";
@@ -701,9 +701,9 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 
 //
 //
-function sanitiseUserData($connection, &$username, &$email, &$password, &$firstname, &$surname, &$number, &$dob) {
+function sanitiseUserData($connection, &$username, &$email, &$password, &$firstname, &$surname, &$number, &$dob)
+{
     // SANITISATION (see helper.php for the function definition)
-    // cannot be put into function as _POST requires superglobals
     $username = sanitise($_POST['username'], $connection);
     $email = sanitise($_POST['email'], $connection);
     $password = sanitise($_POST['password'], $connection);

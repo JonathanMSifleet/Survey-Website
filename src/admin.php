@@ -30,7 +30,7 @@ else {
         echo "<br><br>";
 
         if (isset($_GET['createAccount'])) {
-            initCreateAccount($connection);
+            initCreateAccount($connection, $firstname, $surname, $password, $email, $number, $dob);
         } else {
             displayListOfUsers($connection);
             if (isset($_GET['username'])) {
@@ -55,8 +55,6 @@ function initCreateAccount($connection)
     $arrayOfAccountCreationErrors = array();
     initEmptyArray($arrayOfAccountCreationErrors, 6);
 
-    $todaysDate = date('Y-m-d'); // get current date: +
-
     // default values we show in the form:
     $username = "";
     $firstname = ""; // +
@@ -65,6 +63,8 @@ function initCreateAccount($connection)
     $email = "";
     $number = ""; // +
     $dob = ""; // +
+    
+    $todaysDate = date('Y-m-d'); // get current date: +
 
     if (isset($_POST['username'])) {
         // account tried to be created

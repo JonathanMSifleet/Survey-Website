@@ -17,7 +17,7 @@ else {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    initNewSurvey();
+    initNewSurvey($connection);
 }
 
 // finish of the HTML for this page:
@@ -28,32 +28,18 @@ function initNewSurvey($connection)
     $arrayOfSurveyErrors = array();
     initEmptyArray($arrayOfSurveyErrors, 2);
 
+    $maxInstructionLength = (2 ** 16) - 2; // max varchar length = 2^16, deduct 2 just to be sure
+
     $title = "";
     $instructions = "";
     $noOfQuestions = null;
 
-    $maxInstructionLength = (2 ** 16) - 2; // max varchar length = 2^16, deduct 2 just to be sure
-
     if (isset($_POST['title'])) {
 
-        // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
         // SANITISATION (see helper.php for the function definition)
-        // cannot be put into function as _POST requires superglobals
-
         $title = sanitise($_POST['title'], $connection);
         $instructions = sanitise($_POST['instructions'], $connection);
         $noOfQuestions = sanitise($_POST['noOfQuestions'], $connection);
-
-        createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
-        $errors = concatValidationMessages($arrayOfSurveyErrors);
-
-        if ($errors == "") {
-            return true;
-
-            // code to do stuff
-        } else {
-            displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
-        }
     } else {
         displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
     }
@@ -63,8 +49,6 @@ function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInst
 {
     echo "Input survey details:";
 
-    // error reporting turned off and re-enabled to hide undefined array of errors variable
-    // error_reporting(0);
     echo <<<_END
     <form action="create_survey.php" method="post">
       Please fill in the following fields:<br>
@@ -77,7 +61,33 @@ function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInst
       <input type="submit" value="Submit">
     </form>
     _END;
-    // error_reporting(1);
+}
+
+function createSurvey($connection, $title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors)
+{
+    createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
+    $errors = concatValidationMessages($arrayOfSurveyErrors);
+
+    if ($errors == "") {
+
+        // try to insert new survey:
+        $query = "";
+        $result = mysqli_query($connection, $query);
+
+        // if no data returned, we set result to true(success)/false(failure):
+        if ($result) {
+            // show a successful signup message:
+            echo "Survey creation was successful<br>";
+        } else {
+            // validation failed, show the form again with guidance:
+            displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
+            // show an unsuccessful signup message:
+            echo "Survey creation failed, please try again<br>";
+        }
+    } else {
+        // validation failed, show the form again with guidance:
+        displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
+    }
 }
 
 ?>
