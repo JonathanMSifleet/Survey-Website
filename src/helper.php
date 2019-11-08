@@ -474,19 +474,19 @@ function printOptionsToEdit($origin, $username)
     $URL = $origin . "?username=" . $username;
 
     echo "<br>";
-    echo "<a href =$URL&editAccountDetails=true&changeEmail=true>Change email</a>";
+    echo "<a href =$URL&changeEmail=true>Change email</a>";
     echo " ";
-    echo "<a href =$URL&editAccountDetails=true&changePassword=true>Change password</a>";
+    echo "<a href =$URL&changePassword=true>Change password</a>";
     echo " ";
-    echo "<a href =$URL&editAccountDetails=true&changeFirstname=true>Change firstname</a>";
+    echo "<a href =$URL&changeFirstname=true>Change firstname</a>";
     echo " ";
-    echo "<a href =$URL&editAccountDetails=true&changeSurname=true>Change surname</a>";
+    echo "<a href =$URL&changeSurname=true>Change surname</a>";
     echo " ";
-    echo "<a href =$URL&editAccountDetails=true&changeNumber=true>Change number</a>";
+    echo "<a href =$URL&changeNumber=true>Change number</a>";
     echo " ";
-    echo "<a href =$URL&editAccountDetails=true&changedob=true>Change date of birth</a>";
+    echo "<a href =$URL&changedob=true>Change date of birth</a>";
     echo " ";
-    echo "<a href =$URL&editAccountDetails=true&deleteAccount=true>Delete user account</a>";
+    echo "<a href =$URL&deleteAccount=true>Delete user account</a>";
 }
 
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
@@ -595,7 +595,7 @@ function enactEdit($connection)
 {
     if (isset($_GET['deleteAccount'])) {
         deleteAccount($connection, $_GET['username']);
-    } elseif (isset($_GET['editAccountDetails'])) {
+    } else {
 
         $superGlobalName = getSuperGlobalName($_SERVER['REQUEST_URI']);
 

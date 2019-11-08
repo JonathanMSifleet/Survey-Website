@@ -30,7 +30,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     <a href='about.php'>About</a> ||
     <a href='surveys_manage.php'>My Surveys</a> ||
     <a href='competitors.php'>Design and Analysis</a> ||
-    <a href='edit_account_details.php'>My Account</a> ||
+    <a href='account.php'>Account</a> ||
     <a href='sign_out.php'>Sign Out ({$_SESSION['username']})</a>
     _END;
 
