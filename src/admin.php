@@ -80,7 +80,7 @@ function displayListOfUsers($connection)
 {
     // queries mysql table, outputs results to table
     // this is written by me:
-    $query = "SELECT username FROM users"; // +
+    $query = "SELECT username FROM users ORDER BY username ASC"; // +
     $result = mysqli_query($connection, $query); // +
 
     echo "Or click a name from the table to view user's data:";

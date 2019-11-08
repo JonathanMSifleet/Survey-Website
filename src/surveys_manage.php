@@ -24,12 +24,16 @@ else {
     echo "<a href = create_survey.php>Create a survey</a>";
     echo "<br>";
     echo "<br>";
-    printUserSurveys($connection);
-
-    // a little extra text that only the admin will see:
-    if ($_SESSION['username'] == "admin") {
-        echo "[admin sees more!]<br>";
+    
+    $username = $_SESSION['username'];
+    
+    if ($username == "admin") {
+        echo "User surveys:";
+    } else {
+        echo "Your surveys";
     }
+    
+    printUserSurveys($connection);
 }
 
 function printUserSurveys($connection)
@@ -41,10 +45,14 @@ function printUserSurveys($connection)
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    $username = $_SESSION['username'];
+    // get surveys:
 
-    // get all surveys:
-    $query = "SELECT surveyID, title, type, topic FROM surveys where username='$username'";
+    if ($username = "admin") {
+        $query = "SELECT surveyID, title, type, topic FROM surveys";
+    } else {
+        $query = "SELECT surveyID, title, type, topic FROM surveys where username='$username'";
+    }
+
     $result = mysqli_query($connection, $query);
 
     if ($result !== null) {
