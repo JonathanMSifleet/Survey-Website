@@ -24,7 +24,7 @@ createSurveyTable($connection);
 
 createQuestionTable($connection);
 
-createResponseTable($connection);
+// createResponseTable($connection);
 
 insertDefaultUsers($connection);
 
@@ -37,14 +37,14 @@ echo "<br>Time taken: " . $timeTaken . " seconds";
 // we're finished, close the connection:
 mysqli_close($connection);
 
-function calculateTimeTaken($time_pre, $time_post) {
+function calculateTimeTaken($time_pre, $time_post)
+{
     $timeTaken = $time_post - $time_pre;
     $timeTaken = $timeTaken * 1000;
     $timeTaken = floor($timeTaken);
     $timeTaken = $timeTaken / 1000;
-    
+
     return $timeTaken;
-    
 }
 
 function dropDatabase($connection, $dbname)
@@ -145,7 +145,7 @@ function createQuestionTable($connection)
     }
 
     // make our table:
-    $sql = "CREATE TABLE questions (surveyID VARCHAR(32), questionID VARCHAR(32), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (surveyID, questionID))";
+    $sql = "CREATE TABLE questions (questionID INT, surveyID VARCHAR(32), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (surveyID, questionID) AS 'surveyID_questionID')";
 
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
@@ -168,7 +168,7 @@ function createResponseTable($connection)
     }
 
     // make our table:
-    $sql = "CREATE TABLE responses (surveyID VARCHAR(32), questionID VARCHAR(32), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (surveyID, questionID))";
+    $sql = "CREATE TABLE ";
 
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
