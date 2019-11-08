@@ -40,7 +40,7 @@ else {
         $errors = concatValidationMessages($arrayOfSurveyErrors);
         
         if ($errors == "") {
-            
+            echo "No errors";
         } else {
             displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
         }
