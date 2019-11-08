@@ -6,8 +6,8 @@
 // execute the header script:
 require_once "header.php";
 
-$arrayOfErrors = array();
-initEmptyArray($arrayOfErrors, 6);
+$arrayOfAccountErrors = array();
+initEmptyArray($arrayOfAccountErrors, 6);
 
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
@@ -23,7 +23,7 @@ else {
     if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
-    
+
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
     if ($_SESSION['username'] == "admin") {
 
@@ -110,11 +110,9 @@ function createAccount($connection)
 
         // this was created by me:
         // "should" return array, but instead edits array reference
-        createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors); // +
-        $numberOfErrors = count($arrayOfErrors); // +
-
-        // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-        $errors = concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfErrors);
+        createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors); // +
+                                                                                                                                           // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
+        $errors = concatValidationMessages($arrayOfAccountErrors);
         // /////////
 
         // check that all the validation tests passed before going to the database:
@@ -131,38 +129,44 @@ function createAccount($connection)
                 // show a successful signup message:
                 echo "Signup was successful. Please sign in<br>";
             } else {
-
                 echo "Sign up failed, please try again<br>";
             }
+        } else {
+            displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors);
         }
         // we're finished with the database, close the connection:
     } else {
-
-        $currentURL = $_SERVER['REQUEST_URI'];
-        
-        // error reporting turned off and re-enabled to hide undefined array of errors variable
-        error_reporting(0);
-        echo <<<_END
-        <form action="$currentURL" method="post">
-          Please fill in the following fields:<br>
-          Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
-          <br>
-          Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfErrors[1]
-          <br>
-          Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfErrors[2]
-          <br>
-          First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfErrors[3]
-          <br>
-          Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfErrors[4]
-          <br>
-          Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfErrors[5]
-          <br>
-          Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfErrors[6]
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
-        error_reporting(1);
+        displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors);
     }
 }
+
+function displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors)
+{
+    $currentURL = $_SERVER['REQUEST_URI'];
+
+    // error reporting turned off and re-enabled to hide undefined array of errors variable
+    error_reporting(0);
+    echo <<<_END
+    <form action="$currentURL" method="post">
+      Please fill in the following fields:<br>
+      Username: <input type="text" name="username" minlength="3" maxlength="16" value="$username" required> $arrayOfErrors[0]
+      <br>
+      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
+      <br>
+      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfAccountErrors[2]
+      <br>
+      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfAccountErrors[3]
+      <br>
+      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfAccountErrors[4]
+      <br>
+      Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
+      <br>
+      Date of birth: <input type="date" name="dob" max="$todaysDate" value="$dob" required> $arrayOfAccountErrors[6]
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+    error_reporting(1);
+}
+
 ?>

@@ -231,7 +231,7 @@ function createArrayOfUsableCharacters()
 
 // this function validates all user inputs, and adds each validation message to an array of errors
 // this was created by me:
-function createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
+function createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
     $arrayOfErrors[0] = validateStringLength($username, 1, 20); // +
     $arrayOfErrors[1] = validateStringLength($email, 1, 64);
@@ -244,9 +244,8 @@ function createArrayOfErrors($username, $email, $password, $firstname, $surname,
 
 // this function concatenates each valuae in the array of errors to create one large error, then returns this value
 // this was created by me:
-function concatValidationMessages($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors)
+function concatValidationMessages($arrayOfErrors)
 {
-    createArrayOfErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, $arrayOfErrors); // +
     $numberOfErrors = count($arrayOfErrors); // +
 
     $errors = "";
