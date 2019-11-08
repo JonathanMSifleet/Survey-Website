@@ -168,11 +168,11 @@ function createResponseTable($connection)
     }
 
     // make our table:
-    $sql = "CREATE TABLE responses (surveyID VARCHAR(32), questionID INT AUTO_INCREMENT, type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (questionID))";
+    $sql = "CREATE TABLE responses (surveyID VARCHAR(32), questionID VARCHAR(32), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (surveyID, questionID))";
 
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
-        echo "Table created successfully: questions<br>";
+        echo "Table created successfully: responses<br>";
     } else {
         die("Error creating table: " . mysqli_error($connection));
     }
@@ -257,7 +257,7 @@ function insertDefaultUsers($connection)
         if ($i == 0) {
             $passwords[$i] = 'secret'; // manually overrides admin password
         } else {
-            $passwords[$i] = encryptInput(generateAlphanumericString());
+            $passwords[$i] = generateAlphanumericString();
         }
         // ///////
 
