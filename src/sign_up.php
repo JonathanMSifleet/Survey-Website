@@ -14,9 +14,6 @@
 // execute the header script:
 require_once "header.php";
 
-$arrayOfAccountCreationErrors = array();
-initEmptyArray($arrayOfAccountCreationErrors, 6);
-
 // global: +
 $todaysDate = date('Y-m-d'); // get current date: +
 
@@ -28,8 +25,8 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     echo "You are already logged in, please log out if you wish to create a new account<br>";
 } else {
 
-    $arrayOfAccountErrors = array();
-    initEmptyArray($arrayOfAccountErrors, 6);
+    $arrayOfAccountCreationErrors = array();
+    initEmptyArray($arrayOfAccountCreationErrors, 6);
 
     // default values we show in the form:
     $username = "";

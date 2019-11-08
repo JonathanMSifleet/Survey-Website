@@ -71,6 +71,7 @@ function initCreateAccount($connection)
 
         createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
     } else {
+        // show the sign up form
         displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
     }
 }
