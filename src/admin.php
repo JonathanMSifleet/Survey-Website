@@ -26,44 +26,22 @@ else {
 
         echo "Click to create a new account: <br>";
 
-        echo "<a href ={$_SERVER['REQUEST_URI']}?createAccount=true>Create user account</a>";
+        echo "<a href =admin.php?createAccount=true>Create user account</a>";
         echo "<br><br>";
 
         if (isset($_GET['createAccount'])) {
-            createAccount($connection);
+            initCreateAccount($connection);
         } else {
-
-            // queries mysql table, outputs results to table
-            // this is written by me:
-            $query = "SELECT username FROM users"; // +
-            $result = mysqli_query($connection, $query); // +
-
-            echo "Or click a name from the table to view user's data:";
-            echo "<br>";
-
-            echo "<table border ='1'>";
-            echo "<tr><td>username</td></tr>";
-
-            while ($row = mysqli_fetch_assoc($result)) {
-                // if row hyperlink is clicked, set superglobal with user's name
-                echo "<tr><td><a href =?username={$row['username']}>{$row['username']}</a></td></tr>"; // turns row result into hyperlink
-            }
-            echo "</table>";
-
-            // print user's data
-            if (isset($_GET['username'])) {
-                displayDetailsAndEditOptions($connection, "admin.php", $_GET['username']);
-            }
+            displayListOfUsers($connection);
         }
     } else {
         echo "You don't have permission to view this page <br>";
     }
-    mysqli_close($connection);
 }
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function createAccount($connection)
+function initCreateAccount($connection)
 {
     $arrayOfAccountCreationErrors = array();
     initEmptyArray($arrayOfAccountCreationErrors, 6);
@@ -94,6 +72,31 @@ function createAccount($connection)
         createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
     } else {
         displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
+    }
+}
+
+function displayListOfUsers($connection)
+{
+    // queries mysql table, outputs results to table
+    // this is written by me:
+    $query = "SELECT username FROM users"; // +
+    $result = mysqli_query($connection, $query); // +
+
+    echo "Or click a name from the table to view user's data:";
+    echo "<br>";
+
+    echo "<table border ='1'>";
+    echo "<tr><td>username</td></tr>";
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        // if row hyperlink is clicked, set superglobal with user's name
+        echo "<tr><td><a href =?username={$row['username']}>{$row['username']}</a></td></tr>"; // turns row result into hyperlink
+    }
+    echo "</table>";
+
+    // print user's data
+    if (isset($_GET['username'])) {
+        displayDetailsAndEditOptions($connection, "admin.php", $_GET['username']);
     }
 }
 
