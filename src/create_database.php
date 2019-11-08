@@ -8,18 +8,24 @@ require_once "credentials.php";
 // connect to the host:
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass);
 $time_pre = microtime(true);
+
 dropDatabase($connection, $dbname);
+
 createDatabase($connection, $dbname);
 createUserTable($connection);
 createSurveyTable($connection);
 createQuestionTable($connection);
 createResponseTable($connection);
+
 insertDefaultUsers($connection);
+
 $time_post = microtime(true);
 $timeTaken = calculateTimeTaken($time_pre, $time_post);
 echo "<br>Time taken: " . $timeTaken . " seconds";
+
 // we're finished, close the connection:
 mysqli_close($connection);
+
 function calculateTimeTaken($time_pre, $time_post)
 {
     $timeTaken = $time_post - $time_pre;
@@ -28,6 +34,7 @@ function calculateTimeTaken($time_pre, $time_post)
     $timeTaken = $timeTaken / 1000;
     return $timeTaken;
 }
+
 function dropDatabase($connection, $dbname)
 {
     // exit the script with a useful message if there was an error:
@@ -43,6 +50,7 @@ function dropDatabase($connection, $dbname)
         die("Error dropping database: " . mysqli_error($connection));
     }
 }
+
 function createDatabase($connection, $dbname)
 {
     // exit the script with a useful message if there was an error:
@@ -60,6 +68,7 @@ function createDatabase($connection, $dbname)
     // connect to our database:
     mysqli_select_db($connection, $dbname);
 }
+
 function createUserTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -72,13 +81,14 @@ function createUserTable($connection)
     }
     // make our table:
     $sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(60), email VARCHAR(64), number VARCHAR(11), dob DATE, PRIMARY KEY(username))"; // phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
-    // no data returned, we just test for true(success)/false(failure):
+                                                                                                                                                                                                  // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: users<br>";
     } else {
         die("Error creating table: " . mysqli_error($connection));
     }
 }
+
 function createSurveyTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -98,6 +108,7 @@ function createSurveyTable($connection)
         die("Error creating table: " . mysqli_error($connection));
     }
 }
+
 function createQuestionTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -117,6 +128,7 @@ function createQuestionTable($connection)
         die("Error creating table: " . mysqli_error($connection));
     }
 }
+
 function createResponseTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -136,6 +148,7 @@ function createResponseTable($connection)
         die("Error creating table: " . mysqli_error($connection));
     }
 }
+
 function insertDefaultUsers($connection)
 {
     // put some data in our table:
@@ -208,7 +221,7 @@ function insertDefaultUsers($connection)
         }
         // ///////
         $passwords[$i] = encryptInput($passwords[$i]); // encrypt password before entering DB +
-        // create the SQL query to be executed
+                                                       // create the SQL query to be executed
         $sql = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$usernames[$i]','$firstnames[$i]','$surnames[$i]','$passwords[$i]','$emails[$i]','$numbers[$i]', '$dobs[$i]')";
         // run the above query '$sql' on our DB
         // no data returned, we just test for true(success)/false(failure):

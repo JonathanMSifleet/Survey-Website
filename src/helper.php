@@ -259,15 +259,6 @@ function createArrayOfAccountErrors($username, $email, $password, $firstname, $s
 
 //
 //
-function createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $maxInstructionLength, &$arrayOfSurveyErrors)
-{
-    $arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
-    $arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, $maxInstructionLength);
-    $arrayOfSurveyErrors[2] = validateNumberOfQuestion($noOfQuestions, 1, 32);
-}
-
-//
-//
 function validateNumberOfQuestion($input, $minNo, $maxNo)
 {
     $errors = "";

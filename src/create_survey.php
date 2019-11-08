@@ -33,6 +33,8 @@ function initNewSurvey($connection)
     $title = "";
     $instructions = "";
     $noOfQuestions = null;
+    $type = "";
+    $topic = "";
 
     if (isset($_POST['title'])) {
 
@@ -45,9 +47,9 @@ function initNewSurvey($connection)
     }
 }
 
-function createSurvey($connection, $title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors)
+function createSurvey($connection, $title, $instructions, $noOfQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors)
 {
-    createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
+    createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
     $errors = concatValidationMessages($arrayOfSurveyErrors);
 
     if ($errors == "") {
@@ -62,22 +64,22 @@ function createSurvey($connection, $title, $instructions, $noOfQuestions, $maxIn
             echo "Survey creation was successful<br>";
         } else {
             // validation failed, show the form again with guidance:
-            displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
+            displayCreateSurveyForm($title, $instructions, $noOfQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
             // show an unsuccessful signup message:
             echo "Survey creation failed, please try again<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
-        displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors);
+        displayCreateSurveyForm($title, $instructions, $noOfQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
     }
 }
 
-function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInstructionLength, $arrayOfSurveyErrors)
+function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors)
 {
     echo "Input survey details:";
-    
-    //max number of questions length to be compatible with MYSQL smallint max value
-    
+
+    // max number of questions length to be compatible with MYSQL smallint max value
+
     echo <<<_END
     <form action="create_survey.php" method="post">
       Please fill in the following fields:<br>
@@ -85,11 +87,26 @@ function displayCreateSurveyForm($title, $instructions, $noOfQuestions, $maxInst
       <br>
       Instructions: <input type="text" name="instructions" minlength="2" maxlength="$maxInstructionLength" value="$instructions" required> $arrayOfSurveyErrors[1]
       <br>
-      Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="32767" value="$noOfQuestions"> $arrayOfSurveyErrors[2]
+      Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$noOfQuestions" required> $arrayOfSurveyErrors[2]
+      <br>
+      Type of Survey: <input type="text" name="noOfQuestions" maxlength="64" value="$type"> $arrayOfSurveyErrors[3]
+      <br>
+      Survey Topic: <input type="text" name="noOfQuestions" maxlength="32" value="$topic"> $arrayOfSurveyErrors[4]
       <br>
       <input type="submit" value="Submit">
     </form>
     _END;
+}
+
+//
+//
+function createArrayOfSurveyErrors($title, $instructions, $noOfQuestions, $type, $topic, $maxInstructionLength, &$arrayOfSurveyErrors)
+{
+    $arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
+    $arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, $maxInstructionLength);
+    $arrayOfSurveyErrors[2] = validateNumberOfQuestion($noOfQuestions, 1, 32);
+    $arrayOfSurveyErrors[3] = validateStringLength($type, 0, 64);
+    $arrayOfSurveyErrors[4] = validateStringLength($topic, 0, 32);
 }
 
 ?>
