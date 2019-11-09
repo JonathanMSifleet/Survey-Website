@@ -15,6 +15,7 @@ createDatabase($connection, $dbname);
 createUserTable($connection);
 createSurveyTable($connection);
 createQuestionTable($connection);
+createQuestionOptionsTable($connection);
 createResponseTable($connection);
 
 insertDefaultUsers($connection);
@@ -121,6 +122,25 @@ function createQuestionTable($connection)
     }
     // make our table:
     $sql = "CREATE TABLE questions (questionID INT AUTO_INCREMENT, surveyID VARCHAR(32), questionName VARCHAR(128), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (questionID))";
+    // no data returned, we just test for true(success)/false(failure):
+    if (mysqli_query($connection, $sql)) {
+        echo "Table created successfully: questions<br>";
+    } else {
+        die("Error creating table: " . mysqli_error($connection));
+    }
+}
+
+function createQuestionOptionsTable($connection) {
+    // if there's an old version of our table, then drop it:
+    $sql = "DROP TABLE IF EXISTS questionOptions";
+    // no data returned, we just test for true(success)/false(failure):
+    if (mysqli_query($connection, $sql)) {
+        echo "Dropped existing table: questionOptions<br>";
+    } else {
+        die("Error checking for existing table: " . mysqli_error($connection));
+    }
+    // make our table:
+    $sql = "CREATE TABLE questionOptions (questionID INT, optionName VARCHAR(32), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (questionID, optionName))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: questions<br>";
