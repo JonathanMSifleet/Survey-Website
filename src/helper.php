@@ -301,13 +301,16 @@ function getSuperGlobalName($inputURL)
 {
     $tempString = $inputURL;
 
-    while (containsAmpersand($tempString)) {
-        $tempString = removeAmpersand($tempString);
+    if (containsAmpersand($tempString)) {
+        while (containsAmpersand($tempString)) {
+            $tempString = removeAmpersand($tempString);
+        }
+        $tempString = substr($tempString, 0, strlen($tempString) - 5); // removes '=true' from end of string
+        $tempString = substr($tempString, 6, strlen($tempString)); // removes 'change' from beginning of string
+        return strtolower($tempString);
+    } else {
+        return "";
     }
-
-    $tempString = substr($tempString, 0, strlen($tempString) - 5); // removes '=true' from end of string
-    $tempString = substr($tempString, 6, strlen($tempString)); // removes 'change' from beginning of string
-    return strtolower($tempString);
 }
 
 function containsAmpersand($inputString)

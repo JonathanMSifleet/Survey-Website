@@ -38,11 +38,11 @@ else {
                 $username = $_GET['username'];
 
                 printUserData($connection, $origin, $username);
-                printOptionsToEdit($origin, $username);
 
                 $currentURL = $_SERVER['REQUEST_URI'];
 
                 if ($currentURL !== "/admin.php") {
+                    printOptionsToEdit($origin, $username);
                     enactEdit($connection);
                 }
             }
