@@ -17,12 +17,11 @@ else {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    // echoVariable($surveyID);
+    $numQuestions = getNoOfSurveyQuestions($connection); // by removing survey's number of questions, user cannot edit it from url bar
 
-    // for ($i = 0; $i < $numQuestions; $i ++) {
-    initNewQuestion($connection, $_GET['surveyID']);
-
-    // }}
+    for ($i = 0; $i < $numQuestions; $i ++) {
+        initNewQuestion($connection, $_GET['surveyID']);
+    }
 
     // finish of the HTML for this page:
     require_once "footer.php";
@@ -79,7 +78,7 @@ function createQuestion($connection, $surveyID, $questionName, $type, $required,
             // validation failed, show the form again with guidance:
             displayCreateQuestionForm($questionName, $type, $required, $arrayOfQuestionErrors);
             // show an unsuccessful signup message:
-            echo "Survey creation failed, please try again<br>";
+            echo "Question creation failed, please try again<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
@@ -122,6 +121,27 @@ function createArrayOfQuestionErrors($questionName, $type, &$arrayOfQuestionErro
 {
     $arrayOfQuestionErrors[0] = validateStringLength($questionName, 4, 64);
     // $arrayOfQuestionErrors[1] = validateStringLength($type, 1, 32);
+}
+
+function getNoOfSurveyQuestions($connection)
+{
+    $surveyID = $_GET['surveyID'];
+
+    $query = "SELECT numQuestions FROM surveys WHERE surveyID = '$surveyID'";
+    $result = mysqli_query($connection, $query);
+
+    // if no data returned, we set result to true(success)/false(failure):
+    if ($result) {
+
+        $row = (mysqli_fetch_row($result));
+
+        return $row[0];
+
+        // return mysqli_fetch_assoc($result);
+    } else {
+        // show an unsuccessful signup message:
+        echo "Query failed, please try again<br>";
+    }
 }
 
 ?>
