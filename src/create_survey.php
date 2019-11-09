@@ -1,5 +1,17 @@
 <?php
 
+// Types of questions:
+
+/*
+ * Multiple Choice
+ * Short Answer
+ * Paragraph
+ * Checkboxes
+ * Dropdown
+ * Dates
+ * Times
+ */
+
 // execute the header script:
 require_once "header.php";
 
@@ -23,6 +35,8 @@ else {
 // finish of the HTML for this page:
 require_once "footer.php";
 
+//
+//
 function initNewSurvey($connection)
 {
     $arrayOfSurveyErrors = array();
@@ -51,6 +65,8 @@ function initNewSurvey($connection)
     }
 }
 
+//
+//
 function createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors)
 {
     createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
@@ -68,9 +84,11 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
 
         // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
-
             // show a successful signup message:
-            echo "Survey creation was successful<br>";
+            echo "Survey creation was successful";
+            echo "<br>";
+            echo "<a href = createQuestion.php?surveyID=$surveyID> Click to create some questions: </a>";
+            echo "<br>";
         } else {
             // validation failed, show the form again with guidance:
             displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
@@ -83,6 +101,8 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
     }
 }
 
+//
+//
 function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors)
 {
     echo "Input survey details:";
@@ -119,4 +139,3 @@ function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, 
 }
 
 ?>
-
