@@ -44,13 +44,13 @@ function initNewQuestion($connection, $surveyID)
         // SANITISATION (see helper.php for the function definition)
         $questionName = sanitise($_POST['questionName'], $connection);
         $type = sanitise($_POST['type'], $connection);
-        
-        if(isset($_POST['required'])) {
+
+        if (isset($_POST['required'])) {
             $required = 1;
         } else {
             $required = 0;
         }
-        
+
         createQuestion($connection, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors);
     } else {
         displayCreateQuestionForm($questionName, $type, $required, $arrayOfQuestionErrors);
@@ -96,7 +96,16 @@ function displayCreateQuestionForm($questionName, $type, $required, $arrayOfQues
       Please fill in the following fields:<br>
       Question: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
       <br>
-      Type: <input type="text" name="type" minlength="2" maxlength="32" value="$type" required> $arrayOfQuestionErrors[1]
+      Type of question:
+      <select name="type">
+        <option value ="multOption">Multiple options</option>
+        <option value ="shortAnswer">Short answer</option>      
+        <option value ="paragraph">Paragraph</option>
+        <option value ="checkboxes">Checkboxes</option>
+        <option value ="dropdown">Dropdown</option>
+        <option value ="date">Date</option>
+        <option value ="time">Time</option>
+      </select>  
       <br>
       Required: <input type="checkbox" name="required" value="1">
       <br>
@@ -112,7 +121,7 @@ function displayCreateQuestionForm($questionName, $type, $required, $arrayOfQues
 function createArrayOfQuestionErrors($questionName, $type, &$arrayOfQuestionErrors)
 {
     $arrayOfQuestionErrors[0] = validateStringLength($questionName, 4, 64);
-    $arrayOfQuestionErrors[1] = validateStringLength($type, 1, 32);
+    // $arrayOfQuestionErrors[1] = validateStringLength($type, 1, 32);
 }
 
 ?>

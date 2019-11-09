@@ -1,17 +1,5 @@
 <?php
 
-// Types of questions:
-
-/*
- * Multiple Choice
- * Short Answer
- * Paragraph
- * Checkboxes
- * Dropdown
- * Dates
- * Times
- */
-
 // execute the header script:
 require_once "header.php";
 
@@ -118,7 +106,7 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $t
       <br>
       Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$numQuestions" required> $arrayOfSurveyErrors[2]
       <br>
-      Type of Survey: <input type="text" name="type" maxlength="64" value="$type"> $arrayOfSurveyErrors[3]
+      Type of Survey: <input type="text" name="type" maxlength="11" value="$type"> $arrayOfSurveyErrors[3]
       <br>
       Survey Topic: <input type="text" name="topic" maxlength="32" value="$topic"> $arrayOfSurveyErrors[4]
       <br>
