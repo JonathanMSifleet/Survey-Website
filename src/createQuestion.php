@@ -74,7 +74,17 @@ function createQuestion($connection, $i, $surveyID, $questionName, $type, $requi
             // check if question requires predefine questions:
 
             if ($type == "multOption" || $type == "dropdown") {
-                getNumPreDefinedAnswers($connection);
+
+                $numOptions = getNumOptions($connection);
+
+                echoVariable($numOptions);
+
+                if (isset($numOptions)) {
+                    for ($j = 0; $j < $numOptions; $j ++) {
+                        $option = getOption($connection);
+                        insertOption($connection, $option, $surveyID, $questionName);
+                    }
+                }
             } else {
                 echo "Question creation was successful";
                 echo "<br>";
@@ -91,32 +101,55 @@ function createQuestion($connection, $i, $surveyID, $questionName, $type, $requi
     }
 }
 
-function getNumPreDefinedAnswers($connection)
+function insertOption($connection, $option, $surveyID, $questionName)
 {
-    $numAnswers = null;
-    $valMessage = "";
+    // get question ID
+    $questionID = getQuestionID($connection, $surveyID, $questionName);
 
-    if (isset($_POST['numAnswers'])) {
-        $numAnswers = sanitise($_POST['numAnswers']);
+    $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$option')";
+    $result = mysqli_query($connection, $query);
 
-        for ($i = 0; $i <= numAnswers; $i ++) {
-            createPreDefinedAnswers($connection, $numAnswers);
-        }
+    if ($result) {
+
+        echo "Options inserted successfully";
     } else {
-        displayRequiredNumQuestionsForm($numAnswers, $valMessage);
+        // show an unsuccessful signup message:
+        echo "Query failed, please try again<br>";
     }
 }
 
-function createPreDefinedAnswers($connection, $numAnswers)
+function getNumOptions($connection)
 {
-    
+    $numOptions = null;
+
+    if (isset($_POST['numOptions'])) {
+        $numOptions = sanitise($_POST['numOptions']);
+        return $numOptions;
+    } else {
+        displayRequiredNumOptionsForm($numOptions);
+    }
 }
 
-function displayRequiredNumQuestionsForm($numAnswers, $valMessage)
+function getOption($connection)
+{
+    if (isset($_POST['option'])) {
+        return sanitise($_POST['option'], $connection);
+    } else {
+        echo <<<_END
+        <form action="" method="post">
+          Option: <input type="text" name="option" minlength="1" maxlength="32" required>
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+        _END;
+    }
+}
+
+function displayRequiredNumOptionsForm($numOptions)
 {
     echo <<<_END
     <form action="" method="post">
-      Number of options: <input type="text" name="numAnswers" minlength="1" maxlength="16" value="$numAnswers" required> $valMessage
+      Number of options: <input type="text" name="numOptions" minlength="1" maxlength="16" value="$numOptions" required>
       <br>
       <input type="submit" value="Submit">
     </form>
@@ -162,6 +195,21 @@ function createArrayOfQuestionErrors($questionName, $type, &$arrayOfQuestionErro
     // $arrayOfQuestionErrors[1] = validateStringLength($type, 1, 32);
 }
 
+function getQuestionID($connection, $surveyID, $questionName)
+{
+    $query = "SELECT questionID FROM questions WHERE surveyID ='$surveyID', questionName = '$questionName'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        $row = (mysqli_fetch_row($result));
+
+        return $row[0];
+    } else {
+        // show an unsuccessful signup message:
+        echo "Query failed, please try again<br>";
+    }
+}
+
 function getNoOfSurveyQuestions($connection)
 {
     $surveyID = $_GET['surveyID'];
@@ -175,8 +223,6 @@ function getNoOfSurveyQuestions($connection)
         $row = (mysqli_fetch_row($result));
 
         return $row[0];
-
-        // return mysqli_fetch_assoc($result);
     } else {
         // show an unsuccessful signup message:
         echo "Query failed, please try again<br>";
