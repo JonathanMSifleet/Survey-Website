@@ -121,7 +121,7 @@ function createQuestionTable($connection)
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE questions (questionID INT AUTO_INCREMENT, surveyID VARCHAR(32), questionName VARCHAR(128), type VARCHAR(32), isMandatory BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (questionID))";
+    $sql = "CREATE TABLE questions (questionID VARCHAR(32), surveyID VARCHAR(32), questionName VARCHAR(128), type VARCHAR(32), numOptions SMALLINT, required BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID), PRIMARY KEY (questionID))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: questions<br>";
@@ -140,7 +140,7 @@ function createQuestionOptionsTable($connection) {
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE questionOptions (questionID INT, optionName VARCHAR(32), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (questionID, optionName))";
+    $sql = "CREATE TABLE questionOptions (questionID VARCHAR(32), optionName VARCHAR(32), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (questionID, optionName))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: questions<br>";
@@ -160,7 +160,7 @@ function createResponseTable($connection)
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE responses (questionID INT, username VARCHAR(20), responseID INT AUTO_INCREMENT,  response VARCHAR(65533), FOREIGN KEY (username) REFERENCES users(username), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (responseID))";
+    $sql = "CREATE TABLE responses (questionID VARCHAR(32), username VARCHAR(20), responseID INT AUTO_INCREMENT,  response VARCHAR(65533), FOREIGN KEY (username) REFERENCES users(username), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (responseID))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: responses<br>";

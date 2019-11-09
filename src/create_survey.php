@@ -75,7 +75,7 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
             // show a successful signup message:
             echo "Survey creation was successful";
             echo "<br>";
-            echo "<a href = createQuestion.php?surveyID=$surveyID> Click to create some questions: </a>";
+            echo "<a href = create_question.php?surveyID=$surveyID> Click to create some questions: </a>";
             echo "<br>";
         } else {
             // validation failed, show the form again with guidance:

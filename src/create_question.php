@@ -37,12 +37,14 @@ function initNewQuestion($connection, $i, $surveyID)
     $questionName = "";
     $type = "";
     $required = null;
+    $numOptions = null;
 
     if (isset($_POST['questionName'])) {
 
         // SANITISATION (see helper.php for the function definition)
         $questionName = sanitise($_POST['questionName'], $connection);
         $type = sanitise($_POST['type'], $connection);
+        $numOptions = sanitise($_POST['numOptions'], $connection);
 
         if (isset($_POST['required'])) {
             $required = 1;
@@ -50,115 +52,57 @@ function initNewQuestion($connection, $i, $surveyID)
             $required = 0;
         }
 
-        createQuestion($connection, $i, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors);
+        if (! ($type == "multOption" || $type == "dropdown")) {
+            $numOptions = 1;
+        }
+
+        createQuestion($connection, $i, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     } else {
-        displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors);
+        displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     }
 }
 
 //
 //
-function createQuestion($connection, $i, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors)
+function createQuestion($connection, $i, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
-    createArrayOfQuestionErrors($questionName, $type, $arrayOfQuestionErrors);
+    createArrayOfQuestionErrors($questionName, $type, $numOptions, $arrayOfQuestionErrors);
     $errors = concatValidationMessages($arrayOfQuestionErrors);
+
+    echoVariable($numOptions);
 
     if ($errors == "") {
 
+        $questionID = md5($surveyID . $questionName);
+
         // try to insert new question:
-        $query = "INSERT INTO questions (surveyID, questionName, type, isMandatory) VALUES ('$surveyID', '$questionName', '$type', '$required')";
+        $query = "INSERT INTO questions (questionID, surveyID, questionName, type, numOptions, required) VALUES ('$questionID', '$surveyID', '$questionName', '$type', '$numOptions', '$required')";
         $result = mysqli_query($connection, $query);
 
         // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
-            // check if question requires predefine questions:
 
-            if ($type == "multOption" || $type == "dropdown") {
-
-                $numOptions = getNumOptions($connection);
-
-                echoVariable($numOptions);
-
-                if (isset($numOptions)) {
-                    for ($j = 0; $j < $numOptions; $j ++) {
-                        $option = getOption($connection);
-                        insertOption($connection, $option, $surveyID, $questionName);
-                    }
-                }
+            if ($numOptions !== 1) {
+                echo "<a href = create_option.php?questionID=$questionID> Click to enter question options: </a>";
             } else {
-                echo "Question creation was successful";
-                echo "<br>";
+                // check if question requires predefine questions:
+                echo "Question created successfully";
             }
         } else {
             // validation failed, show the form again with guidance:
-            displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors);
+            displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
             // show an unsuccessful signup message:
             echo "Question creation failed, please try again<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
-        displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors);
+        displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     }
-}
-
-function insertOption($connection, $option, $surveyID, $questionName)
-{
-    // get question ID
-    $questionID = getQuestionID($connection, $surveyID, $questionName);
-
-    $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$option')";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-
-        echo "Options inserted successfully";
-    } else {
-        // show an unsuccessful signup message:
-        echo "Query failed, please try again<br>";
-    }
-}
-
-function getNumOptions($connection)
-{
-    $numOptions = null;
-
-    if (isset($_POST['numOptions'])) {
-        $numOptions = sanitise($_POST['numOptions']);
-        return $numOptions;
-    } else {
-        displayRequiredNumOptionsForm($numOptions);
-    }
-}
-
-function getOption($connection)
-{
-    if (isset($_POST['option'])) {
-        return sanitise($_POST['option'], $connection);
-    } else {
-        echo <<<_END
-        <form action="" method="post">
-          Option: <input type="text" name="option" minlength="1" maxlength="32" required>
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
-    }
-}
-
-function displayRequiredNumOptionsForm($numOptions)
-{
-    echo <<<_END
-    <form action="" method="post">
-      Number of options: <input type="text" name="numOptions" minlength="1" maxlength="16" value="$numOptions" required>
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
 }
 
 //
 //
-function displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors)
+function displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
     $i ++;
 
@@ -178,6 +122,8 @@ function displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOf
         <option value ="time">Time</option>
       </select>  
       <br>
+      Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown or checkboxes
+      <br>
       Required: <input type="checkbox" name="required" value="1">
       <br>
       <input type="submit" value="Submit">
@@ -189,25 +135,10 @@ function displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOf
 
 //
 //
-function createArrayOfQuestionErrors($questionName, $type, &$arrayOfQuestionErrors)
+function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayOfQuestionErrors)
 {
     $arrayOfQuestionErrors[0] = validateStringLength($questionName, 4, 64);
-    // $arrayOfQuestionErrors[1] = validateStringLength($type, 1, 32);
-}
-
-function getQuestionID($connection, $surveyID, $questionName)
-{
-    $query = "SELECT questionID FROM questions WHERE surveyID ='$surveyID', questionName = '$questionName'";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        $row = (mysqli_fetch_row($result));
-
-        return $row[0];
-    } else {
-        // show an unsuccessful signup message:
-        echo "Query failed, please try again<br>";
-    }
+    $arrayOfQuestionErrors[1] = validateStringLength($numOptions, 1, 32);
 }
 
 function getNoOfSurveyQuestions($connection)
