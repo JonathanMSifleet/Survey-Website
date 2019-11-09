@@ -20,7 +20,7 @@ else {
     $numQuestions = getNoOfSurveyQuestions($connection); // by removing survey's number of questions, user cannot edit it from url bar
 
     for ($i = 0; $i < $numQuestions; $i ++) {
-        initNewQuestion($connection, $_GET['surveyID']);
+        initNewQuestion($connection, $i, $_GET['surveyID']);
     }
 
     // finish of the HTML for this page:
@@ -29,7 +29,7 @@ else {
 
 //
 //
-function initNewQuestion($connection, $surveyID)
+function initNewQuestion($connection, $i, $surveyID)
 {
     $arrayOfQuestionErrors = array();
     initEmptyArray($arrayOfQuestionErrors, 1);
@@ -50,15 +50,15 @@ function initNewQuestion($connection, $surveyID)
             $required = 0;
         }
 
-        createQuestion($connection, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors);
+        createQuestion($connection, $i, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors);
     } else {
-        displayCreateQuestionForm($questionName, $type, $required, $arrayOfQuestionErrors);
+        displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors);
     }
 }
 
 //
 //
-function createQuestion($connection, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors)
+function createQuestion($connection, $i, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors)
 {
     createArrayOfQuestionErrors($questionName, $type, $arrayOfQuestionErrors);
     $errors = concatValidationMessages($arrayOfQuestionErrors);
@@ -76,23 +76,25 @@ function createQuestion($connection, $surveyID, $questionName, $type, $required,
             echo "<br>";
         } else {
             // validation failed, show the form again with guidance:
-            displayCreateQuestionForm($questionName, $type, $required, $arrayOfQuestionErrors);
+            displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors);
             // show an unsuccessful signup message:
             echo "Question creation failed, please try again<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
-        displayCreateQuestionForm($questionName, $type, $required, $arrayOfQuestionErrors);
+        displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors);
     }
 }
 
 //
 //
-function displayCreateQuestionForm($questionName, $type, $required, $arrayOfQuestionErrors)
+function displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors)
 {
+    $i++;
+    
     echo <<<_END
     <form action="" method="post">
-      Please fill in the following fields:<br>
+      Question $i: <br>
       Question: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
       <br>
       Type of question:
