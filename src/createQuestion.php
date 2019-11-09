@@ -19,9 +19,9 @@ else {
 
     $numQuestions = getNoOfSurveyQuestions($connection); // by removing survey's number of questions, user cannot edit it from url bar
 
-    for ($i = 0; $i < $numQuestions; $i ++) {
-        initNewQuestion($connection, $i, $_GET['surveyID']);
-    }
+    // for ($i = 0; $i < $numQuestions; $i ++) {
+    initNewQuestion($connection, 0, $_GET['surveyID']);
+    // }
 
     // finish of the HTML for this page:
     require_once "footer.php";
@@ -71,9 +71,14 @@ function createQuestion($connection, $i, $surveyID, $questionName, $type, $requi
 
         // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
-            // show a successful signup message:
-            echo "Question creation was successful";
-            echo "<br>";
+            // check if question requires predefine questions:
+
+            if ($type == "multOption" || $type == "dropdown") {
+                getNumPreDefinedAnswers($connection);
+            } else {
+                echo "Question creation was successful";
+                echo "<br>";
+            }
         } else {
             // validation failed, show the form again with guidance:
             displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors);
@@ -86,12 +91,44 @@ function createQuestion($connection, $i, $surveyID, $questionName, $type, $requi
     }
 }
 
+function getNumPreDefinedAnswers($connection)
+{
+    $numAnswers = null;
+    $valMessage = "";
+
+    if (isset($_POST['numAnswers'])) {
+        $numAnswers = sanitise($_POST['numAnswers']);
+
+        for ($i = 0; $i <= numAnswers; $i ++) {
+            createPreDefinedAnswers($connection, $numAnswers);
+        }
+    } else {
+        displayRequiredNumQuestionsForm($numAnswers, $valMessage);
+    }
+}
+
+function createPreDefinedAnswers($connection, $numAnswers)
+{
+    
+}
+
+function displayRequiredNumQuestionsForm($numAnswers, $valMessage)
+{
+    echo <<<_END
+    <form action="" method="post">
+      Number of options: <input type="text" name="numAnswers" minlength="1" maxlength="16" value="$numAnswers" required> $valMessage
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+}
+
 //
 //
 function displayCreateQuestionForm($i, $questionName, $type, $required, $arrayOfQuestionErrors)
 {
-    $i++;
-    
+    $i ++;
+
     echo <<<_END
     <form action="" method="post">
       Question $i: <br>
