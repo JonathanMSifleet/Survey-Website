@@ -16,10 +16,14 @@ else {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    $option = getOption($connection);
+    $numOptions = getNumOptions($connection);
 
-    if (isset($option)) {
-        insertOption($connection, $option);
+    for ($i = 0; $i < $numOptions; $i ++) {
+        $option = getOption($connection);
+
+        if (isset($option)) {
+            insertOption($connection, $option);
+        }
     }
 
     // finish of the HTML for this page:
@@ -55,6 +59,27 @@ function getOption($connection)
           <input type="submit" value="Submit">
         </form>
         _END;
+        
+        echo "<br>";
+    }
+}
+
+function getNumOptions($connection)
+{
+    $questionID = $_GET['questionID'];
+
+    $query = "SELECT numOptions FROM questions WHERE questionID = '$questionID'";
+    $result = mysqli_query($connection, $query);
+
+    // if no data returned, we set result to true(success)/false(failure):
+    if ($result) {
+
+        $row = (mysqli_fetch_row($result));
+
+        return $row[0];
+    } else {
+        // show an unsuccessful signup message:
+        echo "Query failed, please try again<br>";
     }
 }
 
