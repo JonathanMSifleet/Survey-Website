@@ -37,15 +37,20 @@ function initNewQuestion($connection, $surveyID)
 
     $questionName = "";
     $type = "";
-    $required = 0;
+    $required = null;
 
     if (isset($_POST['questionName'])) {
 
         // SANITISATION (see helper.php for the function definition)
         $questionName = sanitise($_POST['questionName'], $connection);
         $type = sanitise($_POST['type'], $connection);
-        $required = sanitise($_POST['required'], $connection);
-
+        
+        if(isset($_POST['required'])) {
+            $required = 1;
+        } else {
+            $required = 0;
+        }
+        
         createQuestion($connection, $surveyID, $questionName, $type, $required, $arrayOfQuestionErrors);
     } else {
         displayCreateQuestionForm($questionName, $type, $required, $arrayOfQuestionErrors);
@@ -93,7 +98,7 @@ function displayCreateQuestionForm($questionName, $type, $required, $arrayOfQues
       <br>
       Type: <input type="text" name="type" minlength="2" maxlength="32" value="$type" required> $arrayOfQuestionErrors[1]
       <br>
-      Required: <input type="checkbox" name="required" value="$required">
+      Required: <input type="checkbox" name="required" value="1">
       <br>
       <input type="submit" value="Submit">
     </form>
