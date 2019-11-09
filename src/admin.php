@@ -34,13 +34,17 @@ else {
         } else {
             displayListOfUsers($connection);
             if (isset($_GET['username'])) {
-
                 $origin = "admin.php";
                 $username = $_GET['username'];
 
                 printUserData($connection, $origin, $username);
                 printOptionsToEdit($origin, $username);
-                enactEdit($connection);
+
+                $currentURL = $_SERVER['REQUEST_URI'];
+
+                if ($currentURL !== "/admin.php") {
+                    enactEdit($connection);
+                }
             }
         }
     } else {
