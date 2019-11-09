@@ -58,13 +58,3 @@ echo <<<_END
 <h1>2CWK50: A Survey Website</h1>
 _END;
 ?>
-
-<html>
-<head>
-<link href="https://fonts.googleapis.com/css?family=Roboto"
-	rel="stylesheet">
-<!-- imports third party font -->
-<link rel="stylesheet" href="mystyle.css">
-<!-- import style sheet -->
-</head>
-</html>
