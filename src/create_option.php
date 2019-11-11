@@ -17,21 +17,31 @@ else {
     }
 
     $numOptions = getNumOptions($connection);
+    $numOptionsInserted = 0;
 
-    for ($i = 0; $i < $numOptions; $i ++) {
-        $option = getOption($connection);
-
-        if (isset($option)) {
-            insertOption($connection, $option);
-        }
-    }
+    createOption($connection, $numOptions, $numOptionsInserted);
 
     // finish of the HTML for this page:
     require_once "footer.php";
 }
 
-function insertOption($connection, $option)
+function createOption($connection, $numOptions, &$numOptionsInserted)
 {
+    
+    if(isset($_POST['option'])) {
+        $_POST['option'] = NULL;
+    }
+    
+    $option = getOption($connection, $numOptionsInserted);
+
+    if (isset($option)) {
+        insertOption($connection, $option, $numOptions, $numOptionsInserted);
+    }
+}
+
+function insertOption($connection, $option, $numOptions, &$numOptionsInserted)
+{
+
     // get question ID
     $questionID = $_GET['questionID'];
 
@@ -39,8 +49,12 @@ function insertOption($connection, $option)
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-
         echo "Options inserted successfully";
+        $numOptionsInserted ++;
+
+        if ($numOptionsInserted < $numOptions) {
+            createOption($connection, $numOptions, $numOptionsInserted); // recursion
+        }
     } else {
         // show an unsuccessful signup message:
         echo "Query failed, please try again<br>";
@@ -59,7 +73,7 @@ function getOption($connection)
           <input type="submit" value="Submit">
         </form>
         _END;
-        
+
         echo "<br>";
     }
 }
