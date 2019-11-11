@@ -19,9 +19,7 @@ else {
 
     $numQuestions = getNoOfSurveyQuestions($connection); // by removing survey's number of questions, user cannot edit it from url bar
 
-    // for ($i = 0; $i < $numQuestions; $i ++) {
-    initNewQuestion($connection, 0, $_GET['surveyID']);
-    // }
+    initNewQuestions($connection, $_GET['surveyID'], $numQuestions);
 
     // finish of the HTML for this page:
     require_once "footer.php";
@@ -29,7 +27,7 @@ else {
 
 //
 //
-function initNewQuestion($connection, $i, $surveyID)
+function initNewQuestions($connection, $surveyID, $numQuestions)
 {
     $arrayOfQuestionErrors = array();
     initEmptyArray($arrayOfQuestionErrors, 1);
@@ -56,20 +54,18 @@ function initNewQuestion($connection, $i, $surveyID)
             $numOptions = 1;
         }
 
-        createQuestion($connection, $i, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
+        createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     } else {
-        displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
+        displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     }
 }
 
 //
 //
-function createQuestion($connection, $i, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
+function createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
     createArrayOfQuestionErrors($questionName, $type, $numOptions, $arrayOfQuestionErrors);
     $errors = concatValidationMessages($arrayOfQuestionErrors);
-
-    echoVariable($numOptions);
 
     if ($errors == "") {
 
@@ -82,33 +78,29 @@ function createQuestion($connection, $i, $surveyID, $questionName, $type, $numOp
         // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
 
-            if ($numOptions !== 1) {
-                echo "<a href = create_option.php?questionID=$questionID> Click to enter question options: </a>";
-            } else {
-                // check if question requires predefine questions:
-                echo "Question created successfully";
-            }
+            $currentURL = $_SERVER['REQUEST_URI'];
+
+            echo "Question created succesfully <br>";
+            echo "<a href= $currentURL> Click here to create new question </a>";
         } else {
-            // validation failed, show the form again with guidance:
-            displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
-            // show an unsuccessful signup message:
-            echo "Question creation failed, please try again<br>";
+            echo "Question name cannot be identical, try again";
+            echo "<br>";
+            displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
         }
     } else {
         // validation failed, show the form again with guidance:
-        displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
+        displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
+        // show an unsuccessful signup message:
+        echo "Question creation failed, please try again<br>";
     }
 }
 
 //
 //
-function displayCreateQuestionForm($i, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
+function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
-    $i ++;
-
     echo <<<_END
     <form action="" method="post">
-      Question $i: <br>
       Question: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
       <br>
       Type of question:

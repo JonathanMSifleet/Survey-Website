@@ -93,13 +93,11 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
 //
 function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors)
 {
-    echo "Input survey details:";
 
     // max number of questions length to be compatible with MYSQL smallint max value
-
     echo <<<_END
     <form action="create_survey.php" method="post">
-      Please fill in the following fields:<br>
+      Input survey details:<br>
       Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
       <br>
       Instructions: <input type="text" name="instructions" minlength="2" maxlength="$maxInstructionLength" value="$instructions" required> $arrayOfSurveyErrors[1]
