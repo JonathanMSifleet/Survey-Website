@@ -20,9 +20,6 @@ else {
     $numQuestions = getNoOfSurveyQuestions($connection); // by removing survey's number of questions, user cannot edit it from url bar
 
     initNewQuestions($connection, $_GET['surveyID'], $numQuestions);
-    
-    echo "<br>";
-    echo "Survey completed!";
 
     // finish of the HTML for this page:
     require_once "footer.php";
@@ -90,9 +87,18 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
                 $numQuestionsInserted ++;
             }
 
+            $query = "UPDATE questions SET questionNo = '$numQuestionsInserted' WHERE questionID = '$questionID'";
+            $result = mysqli_query($connection, $query);
+
             if ($numQuestionsInserted < $numQuestions) {
                 $nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
                 echo "<a href= $nextQuestionURL> Click here to create new question </a>";
+            } else {
+
+                echo "<br>";
+                echo "Survey completed!";
+                echo "<br>";
+                echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a>";
             }
         } else {
             echo "Question name cannot be identical, try again";
