@@ -20,6 +20,9 @@ else {
     $numQuestions = getNoOfSurveyQuestions($connection); // by removing survey's number of questions, user cannot edit it from url bar
 
     initNewQuestions($connection, $_GET['surveyID'], $numQuestions);
+    
+    echo "<br>";
+    echo "Survey completed!";
 
     // finish of the HTML for this page:
     require_once "footer.php";
@@ -54,7 +57,7 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
             $numOptions = 1;
         }
 
-        createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
+        createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors);
     } else {
         displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     }
@@ -62,7 +65,7 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
 
 //
 //
-function createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
+function createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors)
 {
     createArrayOfQuestionErrors($questionName, $type, $numOptions, $arrayOfQuestionErrors);
     $errors = concatValidationMessages($arrayOfQuestionErrors);
@@ -78,10 +81,19 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
         // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
 
-            $currentURL = $_SERVER['REQUEST_URI'];
-
             echo "Question created succesfully <br>";
-            echo "<a href= $currentURL> Click here to create new question </a>";
+
+            if (isset($_GET['numQuestionsInserted']) == false) {
+                $numQuestionsInserted = 1;
+            } else {
+                $numQuestionsInserted = $_GET['numQuestionsInserted'];
+                $numQuestionsInserted ++;
+            }
+
+            if ($numQuestionsInserted < $numQuestions) {
+                $nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
+                echo "<a href= $nextQuestionURL> Click here to create new question </a>";
+            }
         } else {
             echo "Question name cannot be identical, try again";
             echo "<br>";
@@ -95,13 +107,34 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
     }
 }
 
+function getLocationOfLastAmpersand($input)
+{
+    $arrayOfChars = str_split($input);
+    $inputLength = count($arrayOfChars);
+
+    for ($i = $inputLength; $i > $inputLength; $i --) {
+        if ($arrayOfChars[$i] == '&') {
+            return $i;
+        }
+    }
+
+    return - 1;
+}
+
 //
 //
 function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
+    if (isset($_GET['numQuestionsInserted'])) {
+        $questionNo = $_GET['numQuestionsInserted'];
+        $questionNo ++;
+    } else {
+        $questionNo = 1;
+    }
+
     echo <<<_END
     <form action="" method="post">
-      Question: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
+      Question $questionNo: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
       <br>
       Type of question:
       <select name="type">

@@ -75,13 +75,13 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
             // show a successful signup message:
             echo "Survey creation was successful";
             echo "<br>";
-            echo "<a href = create_question.php?surveyID=$surveyID> Click to create some questions: </a>";
-            echo "<br>";
+            echo "<a href = 'create_question.php?surveyID=$surveyID'>Click here to create questions</a>";
+
         } else {
             // validation failed, show the form again with guidance:
             displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
             // show an unsuccessful signup message:
-            echo "Survey creation failed, please try again<br>";
+            echo "You cannot have surveys with duplicate titles, please try again<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
