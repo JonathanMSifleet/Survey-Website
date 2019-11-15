@@ -113,20 +113,6 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
     }
 }
 
-function getLocationOfLastAmpersand($input)
-{
-    $arrayOfChars = str_split($input);
-    $inputLength = count($arrayOfChars);
-
-    for ($i = $inputLength; $i > $inputLength; $i --) {
-        if ($arrayOfChars[$i] == '&') {
-            return $i;
-        }
-    }
-
-    return - 1;
-}
-
 //
 //
 function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
@@ -182,7 +168,7 @@ function getNoOfSurveyQuestions($connection)
     // if no data returned, we set result to true(success)/false(failure):
     if ($result) {
 
-        $row = (mysqli_fetch_row($result));
+        $row = mysqli_fetch_row($result);
 
         return $row[0];
     } else {

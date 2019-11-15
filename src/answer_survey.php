@@ -21,21 +21,82 @@ else {
     } else {
 
         $surveyID = $_GET['surveyID'];
-        displaySurveyQuestion($connection, $surveyID);
+        displaySurvey($connection, $surveyID);
     }
 }
 
 // finish of the HTML for this page:
 require_once "footer.php";
 
-function displaySurveyQuestion($connection, $surveyID)
+function displaySurvey($connection, $surveyID)
 {
-    $query = "SELECT questionName FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
+    $surveyResponse = "";
+    $responseVal = "";
+
+    $temp = Array();
+    getSurveyQuestion($connection, $surveyID, $temp);
+    $questionName = $temp[0];
+    $questionID = $temp[1];
+
+    /*
+     * echo "questionName: " . $questionName . "<br>";
+     * echo "questionID: " . $questionID . "<br>";
+     */
+
+    if (isset($_POST['surveyResponse'])) {
+        $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
+        insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal);
+    } else {
+        displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $surveyResponse);
+    }
+}
+
+function insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal)
+{
+
+    // input validation here: $responseVal =
+    $currentUser = $_SESSION['username'];
+    $responseID = md5($currentUser . $surveyResponse);
+
+    $query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
     $result = mysqli_query($connection, $query);
 
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo $row['questionName'];
-        echo "<br>";
+    if ($result) {
+        echo "Response was successful <br>";
+    } else {
+        echo "Error";
+        echo "<br>" . $questionID . "<br>" . $currentUser . "<br>" . $responseID . "<br>" . $surveyResponse;
+    }
+}
+
+function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $surveyresponse)
+{
+    echo <<<_END
+    $questionName
+    <form action="" method="post">
+      Response: <input type="text" name="surveyResponse" minlength="3" maxlength="64" value ="$surveyresponse" required>
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+}
+
+function getSurveyQuestion($connection, $surveyID, &$temp)
+{
+    $questionToAnswer = $_GET['questionsAnswered'];
+    $questionToAnswer ++;
+
+    $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $temp[0] = $row['questionName'];
+            $temp[1] = $row['questionID'];
+        }
+    } else {
+        echo "Error";
     }
 }
 

@@ -130,7 +130,8 @@ function createQuestionTable($connection)
     }
 }
 
-function createQuestionOptionsTable($connection) {
+function createQuestionOptionsTable($connection)
+{
     // if there's an old version of our table, then drop it:
     $sql = "DROP TABLE IF EXISTS questionOptions";
     // no data returned, we just test for true(success)/false(failure):
@@ -160,7 +161,7 @@ function createResponseTable($connection)
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE responses (questionID VARCHAR(32), username VARCHAR(20), responseID INT AUTO_INCREMENT,  response VARCHAR(65533), FOREIGN KEY (username) REFERENCES users(username), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (responseID))";
+    $sql = "CREATE TABLE responses (questionID VARCHAR(32), username VARCHAR(20), responseID VARCHAR(32), response VARCHAR(65533), FOREIGN KEY (username) REFERENCES users(username), FOREIGN KEY (questionID) REFERENCES questions(questionID), PRIMARY KEY (responseID))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: responses<br>";
