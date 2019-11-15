@@ -21,14 +21,15 @@ else {
     } else {
 
         $surveyID = $_GET['surveyID'];
-        displaySurvey($connection, $surveyID);
+        $numQuestions = getNoOfSurveyQuestions($connection, $surveyID);
+        displaySurvey($connection, $surveyID, $numQuestions);
     }
 }
 
 // finish of the HTML for this page:
 require_once "footer.php";
 
-function displaySurvey($connection, $surveyID)
+function displaySurvey($connection, $surveyID, $numQuestions)
 {
     $surveyResponse = "";
     $responseVal = "";
@@ -38,20 +39,15 @@ function displaySurvey($connection, $surveyID)
     $questionName = $temp[0];
     $questionID = $temp[1];
 
-    /*
-     * echo "questionName: " . $questionName . "<br>";
-     * echo "questionID: " . $questionID . "<br>";
-     */
-
     if (isset($_POST['surveyResponse'])) {
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
-        insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal);
+        insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal, $numQuestions);
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $surveyResponse);
     }
 }
 
-function insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal)
+function insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal, $numQuestions)
 {
 
     // input validation here: $responseVal =
@@ -63,6 +59,19 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $surv
 
     if ($result) {
         echo "Response was successful <br>";
+
+        $questionsAnswered = $_GET['questionsAnswered'];
+        $questionsAnswered ++;
+
+        if ($questionsAnswered < $numQuestions) {
+            $nextQuestionURL = "answer_survey.php?surveyID=$surveyID&questionsAnswered=$questionsAnswered";
+            echo "<a href = $nextQuestionURL> Click here to answer the next question </a>";
+        } else {
+            echo "<br>";
+            echo "Survey completed!";
+            echo "<br>";
+            echo "<a href = about.php> Click here to return to the main page </a>";
+        }
     } else {
         echo "Error";
         echo "<br>" . $questionID . "<br>" . $currentUser . "<br>" . $responseID . "<br>" . $surveyResponse;

@@ -17,9 +17,11 @@ else {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    $numQuestions = getNoOfSurveyQuestions($connection); // by removing survey's number of questions, user cannot edit it from url bar
+    $surveyID = $_GET['surveyID'];
 
-    initNewQuestions($connection, $_GET['surveyID'], $numQuestions);
+    $numQuestions = getNoOfSurveyQuestions($connection, $surveyID); // by removing survey's number of questions, user cannot edit it from url bar
+
+    initNewQuestions($connection, $surveyID, $numQuestions);
 
     // finish of the HTML for this page:
     require_once "footer.php";
@@ -148,25 +150,6 @@ function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayO
 {
     $arrayOfQuestionErrors[0] = validateStringLength($questionName, 4, 64);
     $arrayOfQuestionErrors[1] = validateStringLength($numOptions, 1, 32);
-}
-
-function getNoOfSurveyQuestions($connection)
-{
-    $surveyID = $_GET['surveyID'];
-
-    $query = "SELECT numQuestions FROM surveys WHERE surveyID = '$surveyID'";
-    $result = mysqli_query($connection, $query);
-
-    // if no data returned, we set result to true(success)/false(failure):
-    if ($result) {
-
-        $row = mysqli_fetch_row($result);
-
-        return $row[0];
-    } else {
-        // show an unsuccessful signup message:
-        echo "Query failed, please try again<br>";
-    }
 }
 
 ?>
