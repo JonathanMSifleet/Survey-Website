@@ -80,12 +80,8 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
 
             echo "Question created succesfully <br>";
 
-            if (isset($_GET['numQuestionsInserted']) == false) {
-                $numQuestionsInserted = 1;
-            } else {
-                $numQuestionsInserted = $_GET['numQuestionsInserted'];
-                $numQuestionsInserted ++;
-            }
+            $numQuestionsInserted = $_GET['numQuestionsInserted'];
+            $numQuestionsInserted ++;
 
             $query = "UPDATE questions SET questionNo = '$numQuestionsInserted' WHERE questionID = '$questionID'";
             $result = mysqli_query($connection, $query);
@@ -117,12 +113,8 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
 //
 function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
-    if (isset($_GET['numQuestionsInserted'])) {
-        $questionNo = $_GET['numQuestionsInserted'];
-        $questionNo ++;
-    } else {
-        $questionNo = 1;
-    }
+    $questionNo = $_GET['numQuestionsInserted'];
+    $questionNo ++;
 
     echo <<<_END
     <form action="" method="post">
