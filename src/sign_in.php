@@ -77,7 +77,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
                     $_SESSION['username'] = $username;
 
                     // show a successful signin message:
-                    echo "Hi, $username, you have successfully logged in, please <a href='account.php'>click here</a><br>";
+                    echo "Hi, $username, you have successfully logged in, please <a href='about.php'>click here</a><br>";
                     // setcookie(session_name(), '', time()-2592000, '/'); // maybe add https +
                 } else {
                     $show_signin_form = true;

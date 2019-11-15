@@ -621,6 +621,8 @@ function enactEdit($connection)
     }
 }
 
+//
+//
 function displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors)
 {
 

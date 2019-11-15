@@ -64,6 +64,8 @@ else {
     }
 }
 
+//
+//
 function printSurveys($connection, $username, $userIsAdmin)
 {
     if ($userIsAdmin) {
