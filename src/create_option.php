@@ -27,11 +27,10 @@ else {
 
 function createOption($connection, $numOptions, &$numOptionsInserted)
 {
-    
-    if(isset($_POST['option'])) {
+    if (isset($_POST['option'])) {
         $_POST['option'] = NULL;
     }
-    
+
     $option = getOption($connection, $numOptionsInserted);
 
     if (isset($option)) {
