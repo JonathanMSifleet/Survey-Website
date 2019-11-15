@@ -87,9 +87,11 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
 
             $query = "UPDATE questions SET questionNo = '$numQuestionsInserted' WHERE questionID = '$questionID'";
             $result = mysqli_query($connection, $query);
-            
+
             if ($type == "multOption" || $type == "dropdown" || $type == "checkboxes") {
                 // add code for creating multiple options
+
+                displayOptionForm($numOptions);
             }
 
             if ($numQuestionsInserted < $numQuestions) {
@@ -156,39 +158,24 @@ function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayO
     $arrayOfQuestionErrors[1] = validateStringLength($numOptions, 1, 32);
 }
 
-////////////////
-// option functionality: 
-
-//
-//
-function createOption($connection, $numOptions, &$numOptionsInserted)
-{
-    if (isset($_POST['option'])) {
-        $_POST['option'] = NULL;
-    }
-    
-    $option = getOption($connection, $numOptionsInserted);
-    
-    if (isset($option)) {
-        insertOption($connection, $option, $numOptions, $numOptionsInserted);
-    }
-}
+// //////////////
+// option functionality:
 
 //
 //
 function insertOption($connection, $option, $numOptions, &$numOptionsInserted)
 {
-    
+
     // get question ID
     $questionID = $_GET['questionID'];
-    
+
     $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$option')";
     $result = mysqli_query($connection, $query);
-    
+
     if ($result) {
         echo "Options inserted successfully";
         $numOptionsInserted ++;
-        
+
         if ($numOptionsInserted < $numOptions) {
             createOption($connection, $numOptions, $numOptionsInserted); // recursion
         }
@@ -200,21 +187,19 @@ function insertOption($connection, $option, $numOptions, &$numOptionsInserted)
 
 //
 //
-function getOption($connection)
+function displayOptionForm($numOptions)
 {
-    if (isset($_POST['option'])) {
-        return sanitise($_POST['option'], $connection);
-    } else {
-        echo <<<_END
-        <form action="" method="post">
-          Option: <input type="text" name="option" minlength="1" maxlength="32" required>
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
-        
+    echo "<form action='' method='post'>";
+
+    for ($i = 0; $i < $numOptions; $i ++) {
+        echo "Option: <input type='text' name='option' minlength='1' maxlength='32' required>";
         echo "<br>";
     }
+
+    echo "<input type='submit' value='Submit'>";
+    echo "</form>";
+
+    echo "<br>";
 }
 
 //
@@ -222,15 +207,15 @@ function getOption($connection)
 function getNumOptions($connection)
 {
     $questionID = $_GET['questionID'];
-    
+
     $query = "SELECT numOptions FROM questions WHERE questionID = '$questionID'";
     $result = mysqli_query($connection, $query);
-    
+
     // if no data returned, we set result to true(success)/false(failure):
     if ($result) {
-        
+
         $row = mysqli_fetch_row($result);
-        
+
         return $row[0];
     } else {
         // show an unsuccessful signup message:
