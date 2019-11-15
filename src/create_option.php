@@ -25,6 +25,8 @@ else {
     require_once "footer.php";
 }
 
+//
+//
 function createOption($connection, $numOptions, &$numOptionsInserted)
 {
     if (isset($_POST['option'])) {
@@ -38,6 +40,8 @@ function createOption($connection, $numOptions, &$numOptionsInserted)
     }
 }
 
+//
+//
 function insertOption($connection, $option, $numOptions, &$numOptionsInserted)
 {
 
@@ -60,6 +64,8 @@ function insertOption($connection, $option, $numOptions, &$numOptionsInserted)
     }
 }
 
+//
+//
 function getOption($connection)
 {
     if (isset($_POST['option'])) {
@@ -77,6 +83,8 @@ function getOption($connection)
     }
 }
 
+//
+//
 function getNumOptions($connection)
 {
     $questionID = $_GET['questionID'];
@@ -87,7 +95,7 @@ function getNumOptions($connection)
     // if no data returned, we set result to true(success)/false(failure):
     if ($result) {
 
-        $row = (mysqli_fetch_row($result));
+        $row = mysqli_fetch_row($result);
 
         return $row[0];
     } else {

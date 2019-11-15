@@ -39,47 +39,60 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     $questionName = $temp[0];
     $questionID = $temp[1];
     $questionType = $temp[2];
+    $answerRequired = $temp[3];
+    $responseErrors = "";
 
     if (isset($_POST['surveyResponse'])) {
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
-        insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal, $numQuestions);
+        insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseVal, $responseErrors, $numQuestions);
     } else {
-        displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $surveyResponse);
+        displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
     }
 }
 
-function insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal, $numQuestions)
+function insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseVal, $responseErrors, $numQuestions)
 {
+    if ($answerRequired == 1 && $surveyResponse == "") {
+        $responseErrors = "Answer required!";
+    } else {
+        $responseErrors = "";
+    }
 
-    // input validation here: $responseVal =
-    $currentUser = $_SESSION['username'];
-    $responseID = md5($currentUser . $surveyResponse);
+    if ($responseErrors == "") {
 
-    $query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
-    $result = mysqli_query($connection, $query);
+        // input validation here: $responseVal =
+        $currentUser = $_SESSION['username'];
+        $responseID = md5($currentUser . $surveyResponse);
 
-    if ($result) {
-        echo "Response was successful <br>";
+        $query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
+        $result = mysqli_query($connection, $query);
 
-        $questionsAnswered = $_GET['questionsAnswered'];
-        $questionsAnswered ++;
+        if ($result) {
+            echo "Response was successful <br>";
 
-        if ($questionsAnswered < $numQuestions) {
-            $nextQuestionURL = "answer_survey.php?surveyID=$surveyID&questionsAnswered=$questionsAnswered";
-            echo "<a href = $nextQuestionURL> Click here to answer the next question </a>";
+            $questionsAnswered = $_GET['questionsAnswered'];
+            $questionsAnswered ++;
+
+            if ($questionsAnswered < $numQuestions) {
+                $nextQuestionURL = "answer_survey.php?surveyID=$surveyID&questionsAnswered=$questionsAnswered";
+                echo "<a href = $nextQuestionURL> Click here to answer the next question </a>";
+            } else {
+                echo "<br>";
+                echo "Survey completed!";
+                echo "<br>";
+                echo "<a href = about.php> Click here to return to the main page </a>";
+            }
         } else {
-            echo "<br>";
-            echo "Survey completed!";
-            echo "<br>";
-            echo "<a href = about.php> Click here to return to the main page </a>";
+            displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
+            echo "See validation messages";
         }
     } else {
-        echo "Error";
-        echo "<br>" . $questionID . "<br>" . $currentUser . "<br>" . $responseID . "<br>" . $surveyResponse;
+        displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
+        echo "See validation messages";
     }
 }
 
-function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $questionType, $surveyresponse)
+function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $questionType, $answerRequired, $surveyresponse, $responseErrors)
 {
     echo $questionName;
 
@@ -89,7 +102,7 @@ function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questio
         case ("shortAnswer"):
             echo <<<_END
             <form action="" method="post">
-              Response: <input type="text" name="surveyResponse" minlength="1" maxlength="500" value ="$surveyresponse" required>
+              Response: <input type="text" name="surveyResponse" minlength="1" maxlength="500" value ="$surveyresponse"> $responseErrors
               <br>
               <input type="submit" value="Submit">
             </form>
@@ -98,7 +111,7 @@ function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questio
         case ("longAnswer"):
             echo <<<_END
             <form action="" method="post">
-              Response: <input type="text" name="surveyResponse" minlength="3" maxlength="65533" value ="$surveyresponse" required>
+              Response: <input type="text" name="surveyResponse" minlength="3" maxlength="65533" value ="$surveyresponse"> $responseErrors
               <br>
               <input type="submit" value="Submit">
             </form>
@@ -111,7 +124,7 @@ function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questio
         case ("date"):
             echo <<<_END
             <form action="" method="post">
-              Response: <input type="date" name="surveyResponse" value ="$surveyresponse" required>
+              Response: <input type="date" name="surveyResponse" value ="$surveyresponse"> $responseErrors
               <br>
               <input type="submit" value="Submit">
             </form>
@@ -120,7 +133,7 @@ function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questio
         case ("time"):
             echo <<<_END
             <form action="" method="post">
-              Response: <input type="time" name="surveyResponse" value ="$surveyresponse" required>
+              Response: <input type="time" name="surveyResponse" value ="$surveyresponse"> $responseErrors
               <br>
               <input type="submit" value="Submit">
             </form>
@@ -134,7 +147,7 @@ function getSurveyQuestion($connection, $surveyID, &$temp)
     $questionToAnswer = $_GET['questionsAnswered'];
     $questionToAnswer ++;
 
-    $query = "SELECT questionName, questionID, type FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
+    $query = "SELECT questionName, questionID, type, required FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
@@ -143,6 +156,7 @@ function getSurveyQuestion($connection, $surveyID, &$temp)
             $temp[0] = $row['questionName'];
             $temp[1] = $row['questionID'];
             $temp[2] = $row['type'];
+            $temp[3] = $row['required'];
         }
     } else {
         echo "Error";
