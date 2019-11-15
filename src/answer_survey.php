@@ -38,12 +38,13 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     getSurveyQuestion($connection, $surveyID, $temp);
     $questionName = $temp[0];
     $questionID = $temp[1];
+    $questionType = $temp[2];
 
     if (isset($_POST['surveyResponse'])) {
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
         insertReponse($connection, $surveyID, $questionID, $questionName, $surveyResponse, $responseVal, $numQuestions);
     } else {
-        displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $surveyResponse);
+        displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $surveyResponse);
     }
 }
 
@@ -78,16 +79,54 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $surv
     }
 }
 
-function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $surveyresponse)
+function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $questionType, $surveyresponse)
 {
-    echo <<<_END
-    $questionName
-    <form action="" method="post">
-      Response: <input type="text" name="surveyResponse" minlength="3" maxlength="64" value ="$surveyresponse" required>
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
+    echo $questionName;
+
+    switch ($questionType) {
+        case ("multOption"):
+            break;
+        case ("shortAnswer"):
+            echo <<<_END
+            <form action="" method="post">
+              Response: <input type="text" name="surveyResponse" minlength="1" maxlength="500" value ="$surveyresponse" required>
+              <br>
+              <input type="submit" value="Submit">
+            </form>
+            _END;
+            break;
+        case ("longAnswer"):
+            echo <<<_END
+            <form action="" method="post">
+              Response: <input type="text" name="surveyResponse" minlength="3" maxlength="65533" value ="$surveyresponse" required>
+              <br>
+              <input type="submit" value="Submit">
+            </form>
+            _END;
+            break;
+        case ("checkboxes"):
+            break;
+        case ("dropdown"):
+            break;
+        case ("date"):
+            echo <<<_END
+            <form action="" method="post">
+              Response: <input type="date" name="surveyResponse" value ="$surveyresponse" required>
+              <br>
+              <input type="submit" value="Submit">
+            </form>
+            _END;
+            break;
+        case ("time"):
+            echo <<<_END
+            <form action="" method="post">
+              Response: <input type="time" name="surveyResponse" value ="$surveyresponse" required>
+              <br>
+              <input type="submit" value="Submit">
+            </form>
+            _END;
+            break;
+    }
 }
 
 function getSurveyQuestion($connection, $surveyID, &$temp)
@@ -95,7 +134,7 @@ function getSurveyQuestion($connection, $surveyID, &$temp)
     $questionToAnswer = $_GET['questionsAnswered'];
     $questionToAnswer ++;
 
-    $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
+    $query = "SELECT questionName, questionID, type FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
@@ -103,6 +142,7 @@ function getSurveyQuestion($connection, $surveyID, &$temp)
         while ($row = mysqli_fetch_assoc($result)) {
             $temp[0] = $row['questionName'];
             $temp[1] = $row['questionID'];
+            $temp[2] = $row['type'];
         }
     } else {
         echo "Error";
