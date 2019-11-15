@@ -53,14 +53,10 @@ else {
             $surveyID = $_GET['surveyID'];
 
             $query = "DELETE FROM surveys WHERE surveyID = '$surveyID'";
-            $result = mysqli_query($connection, $query); // +
-
-            echo "<br>";
-
-            if ($result) {
-                echo "Survey deleted";
+            if (! mysqli_query($connection, $query)) {
+                echo mysqli_error($connection);
             } else {
-                echo "Error";
+                echo "Survey deleted";
             }
         }
     }
