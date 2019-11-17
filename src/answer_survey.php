@@ -92,7 +92,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
     }
 }
 
-function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $questionType, $answerRequired, $surveyresponse, $responseErrors)
+function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
 {
     echo $questionName;
 
@@ -100,45 +100,20 @@ function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questio
         case ("multOption"):
             break;
         case ("shortAnswer"):
-            echo <<<_END
-            <form action="" method="post">
-              Response: <input type="text" name="surveyResponse" minlength="1" maxlength="500" value ="$surveyresponse"> $responseErrors
-              <br>
-              <input type="submit" value="Submit">
-            </form>
-            _END;
+            displayTextQuestion($surveyResponse, $responseErrors, 500);
             break;
         case ("longAnswer"):
-            echo <<<_END
-            <form action="" method="post">
-              Response: <input type="text" name="surveyResponse" minlength="3" maxlength="65533" value ="$surveyresponse"> $responseErrors
-              <br>
-              <input type="submit" value="Submit">
-            </form>
-            _END;
+            displayTextQuestion($surveyResponse, $responseErrors, 65533);
             break;
         case ("checkboxes"):
             break;
         case ("dropdown"):
             break;
         case ("date"):
-            echo <<<_END
-            <form action="" method="post">
-              Response: <input type="date" name="surveyResponse" value ="$surveyresponse"> $responseErrors
-              <br>
-              <input type="submit" value="Submit">
-            </form>
-            _END;
+            displayDateQuestion($surveyResponse, $responseErrors);
             break;
         case ("time"):
-            echo <<<_END
-            <form action="" method="post">
-              Response: <input type="time" name="surveyResponse" value ="$surveyresponse"> $responseErrors
-              <br>
-              <input type="submit" value="Submit">
-            </form>
-            _END;
-            break;
+            displayTimwQuestion($surveyResponse, $responseErrors);
     }
 }
 
@@ -163,6 +138,8 @@ function getSurveyQuestion($connection, $surveyID, &$temp)
     }
 }
 
+//
+//
 function determineValidSurvey($connection)
 {
     $surveyID = $_GET['surveyID'];
@@ -175,6 +152,45 @@ function determineValidSurvey($connection)
     } else {
         return true;
     }
+}
+
+//
+//
+function displayTextQuestion($surveyResponse, $responseErrors, $maxLength)
+{
+    echo <<<_END
+    <form action="" method="post">
+    Response: <input type="text" name="surveyResponse" minlength="1" maxlength="$maxLength" value ="$surveyResponse"> $responseErrors
+    <br>
+    <input type="submit" value="Submit">
+    </form > 
+    _END;
+}
+
+//
+//
+function displayDateQuestion($surveyResponse, $responseErrors)
+{
+    echo <<<_END
+    <form action="" method="post">
+      Response: <input type="date" name="surveyResponse" value ="$surveyResponse"> $responseErrors
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+}
+
+//
+function displayTimwQuestion($surveyResponse, $responseErrors)
+{
+    echo <<<_END
+    <form action="" method="post">
+      Response: <input type="time" name="surveyResponse" value ="$surveyResponse"> $responseErrors
+      <br>
+      <input type="submit" value="Submit">
+    </form>
+    _END;
+    break;
 }
 
 ?>
