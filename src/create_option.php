@@ -25,6 +25,10 @@ function getOptions($connection, $numOptions, $questionID)
 
     if (isset($_POST['options'])) {
 
+        for ($i = 0; $i < count($arrayOfOptions); $i ++) {
+            $arrayOfOptions[$i] = sanitise($arrayOfOptions[$i], $connection);
+        }
+
         insertOptions($connection, $arrayOfOptions, $numOptions);
     } else {
         displayOptionForm($numOptions);
@@ -46,6 +50,7 @@ function insertOptions($connection, $arrayOfOptions, $numOptions)
 
     if ($result) {
         echo "Options inserted successfully";
+        // go to to next question
     } else {
         // show an unsuccessful signup message:
         echo "Query failed, please try again<br>";
@@ -58,11 +63,11 @@ function displayOptionForm($numOptions)
 {
     echo "<form action='' method='post'>";
 
-    $optionNum = 1;
+    $optionNum = 0;
 
     for ($i = 0; $i < $numOptions; $i ++) {
-        echo "Option $optionNum: <input type='text' name='options[]' minlength='1' maxlength='32' required> <br><br>";
         $optionNum ++;
+        echo "Option $optionNum: <input type='text' name='options[]' minlength='1' maxlength='32' required> <br><br>";
     }
 
     echo "<input type='submit' value='Submit'>";
