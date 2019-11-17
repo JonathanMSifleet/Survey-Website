@@ -50,10 +50,16 @@ function insertOptions($connection, $arrayOfOptions, $numOptions)
 
     if ($result) {
         echo "Options inserted successfully";
-        // go to to next question
+
+        $surveyID = $_GET['surveyID'];
+        $numQuestionsInserted = $_GET['numQuestionsInserted'];
+        $numQuestions = $_GET['numQuestions'];
+
+        displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
     } else {
         // show an unsuccessful signup message:
         echo "Query failed, please try again<br>";
+        displayOptionForm($numOptions);
     }
 }
 

@@ -735,15 +735,20 @@ function getNoOfSurveyQuestions($connection, $surveyID)
     }
 }
 
-function determineArrayIsEmpty($array)
+//
+//
+function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions)
 {
-    for ($i = 0; $i < count($array); $i ++) {
-        if ($array[$i] !== "") {
-            return false;
-        }
-    }
+    if ($numQuestionsInserted < $numQuestions) {
+        $nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
+        echo "<a href= $nextQuestionURL> Click here to create new question </a>";
+    } else {
 
-    return true;
+        echo "<br>";
+        echo "Survey completed!";
+        echo "<br>";
+        echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a>";
+    }
 }
 
 //

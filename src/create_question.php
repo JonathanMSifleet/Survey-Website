@@ -91,19 +91,10 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
             if ($type == "multOption" || $type == "dropdown" || $type == "checkboxes") {
 
                 echo "<br>Now to create some options: <br>";
-                echo "<a href = create_option.php?questionID=$questionID> Click here to create options </a>";
+                echo "<a href = create_option.php?questionID=$questionID&surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted&numQuestions=$numQuestions> Click here to create options </a>";
             } else {
 
-                if ($numQuestionsInserted < $numQuestions) {
-                    $nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
-                    echo "<a href= $nextQuestionURL> Click here to create new question </a>";
-                } else {
-
-                    echo "<br>";
-                    echo "Survey completed!";
-                    echo "<br>";
-                    echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a>";
-                }
+                displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
             }
         } else {
             echo "Question name cannot be identical, try again";
