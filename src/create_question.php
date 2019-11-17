@@ -80,7 +80,7 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
         // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
 
-            echo "Question created succesfully<br> Now to create some options: <br>";
+            echo "Question created succesfully<br>";
 
             $numQuestionsInserted = $_GET['numQuestionsInserted'];
             $numQuestionsInserted ++;
@@ -89,19 +89,21 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
             $result = mysqli_query($connection, $query);
 
             if ($type == "multOption" || $type == "dropdown" || $type == "checkboxes") {
-                // add code for creating multiple options
-                echo "<a href = create_option.php?$questionID> Click here to create options </a>";
-            }
 
-            if ($numQuestionsInserted < $numQuestions) {
-                $nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
-                echo "<a href= $nextQuestionURL> Click here to create new question </a>";
+                echo "<br>Now to create some options: <br>";
+                echo "<a href = create_option.php?questionID=$questionID> Click here to create options </a>";
             } else {
 
-                echo "<br>";
-                echo "Survey completed!";
-                echo "<br>";
-                echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a>";
+                if ($numQuestionsInserted < $numQuestions) {
+                    $nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
+                    echo "<a href= $nextQuestionURL> Click here to create new question </a>";
+                } else {
+
+                    echo "<br>";
+                    echo "Survey completed!";
+                    echo "<br>";
+                    echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a>";
+                }
             }
         } else {
             echo "Question name cannot be identical, try again";

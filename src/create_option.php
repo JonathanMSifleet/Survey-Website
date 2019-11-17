@@ -12,25 +12,20 @@ else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
     $questionID = $_GET['questionID'];
-
+    $numOptions = getNumOptions($connection);
     getOptions($connection, $numOptions, $questionID);
 }
 
 function getOptions($connection, $numOptions, $questionID)
 {
     $arrayOfOptions = Array();
+    initEmptyArray($arrayOfOptions, $numOptions);
 
-    if (isset($_POST['optionName[]'])) {
+    $arrayOfOptions = $_POST['options'];
 
-        for ($i = 0; $i < $numOptions; $i ++) {
-            $arrayOfOptions[$i] = sanitise($_POST['option[]'], $connection);
-        }
+    if (isset($_POST['options'])) {
 
-        insertOptions($connection, $arrayOfOptions);
-
-        print_r($arrayOfOptions);
-
-        // insertOptions($connection, $arrayOfOptions, $numOptions, $numOptionsInserted);
+        insertOptions($connection, $arrayOfOptions, $numOptions);
     } else {
         displayOptionForm($numOptions);
     }
@@ -38,18 +33,19 @@ function getOptions($connection, $numOptions, $questionID)
 
 //
 //
-function insertOptions($connection, $arrayOfOptions)
+function insertOptions($connection, $arrayOfOptions, $numOptions)
 {
 
     // get question ID
     $questionID = $_GET['questionID'];
 
-    $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$option')";
-    $result = mysqli_query($connection, $query);
+    for ($i = 0; $i < count($arrayOfOptions); $i ++) {
+        $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$arrayOfOptions[$i]')";
+        $result = mysqli_query($connection, $query);
+    }
 
     if ($result) {
         echo "Options inserted successfully";
-        $numOptionsInserted ++;
     } else {
         // show an unsuccessful signup message:
         echo "Query failed, please try again<br>";
@@ -60,19 +56,17 @@ function insertOptions($connection, $arrayOfOptions)
 //
 function displayOptionForm($numOptions)
 {
-    echo "<br>";
     echo "<form action='' method='post'>";
 
+    $optionNum = 1;
+
     for ($i = 0; $i < $numOptions; $i ++) {
-        echo "Option: <input type='text' name='optionName[$i]' minlength='1' maxlength='32' required>";
-        echo "<br>";
-        echo "<br>";
+        echo "Option $optionNum: <input type='text' name='options[]' minlength='1' maxlength='32' required> <br><br>";
+        $optionNum ++;
     }
 
     echo "<input type='submit' value='Submit'>";
     echo "</form>";
-
-    echo "<br>";
 }
 
 //

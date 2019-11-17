@@ -735,6 +735,17 @@ function getNoOfSurveyQuestions($connection, $surveyID)
     }
 }
 
+function determineArrayIsEmpty($array)
+{
+    for ($i = 0; $i < count($array); $i ++) {
+        if ($array[$i] !== "") {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 //
 //
 function echoVariable($variableToEcho)
