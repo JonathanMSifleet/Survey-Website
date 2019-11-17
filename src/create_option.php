@@ -20,52 +20,63 @@ function getOptions($connection, $numOptions, $questionID)
 {
     $arrayOfOptions = Array();
     initEmptyArray($arrayOfOptions, $numOptions);
-
-    $arrayOfOptions = $_POST['options'];
+    $arrayOfOptionErrors = Array();
+    initEmptyArray($arrayOfOptionErrors, $numOptions);
 
     if (isset($_POST['options'])) {
+
+        $arrayOfOptions = $_POST['options'];
 
         for ($i = 0; $i < count($arrayOfOptions); $i ++) {
             $arrayOfOptions[$i] = sanitise($arrayOfOptions[$i], $connection);
         }
 
-        insertOptions($connection, $arrayOfOptions, $numOptions);
+        insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOptionErrors);
     } else {
-        displayOptionForm($numOptions);
+        displayOptionForm($numOptions, $arrayOfOptionErrors);
     }
 }
 
 //
 //
-function insertOptions($connection, $arrayOfOptions, $numOptions)
+function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOptionErrors)
 {
+    $errors = array();
+    createArrayOfOptionErrors($arrayOfOptions, $arrayOfOptionErrors);
+    $errors = concatValidationMessages($arrayOfOptionErrors);
 
-    // get question ID
-    $questionID = $_GET['questionID'];
+    if ($errors == "") {
 
-    for ($i = 0; $i < count($arrayOfOptions); $i ++) {
-        $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$arrayOfOptions[$i]')";
-        $result = mysqli_query($connection, $query);
-    }
+        // get question ID
+        $questionID = $_GET['questionID'];
 
-    if ($result) {
-        echo "Options inserted successfully";
+        for ($i = 0; $i < count($arrayOfOptions); $i ++) {
+            $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$arrayOfOptions[$i]')";
+            $result = mysqli_query($connection, $query);
+        }
 
-        $surveyID = $_GET['surveyID'];
-        $numQuestionsInserted = $_GET['numQuestionsInserted'];
-        $numQuestions = $_GET['numQuestions'];
+        if ($result) {
+            echo "Options inserted successfully <br>";
 
-        displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
+            $surveyID = $_GET['surveyID'];
+            $numQuestionsInserted = $_GET['numQuestionsInserted'];
+            $numQuestions = $_GET['numQuestions'];
+
+            displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
+        } else {
+            // show an unsuccessful signup message:
+            echo "Query failed, please try again<br>";
+            displayOptionForm($numOptions, $arrayOfOptionErrors);
+        }
     } else {
-        // show an unsuccessful signup message:
-        echo "Query failed, please try again<br>";
-        displayOptionForm($numOptions);
+        displayOptionForm($numOptions, $arrayOfOptionErrors);
+        echo "Option created failed, see validation errors <br>";
     }
 }
 
 //
 //
-function displayOptionForm($numOptions)
+function displayOptionForm($numOptions, $arrayOfOptionErrors)
 {
     echo "<form action='' method='post'>";
 
@@ -73,7 +84,7 @@ function displayOptionForm($numOptions)
 
     for ($i = 0; $i < $numOptions; $i ++) {
         $optionNum ++;
-        echo "Option $optionNum: <input type='text' name='options[]' minlength='1' maxlength='32' required> <br><br>";
+        echo "Option $optionNum: <input type='text' name='options[]' minlength='1' maxlength='32' required> $arrayOfOptionErrors[$i] <br><br>";
     }
 
     echo "<input type='submit' value='Submit'>";
@@ -98,6 +109,15 @@ function getNumOptions($connection)
     } else {
         // show an unsuccessful signup message:
         echo "Query failed, please try again<br>";
+    }
+}
+
+//
+//
+function createArrayOfOptionErrors($arrayOfOptions, &$arrayOfOptionErrors)
+{
+    for ($i = 0; $i < count($arrayOfOptions); $i ++) {
+        $arrayOfOptionErrors[$i] = validateStringLength($arrayOfOptions[$i], 2, 64);
     }
 }
 

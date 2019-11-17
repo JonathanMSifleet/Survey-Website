@@ -56,7 +56,7 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
             $numOptions = 1;
         }
 
-        createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors);
+        insertQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors);
     } else {
         displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     }
@@ -64,7 +64,7 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
 
 //
 //
-function createQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors)
+function insertQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors)
 {
     createArrayOfQuestionErrors($questionName, $type, $numOptions, $arrayOfQuestionErrors);
     $errors = concatValidationMessages($arrayOfQuestionErrors);
@@ -105,7 +105,7 @@ function createQuestion($connection, $surveyID, $questionName, $type, $numOption
         // validation failed, show the form again with guidance:
         displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
         // show an unsuccessful signup message:
-        echo "Question creation failed, please try again<br>";
+        echo "Question creation failed, see validation errors<br>";
     }
 }
 
