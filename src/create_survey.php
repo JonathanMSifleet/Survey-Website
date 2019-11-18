@@ -30,8 +30,6 @@ function initNewSurvey($connection)
     $arrayOfSurveyErrors = array();
     initEmptyArray($arrayOfSurveyErrors, 4);
 
-    $maxInstructionLength = (2 ** 16) - 2; // max varchar length = 2^16, deduct 2 just to be sure
-
     $title = "";
     $instructions = "";
     $numQuestions = null;
@@ -47,17 +45,17 @@ function initNewSurvey($connection)
         $type = sanitise($_POST['type'], $connection);
         $topic = sanitise($_POST['topic'], $connection);
 
-        createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
+        createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
     } else {
-        displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
+        displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
     }
 }
 
 //
 //
-function createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors)
+function createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors)
 {
-    createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
+    createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
     $errors = concatValidationMessages($arrayOfSurveyErrors);
 
     if ($errors == "") {
@@ -78,13 +76,13 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
             echo "<a href = 'create_question.php?surveyID=$surveyID&numQuestionsInserted=0'>Click here to create questions</a>";
         } else {
             // validation failed, show the form again with guidance:
-            displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
+            displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
             // show an unsuccessful signup message:
             echo "You cannot have surveys with duplicate titles, please try again<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
-        displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors);
+        displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
     }
 }
 
@@ -99,7 +97,7 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $t
       Input survey details:<br>
       Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
       <br>
-      Instructions: <input type="text" name="instructions" minlength="2" maxlength="$maxInstructionLength" value="$instructions" required> $arrayOfSurveyErrors[1]
+      Instructions: <input type="text" name="instructions" minlength="2" maxlength="500" value="$instructions" required> $arrayOfSurveyErrors[1]
       <br>
       Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$numQuestions" required> $arrayOfSurveyErrors[2]
       <br>
@@ -114,10 +112,10 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $t
 
 //
 //
-function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, &$arrayOfSurveyErrors)
+function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, &$arrayOfSurveyErrors)
 {
     $arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
-    $arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, $maxInstructionLength);
+    $arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, 500);
     $arrayOfSurveyErrors[2] = validateNumberOfQuestion($numQuestions, 1, 32);
     $arrayOfSurveyErrors[3] = validateStringLength($type, 0, 64);
     $arrayOfSurveyErrors[4] = validateStringLength($topic, 0, 32);
