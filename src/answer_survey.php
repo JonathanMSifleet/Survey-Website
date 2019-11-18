@@ -94,7 +94,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
         }
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
-        echo "See validation messages";
+        echo "Response couldn't be inserted, see validation messages";
     }
 }
 
@@ -111,10 +111,8 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
     // to do:
     // validation
     // handling multiple answers to checkboxes
-    // fix multiple option creation when
 
-    echo "<form action='' method='post'>";
-    echo "<br>";
+    echo "<form action='' method='post'><br>";
     echo "Response: <br>";
 
     switch ($questionType) {
@@ -123,6 +121,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
                 echo "<input type='checkbox' name='surveyResponse' value ='$predefinedOptions[$i]'>$predefinedOptions[$i]</input>";
                 echo "<br>";
             }
+            echo $responseErrors;
             break;
         case ("date"):
             echo "<input type='date' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
@@ -133,6 +132,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
                 echo "<option value='$predefinedOptions[$i]'>$predefinedOptions[$i]</option>";
             }
             echo "</select>";
+            echo $responseErrors;
             break;
         case ("longAnswer"):
             echo "<input type='text' name='surveyResponse' minlength='1' maxlength='65533' value ='$surveyResponse'> $responseErrors";
@@ -141,6 +141,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             for ($i = 0; $i < count($predefinedOptions); $i ++) {
                 echo "<input type='radio' name='surveyResponse' value='$predefinedOptions[$i]'>$predefinedOptions[$i]<br>";
             }
+            echo $responseErrors;
             break;
         case ("number"):
             echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
@@ -152,8 +153,8 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             echo "<input type='time' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
     }
 
-    echo "<input type='submit' value='Submit'>";
-    echo "</form>";
+    echo "<br><br><input type='submit' value='Submit'>";
+    echo "</form><br>";
 }
 
 function getSurveyQuestion($connection, $surveyID, &$temp)
