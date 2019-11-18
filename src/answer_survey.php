@@ -43,7 +43,7 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     $responseErrors = "";
 
     if (isset($_POST['surveyResponse'])) {
-        echo "Survey response: '" . $_POST['surveyResponse'] . "'<br>";
+
         // SANITISATION (see helper.php for the function definition)
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
 
@@ -108,40 +108,48 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
         getPredefinedOptions($connection, $questionID, $predefinedOptions);
     }
 
-    // here doc not in seperate functions as POST requires it to not be in seperate function
+    // to do:
+    // validation
+    // handling multiple answers to checkboxes
+    // fix multiple option creation when
 
     echo "<form action='' method='post'>";
     echo "<br>";
+    echo "Response: <br>";
 
     switch ($questionType) {
         case ("checkboxes"):
             for ($i = 0; $i < count($predefinedOptions); $i ++) {
-                echo "<input type='checkbox' name='surveyResponse' value ='{$predefinedOptions[$i]}'>$predefinedOptions[$i]</input>";
+                echo "<input type='checkbox' name='surveyResponse' value ='$predefinedOptions[$i]'>$predefinedOptions[$i]</input>";
                 echo "<br>";
             }
             break;
         case ("date"):
-            echo "Response: <input type='date' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<input type='date' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
             break;
         case ("dropdown"):
-            echo "Response:";
-            echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<select name ='surveyResponse'>";
+            for ($i = 0; $i < count($predefinedOptions); $i ++) {
+                echo "<option value='$predefinedOptions[$i]'>$predefinedOptions[$i]</option>";
+            }
+            echo "</select>";
             break;
         case ("longAnswer"):
-            echo "Response: <input type='text' name='surveyResponse' minlength='1' maxlength='65533' value ='$surveyResponse'> $responseErrors";
+            echo "<input type='text' name='surveyResponse' minlength='1' maxlength='65533' value ='$surveyResponse'> $responseErrors";
             break;
         case ("multOption"):
-            echo "Response:";
-            echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            for ($i = 0; $i < count($predefinedOptions); $i ++) {
+                echo "<input type='radio' name='surveyResponse' value='$predefinedOptions[$i]'>$predefinedOptions[$i]<br>";
+            }
             break;
         case ("number"):
-            echo "Response: <input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
             break;
         case ("shortAnswer"):
-            echo "Response: <input type='text' name='surveyResponse' minlength='1' maxlength='500' value ='$surveyResponse'> $responseErrors";
+            echo " <input type='text' name='surveyResponse' minlength='1' maxlength='500' value ='$surveyResponse'> $responseErrors";
             break;
         case ("time"):
-            echo "Response: <input type='time' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<input type='time' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
     }
 
     echo "<input type='submit' value='Submit'>";

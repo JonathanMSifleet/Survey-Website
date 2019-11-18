@@ -118,7 +118,8 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
 
     echo <<<_END
     <form action="" method="post">
-      Question $questionNo: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
+      Question $questionNo: <br><br>
+      Title: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
       <br>
       Type of question:
       <select name="type">
@@ -135,7 +136,7 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
       Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown or checkboxes
       <br>
       Required: <input type="checkbox" name="required" value="1">
-      <br>
+      <br><br>
       <input type="submit" value="Submit">
     </form>
     _END;
