@@ -69,9 +69,9 @@ else {
 function printSurveys($connection, $username, $userIsAdmin)
 {
     if ($userIsAdmin) {
-        $query = "SELECT surveyID, username, title, type, topic FROM surveys ORDER BY username ASC";
+        $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
     } else {
-        $query = "SELECT surveyID, title, type, topic FROM surveys where username='$username' ORDER BY username ASC";
+        $query = "SELECT surveyID, title, topic FROM surveys where username='$username' ORDER BY username ASC";
     }
 
     $result = mysqli_query($connection, $query);
@@ -83,12 +83,12 @@ function printSurveys($connection, $username, $userIsAdmin)
         if ($userIsAdmin) {
             echo "<tr><td>surveyID</td><td>username</td><td>title</td><td>type</td><td>topic</td><td>Survey Link</td><td>Delete Survey</td></tr>";
             while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td><td><a href = http://localhost/answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
+                echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = http://localhost/answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
             }
         } else {
             echo "<tr><td>surveyID</td><td>title</td><td>type</td><td>topic</td><td>Delete Survey</td></tr>";
             while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['type']}</td><td>{$row['topic']}</td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
+                echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
             }
         }
         echo "</table>";
