@@ -108,7 +108,7 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $
 
 //
 //
-function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, &$arrayOfSurveyErrors)
+function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic, &$arrayOfSurveyErrors)
 {
     $arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
     $arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, 500);
