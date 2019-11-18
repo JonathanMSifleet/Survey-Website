@@ -21,7 +21,22 @@ else {
     } else {
 
         $surveyID = $_GET['surveyID'];
-        $numQuestions = getNoOfSurveyQuestions($connection, $surveyID);
+
+        $surveyInformation = array();
+
+        getSurveyInformation($connection, $surveyID, $surveyInformation);
+
+        $title = $surveyInformation[0];
+        $topic = $surveyInformation[1];
+        $instructions = $surveyInformation[2];
+        $numQuestions = $surveyInformation[3];
+
+        echo <<<_END
+            $title <br>
+            $topic <br>
+            $instructions <br>    
+        _END;
+
         displaySurvey($connection, $surveyID, $numQuestions);
     }
 }
@@ -29,6 +44,8 @@ else {
 // finish of the HTML for this page:
 require_once "footer.php";
 
+//
+//
 function displaySurvey($connection, $surveyID, $numQuestions)
 {
     $surveyResponse = "";
@@ -59,6 +76,8 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     }
 }
 
+//
+//
 function insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions)
 {
     if ($answerRequired == 1 && $surveyResponse == "") {
@@ -66,8 +85,6 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
     } else {
         $responseErrors = "";
     }
-
-    // input validation here, switch type to get validation
 
     if ($responseErrors == "") {
 
@@ -112,10 +129,6 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
     if ($questionType == "multOption" || $questionType == "dropdown" || $questionType == "checkboxes") {
         getPredefinedOptions($connection, $questionID, $predefinedOptions);
     }
-
-    // to do:
-    // validation
-    // handling multiple answers to checkboxes
 
     echo "<form action='' method='post'><br>";
     echo "Response: <br>";
@@ -162,6 +175,8 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
     echo "</form><br>";
 }
 
+//
+//
 function getSurveyQuestion($connection, $surveyID, &$temp)
 {
     $questionToAnswer = $_GET['questionsAnswered'];
@@ -199,6 +214,8 @@ function determineValidSurvey($connection)
     }
 }
 
+//
+//
 function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
 {
     $query = "SELECT optionName FROM questionoptions WHERE questionID = '$questionID' ORDER BY optionName ASC";
@@ -208,6 +225,26 @@ function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
 
         while ($row = mysqli_fetch_assoc($result)) {
             $predefinedOptions[] = $row['optionName'];
+        }
+    } else {
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+
+//
+//
+function getSurveyInformation($connection, $surveyID, &$surveyInformation)
+{
+    $query = "SELECT title, topic, instructions, numQuestions FROM surveys WHERE surveyID = '$surveyID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $surveyInformation[0] = $row['title'];
+            $surveyInformation[1] = $row['topic'];
+            $surveyInformation[2] = $row['instructions'];
+            $surveyInformation[3] = $row['numQuestions'];
         }
     } else {
         echo mysqli_error($connection) . "<br>";

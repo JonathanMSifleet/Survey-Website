@@ -108,7 +108,7 @@ function getNumOptions($connection)
         return $row[0];
     } else {
         // show an unsuccessful signup message:
-        echo "Query failed, please try again<br>";
+        echo mysqli_error($connection) . "<br>";
     }
 }
 
