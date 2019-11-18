@@ -33,7 +33,6 @@ function initNewSurvey($connection)
     $title = "";
     $instructions = "";
     $numQuestions = null;
-    $type = "";
     $topic = "";
 
     if (isset($_POST['title'])) {
@@ -42,20 +41,19 @@ function initNewSurvey($connection)
         $title = sanitise($_POST['title'], $connection);
         $instructions = sanitise($_POST['instructions'], $connection);
         $numQuestions = sanitise($_POST['noOfQuestions'], $connection);
-        $type = sanitise($_POST['type'], $connection);
         $topic = sanitise($_POST['topic'], $connection);
 
-        createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
+        createSurvey($connection, $title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
     } else {
-        displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
+        displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
     }
 }
 
 //
 //
-function createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors)
+function createSurvey($connection, $title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors)
 {
-    createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
+    createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
     $errors = implode('', $arrayOfSurveyErrors);
 
     if ($errors == "") {
@@ -65,7 +63,7 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
         $currentUser = $_SESSION['username'];
         $surveyID = md5($currentUser . $title);
 
-        $query = "INSERT INTO surveys (surveyID, username, title, instructions, numQuestions, type, topic) VALUES ('$surveyID', '$currentUser',  '$title' , '$instructions','$numQuestions', '$type', '$topic')";
+        $query = "INSERT INTO surveys (surveyID, username, title, instructions, numQuestions, topic) VALUES ('$surveyID', '$currentUser',  '$title' , '$instructions','$numQuestions', '$topic')";
         $result = mysqli_query($connection, $query);
 
         // if no data returned, we set result to true(success)/false(failure):
@@ -78,17 +76,17 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
             // show an unsuccessful signup message:
 
             echo mysqli_error($connection) . "<br>";
-            displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
+            displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
         }
     } else {
         // validation failed, show the form again with guidance:
-        displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
+        displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
     }
 }
 
 //
 //
-function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors)
+function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors)
 {
 
     // max number of questions length to be compatible with MYSQL smallint max value
@@ -100,8 +98,6 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $t
       Instructions: <input type="text" name="instructions" minlength="2" maxlength="500" value="$instructions" required> $arrayOfSurveyErrors[1]
       <br>
       Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$numQuestions" required> $arrayOfSurveyErrors[2]
-      <br>
-      Type of Survey: <input type="text" name="type" maxlength="11" value="$type"> $arrayOfSurveyErrors[3]
       <br>
       Survey Topic: <input type="text" name="topic" maxlength="32" value="$topic"> $arrayOfSurveyErrors[4]
       <br>
