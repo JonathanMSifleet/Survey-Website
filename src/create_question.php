@@ -146,6 +146,25 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
 
 //
 //
+function getNoOfSurveyQuestions($connection, $surveyID)
+{
+    $query = "SELECT numQuestions FROM surveys WHERE surveyID = '$surveyID'";
+    $result = mysqli_query($connection, $query);
+
+    // if no data returned, we set result to true(success)/false(failure):
+    if ($result) {
+
+        $row = mysqli_fetch_row($result);
+
+        return $row[0];
+    } else {
+        // show an unsuccessful signup message:
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+
+//
+//
 function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayOfQuestionErrors)
 {
     $arrayOfQuestionErrors[0] = validateStringLength($questionName, 4, 64);
