@@ -32,7 +32,6 @@ require_once "footer.php";
 function displaySurvey($connection, $surveyID, $numQuestions)
 {
     $surveyResponse = "";
-    $responseVal = "";
 
     $temp = Array();
     getSurveyQuestion($connection, $surveyID, $temp);
@@ -42,18 +41,25 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     $answerRequired = $temp[3];
     $responseErrors = "";
 
-    if (isset($_POST['surveyResponse'])) {
+    if (! empty($_POST['checkboxResponse'])) {
+
+        $surveyResponse = implode(', ', $_POST['checkboxResponse']);
+
+        $surveyResponse = sanitise($surveyResponse, $connection);
+
+        insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+    } elseif (isset($_POST['surveyResponse'])) {
 
         // SANITISATION (see helper.php for the function definition)
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
 
-        insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseVal, $responseErrors, $numQuestions);
+        insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
     }
 }
 
-function insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseVal, $responseErrors, $numQuestions)
+function insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions)
 {
     if ($answerRequired == 1 && $surveyResponse == "") {
         $responseErrors = "Answer required!";
@@ -65,7 +71,6 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
 
     if ($responseErrors == "") {
 
-        // input validation here: $responseVal =
         $currentUser = $_SESSION['username'];
         $responseID = md5($currentUser . $surveyResponse);
 
@@ -118,7 +123,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
     switch ($questionType) {
         case ("checkboxes"):
             for ($i = 0; $i < count($predefinedOptions); $i ++) {
-                echo "<input type='checkbox' name='surveyResponse' value ='$predefinedOptions[$i]'>$predefinedOptions[$i]</input>";
+                echo "<input type='checkbox' name='checkboxResponse[]' value ='$predefinedOptions[$i]'>$predefinedOptions[$i]</input>";
                 echo "<br>";
             }
             echo $responseErrors;
