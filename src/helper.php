@@ -658,7 +658,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
     createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-    $errors = implode(' ', $arrayOfAccountCreationErrors);
+    $errors = implode('', $arrayOfAccountCreationErrors);
     // /////////
 
     // check that all the validation tests passed before going to the database:
@@ -682,6 +682,9 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
         // validation failed, show the form again with guidance:
         displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
         // show an unsuccessful signin message:
+
+        echo mysqli_error($connection) . "<br>";
+
         echo "Account creation failed, please check the errors shown above and try again<br>";
     }
     // we're finished with the database, close the connection:

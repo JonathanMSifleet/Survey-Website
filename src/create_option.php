@@ -43,7 +43,7 @@ function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOption
 {
     $errors = array();
     createArrayOfOptionErrors($arrayOfOptions, $arrayOfOptionErrors);
-    $errors = implode(' ', $arrayOfOptionErrors);
+    $errors = implode('', $arrayOfOptionErrors);
 
     if ($errors == "") {
 

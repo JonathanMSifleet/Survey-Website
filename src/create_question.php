@@ -67,7 +67,7 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
 function insertQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors)
 {
     createArrayOfQuestionErrors($questionName, $type, $numOptions, $arrayOfQuestionErrors);
-    $errors = implode(' ', $arrayOfQuestionErrors);
+    $errors = implode('', $arrayOfQuestionErrors);
 
     if ($errors == "") {
 

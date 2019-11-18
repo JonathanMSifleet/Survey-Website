@@ -56,7 +56,7 @@ function initNewSurvey($connection)
 function createSurvey($connection, $title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors)
 {
     createArrayOfSurveyErrors($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors);
-    $errors = implode(' ', $arrayOfSurveyErrors);
+    $errors = implode('', $arrayOfSurveyErrors);
 
     if ($errors == "") {
 
