@@ -281,20 +281,6 @@ function validateIntSize($input, $minNo, $maxNo)
     }
 }
 
-// this function concatenates each valuae in the array of errors to create one large error, then returns this value
-// this was created by me:
-function concatValidationMessages($arrayOfErrors)
-{
-    $numberOfErrors = count($arrayOfErrors); // +
-
-    $errors = "";
-    for ($i = 0; $i < $numberOfErrors; $i ++) {
-        $errors = $errors . $arrayOfErrors[$i];
-    }
-
-    return $errors;
-}
-
 //
 //
 function getSuperGlobalName($inputURL)
@@ -672,7 +658,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
     createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors); // +
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
-    $errors = concatValidationMessages($arrayOfAccountCreationErrors);
+    $errors = implode(' ', $arrayOfAccountCreationErrors);
     // /////////
 
     // check that all the validation tests passed before going to the database:
