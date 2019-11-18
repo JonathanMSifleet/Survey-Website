@@ -65,7 +65,7 @@ function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOption
             displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
         } else {
             // show an unsuccessful signup message:
-            echo "Query failed, please try again<br>";
+            echo mysqli_error($connection) . "<br>";
             displayOptionForm($numOptions, $arrayOfOptionErrors);
         }
     } else {
@@ -117,7 +117,7 @@ function getNumOptions($connection)
 function createArrayOfOptionErrors($arrayOfOptions, &$arrayOfOptionErrors)
 {
     for ($i = 0; $i < count($arrayOfOptions); $i ++) {
-        $arrayOfOptionErrors[$i] = validateStringLength($arrayOfOptions[$i], 2, 64);
+        $arrayOfOptionErrors[$i] = validateStringLength($arrayOfOptions[$i], 1, 64);
     }
 }
 
