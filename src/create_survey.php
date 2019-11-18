@@ -88,7 +88,7 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $type, 
 
 //
 //
-function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $maxInstructionLength, $arrayOfSurveyErrors)
+function displayCreateSurveyForm($title, $instructions, $numQuestions, $type, $topic, $arrayOfSurveyErrors)
 {
 
     // max number of questions length to be compatible with MYSQL smallint max value

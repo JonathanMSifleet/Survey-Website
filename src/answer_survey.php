@@ -58,6 +58,8 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
         $responseErrors = "";
     }
 
+    // input validation here, switch type to get validation
+
     if ($responseErrors == "") {
 
         // input validation here: $responseVal =
@@ -92,24 +94,34 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
     }
 }
 
-function displaySurveyQuestion($connection, $surveyID, &$questionName, &$questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
+function displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
 {
-    echo $questionName;
+    echo $questionName . "<br>";
+
+    $predefinedOptions = array();
+
+    if ($questionType == "multOption" || $questionType == "dropdown" || $questionType == "checkboxes") {
+        getPredefinedOptions($connection, $questionID, $predefinedOptions);
+    }
 
     switch ($questionType) {
         case ("checkboxes"):
+            displayCheckboxesQuestion($surveyResponse, $responseErrors, $predefinedOptions);
             break;
         case ("date"):
             displayDateQuestion($surveyResponse, $responseErrors);
             break;
         case ("dropdown"):
+            displayDropdownQuestion($surveyResponse, $responseErrors, $predefinedOptions);
             break;
         case ("longAnswer"):
             displayTextQuestion($surveyResponse, $responseErrors, 65533);
             break;
         case ("multOption"):
+            displayMultOptionQuestion($surveyResponse, $responseErrors, $predefinedOptions);
             break;
         case ("number"):
+            displayNumberQuestion($surveyResponse, $responseErrors);
             break;
         case ("shortAnswer"):
             displayTextQuestion($surveyResponse, $responseErrors, 500);
@@ -158,14 +170,19 @@ function determineValidSurvey($connection)
 
 //
 //
-function displayCheckboxesQuestion($surveyResponse, $responseErrors, $maxLength)
+function displayCheckboxesQuestion($surveyResponse, $responseErrors, $predefinedOptions)
 {
+    echo "<br>";
+    echo "<form action='' method='post'>";
+
+    for ($i = 0; $i < count($predefinedOptions); $i ++) {
+        echo "<input type='checkbox' name='surveyResponse' value='$surveyResponse'>$predefinedOptions[$i]</option>";
+        echo "<br>";
+    }
+
     echo <<<_END
-    <form action="" method="post">
-    Response: <input type="" name="surveyResponse" minlength="1" maxlength="$maxLength" value ="$surveyResponse"> $responseErrors
-    <br>
     <input type="submit" value="Submit">
-    </form >
+    </form > 
     _END;
 }
 
@@ -184,11 +201,12 @@ function displayDateQuestion($surveyResponse, $responseErrors)
 
 //
 //
-function displayDropdownQuestion($surveyResponse, $responseErrors)
+function displayDropdownQuestion($surveyResponse, $responseErrors, $predefinedOptions)
 {
     echo <<<_END
     <form action="" method="post">
-      Response: <input type="date" name="surveyResponse" value ="$surveyResponse"> $responseErrors
+      Response: 
+      <input type="" name="surveyResponse" value ="$surveyResponse"> $responseErrors
       <br>
       <input type="submit" value="Submit">
     </form>
@@ -210,11 +228,12 @@ function displayTextQuestion($surveyResponse, $responseErrors, $maxLength)
 
 //
 //
-function displayMultOptionQuestion($surveyResponse, $responseErrors)
+function displayMultOptionQuestion($surveyResponse, $responseErrors, $predefinedOptions)
 {
     echo <<<_END
     <form action="" method="post">
-      Response: <input type="date" name="surveyResponse" value ="$surveyResponse"> $responseErrors
+      Response: 
+      <input type="" name="surveyResponse" value ="$surveyResponse"> $responseErrors
       <br>
       <input type="submit" value="Submit">
     </form>
@@ -227,7 +246,7 @@ function displayNumberQuestion($surveyResponse, $responseErrors)
 {
     echo <<<_END
     <form action="" method="post">
-      Response: <input type="date" name="surveyResponse" value ="$surveyResponse"> $responseErrors
+      Response: <input type="" name="surveyResponse" value ="$surveyResponse"> $responseErrors
       <br>
       <input type="submit" value="Submit">
     </form>
@@ -244,7 +263,21 @@ function displayTimeQuestion($surveyResponse, $responseErrors)
       <input type="submit" value="Submit">
     </form>
     _END;
-    break;
+}
+
+function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
+{
+    $query = "SELECT optionName FROM questionoptions WHERE questionID = '$questionID' ORDER BY optionName ASC";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $predefinedOptions[] = $row['optionName'];
+        }
+    } else {
+        echo "Error";
+    }
 }
 
 ?>
