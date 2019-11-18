@@ -51,7 +51,7 @@ function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOption
         $questionID = $_GET['questionID'];
 
         for ($i = 0; $i < count($arrayOfOptions); $i ++) {
-            $query = "INSERT INTO questionoptions (questionID, optionName) VALUES ('$questionID', '$arrayOfOptions[$i]')";
+            $query = "INSERT INTO question_options (questionID, optionName) VALUES ('$questionID', '$arrayOfOptions[$i]')";
             $result = mysqli_query($connection, $query);
         }
 

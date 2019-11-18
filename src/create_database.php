@@ -133,10 +133,10 @@ function createQuestionTable($connection)
 function createQuestionOptionsTable($connection)
 {
     // if there's an old version of our table, then drop it:
-    $sql = "DROP TABLE IF EXISTS questionOptions";
+    $sql = "DROP TABLE IF EXISTS question_options";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
-        echo "Dropped existing table: questionOptions<br>";
+        echo "Dropped existing table: question_options<br>";
     } else {
         die("Error checking for existing table: " . mysqli_error($connection));
     }
