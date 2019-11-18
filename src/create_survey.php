@@ -113,8 +113,7 @@ function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic,
     $arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
     $arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, 500);
     $arrayOfSurveyErrors[2] = validateNumberOfQuestion($numQuestions, 1, 32);
-    $arrayOfSurveyErrors[3] = validateStringLength($type, 0, 64);
-    $arrayOfSurveyErrors[4] = validateStringLength($topic, 0, 32);
+    $arrayOfSurveyErrors[3] = validateStringLength($topic, 0, 32);
 }
 
 ?>

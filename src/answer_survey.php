@@ -32,9 +32,9 @@ else {
         $numQuestions = $surveyInformation[3];
 
         echo <<<_END
-            $title <br>
-            $topic <br>
-            $instructions <br>    
+            $title <br><br>
+            Topic: $topic <br><br>
+            $instructions <br><br>    
         _END;
 
         displaySurvey($connection, $surveyID, $numQuestions);
@@ -218,7 +218,7 @@ function determineValidSurvey($connection)
 //
 function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
 {
-    $query = "SELECT optionName FROM questionoptions WHERE questionID = '$questionID' ORDER BY optionName ASC";
+    $query = "SELECT optionName FROM question_options WHERE questionID = '$questionID' ORDER BY optionName ASC";
     $result = mysqli_query($connection, $query);
 
     if ($result) {

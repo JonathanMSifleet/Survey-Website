@@ -141,7 +141,7 @@ function createQuestionOptionsTable($connection)
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE questionOptions (questionID VARCHAR(32), optionName VARCHAR(32), FOREIGN KEY (questionID) REFERENCES questions(questionID) ON DELETE CASCADE, PRIMARY KEY (questionID, optionName))";
+    $sql = "CREATE TABLE question_options (questionID VARCHAR(32), optionName VARCHAR(32), FOREIGN KEY (questionID) REFERENCES questions(questionID) ON DELETE CASCADE, PRIMARY KEY (questionID, optionName))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: questions<br>";
