@@ -43,7 +43,10 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     $responseErrors = "";
 
     if (isset($_POST['surveyResponse'])) {
+        echo "Survey response: '" . $_POST['surveyResponse'] . "'<br>";
+        // SANITISATION (see helper.php for the function definition)
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
+
         insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseVal, $responseErrors, $numQuestions);
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
@@ -85,8 +88,9 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
                 echo "<a href = about.php> Click here to return to the main page </a>";
             }
         } else {
+
+            echo mysqli_error($connection) . "<br>";
             displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
-            echo "See validation messages";
         }
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
@@ -104,31 +108,44 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
         getPredefinedOptions($connection, $questionID, $predefinedOptions);
     }
 
+    // here doc not in seperate functions as POST requires it to not be in seperate function
+
+    echo "<form action='' method='post'>";
+    echo "<br>";
+
     switch ($questionType) {
         case ("checkboxes"):
-            displayCheckboxesQuestion($surveyResponse, $responseErrors, $predefinedOptions);
+            for ($i = 0; $i < count($predefinedOptions); $i ++) {
+                echo "<input type='checkbox' name='surveyResponse' value ='{$predefinedOptions[$i]}'>$predefinedOptions[$i]</input>";
+                echo "<br>";
+            }
             break;
         case ("date"):
-            displayDateQuestion($surveyResponse, $responseErrors);
+            echo "Response: <input type='date' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
             break;
         case ("dropdown"):
-            displayDropdownQuestion($surveyResponse, $responseErrors, $predefinedOptions);
+            echo "Response:";
+            echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
             break;
         case ("longAnswer"):
-            displayTextQuestion($surveyResponse, $responseErrors, 65533);
+            echo "Response: <input type='text' name='surveyResponse' minlength='1' maxlength='65533' value ='$surveyResponse'> $responseErrors";
             break;
         case ("multOption"):
-            displayMultOptionQuestion($surveyResponse, $responseErrors, $predefinedOptions);
+            echo "Response:";
+            echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
             break;
         case ("number"):
-            displayNumberQuestion($surveyResponse, $responseErrors);
+            echo "Response: <input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
             break;
         case ("shortAnswer"):
-            displayTextQuestion($surveyResponse, $responseErrors, 500);
+            echo "Response: <input type='text' name='surveyResponse' minlength='1' maxlength='500' value ='$surveyResponse'> $responseErrors";
             break;
         case ("time"):
-            displayTimeQuestion($surveyResponse, $responseErrors);
+            echo "Response: <input type='time' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
     }
+
+    echo "<input type='submit' value='Submit'>";
+    echo "</form>";
 }
 
 function getSurveyQuestion($connection, $surveyID, &$temp)
@@ -148,7 +165,7 @@ function getSurveyQuestion($connection, $surveyID, &$temp)
             $temp[3] = $row['required'];
         }
     } else {
-        echo "Error";
+        echo mysqli_error($connection) . "<br>";
     }
 }
 
@@ -168,103 +185,6 @@ function determineValidSurvey($connection)
     }
 }
 
-//
-//
-function displayCheckboxesQuestion($surveyResponse, $responseErrors, $predefinedOptions)
-{
-    echo "<br>";
-    echo "<form action='' method='post'>";
-
-    for ($i = 0; $i < count($predefinedOptions); $i ++) {
-        echo "<input type='checkbox' name='surveyResponse' value='$surveyResponse'>$predefinedOptions[$i]</option>";
-        echo "<br>";
-    }
-
-    echo <<<_END
-    <input type="submit" value="Submit">
-    </form > 
-    _END;
-}
-
-//
-//
-function displayDateQuestion($surveyResponse, $responseErrors)
-{
-    echo <<<_END
-    <form action="" method="post">
-      Response: <input type="date" name="surveyResponse" value ="$surveyResponse"> $responseErrors
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-}
-
-//
-//
-function displayDropdownQuestion($surveyResponse, $responseErrors, $predefinedOptions)
-{
-    echo <<<_END
-    <form action="" method="post">
-      Response: 
-      <input type="" name="surveyResponse" value ="$surveyResponse"> $responseErrors
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-}
-
-//
-//
-function displayTextQuestion($surveyResponse, $responseErrors, $maxLength)
-{
-    echo <<<_END
-    <form action="" method="post">
-    Response: <input type="text" name="surveyResponse" minlength="1" maxlength="$maxLength" value ="$surveyResponse"> $responseErrors
-    <br>
-    <input type="submit" value="Submit">
-    </form > 
-    _END;
-}
-
-//
-//
-function displayMultOptionQuestion($surveyResponse, $responseErrors, $predefinedOptions)
-{
-    echo <<<_END
-    <form action="" method="post">
-      Response: 
-      <input type="" name="surveyResponse" value ="$surveyResponse"> $responseErrors
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-}
-
-//
-//
-function displayNumberQuestion($surveyResponse, $responseErrors)
-{
-    echo <<<_END
-    <form action="" method="post">
-      Response: <input type="" name="surveyResponse" value ="$surveyResponse"> $responseErrors
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-}
-
-//
-function displayTimeQuestion($surveyResponse, $responseErrors)
-{
-    echo <<<_END
-    <form action="" method="post">
-      Response: <input type="time" name="surveyResponse" value ="$surveyResponse"> $responseErrors
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-    _END;
-}
-
 function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
 {
     $query = "SELECT optionName FROM questionoptions WHERE questionID = '$questionID' ORDER BY optionName ASC";
@@ -276,7 +196,7 @@ function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
             $predefinedOptions[] = $row['optionName'];
         }
     } else {
-        echo "Error";
+        echo mysqli_error($connection) . "<br>";
     }
 }
 
