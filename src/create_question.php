@@ -97,8 +97,8 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
                 displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
             }
         } else {
-            echo "Question name cannot be identical, try again";
-            echo "<br>";
+            echo mysqli_error($connection) . "<br>";
+
             displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
         }
     } else {

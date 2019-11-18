@@ -457,17 +457,19 @@ function printUserData($connection, $origin, $username)
     $query = "SELECT * FROM users WHERE username = '$username'"; // +
     $result = mysqli_query($connection, $query); // +
 
-    echo "User's details:";
-    echo "<table border ='1'>";
-    echo "<tr><td>username</td><td>email</td><td>password</td><td>firstname</td><td>surname</td><td>number</td><td>dob</td></tr>";
+    if ($result) {
 
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<tr><td>{$row['username']}</td><td>{$row['email']}</td><td>{$row['password']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
+        echo "User's details:";
+        echo "<table border ='1'>";
+        echo "<tr><td>username</td><td>email</td><td>password</td><td>firstname</td><td>surname</td><td>number</td><td>dob</td></tr>";
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr><td>{$row['username']}</td><td>{$row['email']}</td><td>{$row['password']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
+        }
+        echo "</table>";
+    } else {
+        echo mysqli_error($connection) . "<br>";
     }
-    echo "</table>";
-
-    $currentURL = $_SERVER['REQUEST_URI'];
-    $currentURL = substr($currentURL, 1, strlen($currentURL));
 }
 
 //
@@ -526,7 +528,7 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
             if ($result) {
                 echo ucfirst($fieldToChange) . " changed";
             } else {
-                echo "Error";
+                echo mysqli_error($connection) . "<br>";
             }
         } else {
             echo "<br>";
@@ -593,7 +595,7 @@ function deleteAccount($connection, $username)
             if ($result) {
                 echo "Account deleted";
             } else {
-                echo "Error";
+                echo mysqli_error($connection) . "<br>";
             }
         }
     }
@@ -687,10 +689,8 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
             // show a successful signup message:
             echo "Account creation was successful<br>";
         } else {
-            // validation failed, show the form again with guidance:
             displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
-            // show an unsuccessful signup message:
-            echo "Account creation failed, please try again<br>";
+            echo mysqli_error($connection) . "<br>";
         }
     } else {
         // validation failed, show the form again with guidance:
@@ -731,7 +731,7 @@ function getNoOfSurveyQuestions($connection, $surveyID)
         return $row[0];
     } else {
         // show an unsuccessful signup message:
-        echo "Query failed, please try again<br>";
+        echo mysqli_error($connection) . "<br>";
     }
 }
 
