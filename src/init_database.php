@@ -310,7 +310,7 @@ function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
         "1"
     );
 
-    for ($i = 0; $i <= 4; $i ++) {
+    for ($i = 0; $i < 5; $i ++) {
         $questionID = md5($surveyID . $arrayOfQuestions[$i]);
         $query = "INSERT INTO questions (questionID, surveyID, questionNo, questionName, type, numOptions, required) VALUES ('$questionID', '$surveyID','$i', '$arrayOfQuestions[$i]', '$arrayOfQuestionTypes[$i]', '$arrayOfNumOptions[$i]','1')";
         $result = mysqli_query($connection, $query);
@@ -336,7 +336,7 @@ function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
         "Very satisfied"
     );
 
-    for ($i = 0; $i <= 4; $i ++) {
+    for ($i = 0; $i < 5; $i ++) {
         $query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$arrayOfQuestionIDs[1]', '$arrayOfOptions[$i]', '$i')";
         $result = mysqli_query($connection, $query);
 
@@ -357,7 +357,7 @@ function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
         "Highly likely"
     );
 
-    for ($i = 0; $i <= 4; $i ++) {
+    for ($i = 0; $i < 5; $i ++) {
         $query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$arrayOfQuestionIDs[3]', '$arrayOfOptions[$i]', '$i')";
         $result = mysqli_query($connection, $query);
 

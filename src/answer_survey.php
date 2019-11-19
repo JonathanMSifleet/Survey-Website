@@ -189,13 +189,11 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
 function getSurveyQuestion($connection, $surveyID, &$temp)
 {
     $questionToAnswer = $_GET['questionsAnswered'];
-    $questionToAnswer ++;
 
     $query = "SELECT questionName, questionID, type, required FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-
         while ($row = mysqli_fetch_assoc($result)) {
             $temp[0] = $row['questionName'];
             $temp[1] = $row['questionID'];
