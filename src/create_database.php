@@ -19,6 +19,7 @@ createQuestionOptionsTable($connection);
 createResponseTable($connection);
 
 insertDefaultUsers($connection);
+createDefaultSurvey($connection);
 
 $time_post = microtime(true);
 $timeTaken = calculateTimeTaken($time_pre, $time_post);
@@ -253,4 +254,119 @@ function insertDefaultUsers($connection)
         }
     }
 }
+
+function createDefaultSurvey($connection)
+{
+    $surveyID = "";
+
+    insertDefaultSurvey($connection, $surveyID);
+
+    $arrayOfQuestionIDs = array();
+
+    insertDefaultQuestions($connection, $surveyID, $arrayOfQuestionIDs);
+    insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs);
+}
+
+function insertDefaultSurvey($connection, &$surveyID)
+{
+    $title = "Website Feedback";
+    $surveyID = md5("admin" . $title);
+    $instructions = "This is the default survey. The survey contains five questions and five question types. This survey acts as feedback for the site";
+
+    $query = "INSERT INTO surveys(surveyID, username, title, instructions, numQuestions, topic) VALUES ('$surveyID', 'admin', '$title','$instructions','5','feedback')";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        echo "Default survey inserted successfully<br>";
+    } else {
+        // show an unsuccessful signup message:
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+
+function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
+{
+    $arrayOfQuestions = array(
+        "What is todays date?",
+        "How satisfied are you with the website?",
+        "What could be improved with the website?",
+        "How likely are you to recommend the website?",
+        "What have you used this website for?"
+    );
+
+    $arrayOfQuestionTypes = array(
+        "date",
+        "dropdown",
+        "longAnswer",
+        "multOption",
+        "shortAnswer"
+    );
+
+    $arrayOfNumOptions = array(
+        "1",
+        "5",
+        "1",
+        "5",
+        "1"
+    );
+
+    for ($i = 0; $i <= 4; $i ++) {
+        $questionID = md5($surveyID . $arrayOfQuestions[$i]);
+        $query = "INSERT INTO questions (questionID, surveyID, questionNo, questionName, type, numOptions, required) VALUES ('$questionID', '$surveyID','$i', '$arrayOfQuestions[$i]', '$arrayOfQuestionTypes[$i]', '$arrayOfNumOptions[$i]','1')";
+        $result = mysqli_query($connection, $query);
+
+        if ($result) {
+            array_push($arrayOfQuestionIDs, $questionID);
+            echo "Question " . ($i + 1) . " inserted succesfully<br>";
+        } else {
+            echo "Error: " . mysqli_error($connection) . "<br>";
+        }
+    }
+}
+
+function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
+{
+
+    // question 1:
+    $arrayOfOptions = array(
+        "Very dissatisfied",
+        "Slightly dissatisfied",
+        "Neutral",
+        "Slightly satisfied",
+        "Very satisfied"
+    );
+
+    for ($i = 0; $i <= 4; $i ++) {
+        $query = "INSERT INTO question_options (questionID, optionName) VALUES ('$arrayOfQuestionIDs[1]', '$arrayOfOptions[$i]')";
+        $result = mysqli_query($connection, $query);
+
+        if ($result) {
+            echo "Option " . ($i + 1) . " inserted succesfully<br>";
+        } else {
+            echo "Error: " . mysqli_error($connection) . "<br>";
+        }
+    }
+
+    // question 3:
+
+    $arrayOfOptions = array(
+        "Highly unlikely",
+        "Somewhat unlikely",
+        "Neutral",
+        "Slightly likely",
+        "Highly likely"
+    );
+
+    for ($i = 0; $i <= 4; $i ++) {
+        $query = "INSERT INTO question_options (questionID, optionName) VALUES ('$arrayOfQuestionIDs[3]', '$arrayOfOptions[$i]')";
+        $result = mysqli_query($connection, $query);
+
+        if ($result) {
+            echo "Option " . ($i + 1) . " inserted succesfully<br>";
+        } else {
+            echo "Error: " . mysqli_error($connection) . "<br>";
+        }
+    }
+}
+
 ?>
