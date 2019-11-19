@@ -78,10 +78,10 @@ function printSurveys($connection, $username, $userIsAdmin)
 
     if ($result !== null) {
 
-        echo "<table border ='1'>";
+        echo "<table>";
 
         if ($userIsAdmin) {
-            echo "<tr><td>surveyID</td><td>username</td><td>title</td><td>topic</td><td>Survey Link</td><td>Delete Survey</td></tr>";
+            echo "<tr><th>surveyID</th><th>username</th><th>title</th><th>topic</th><th>Survey Link</th><th>Delete Survey</th></tr>";
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = http://localhost/answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
             }

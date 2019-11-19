@@ -446,8 +446,8 @@ function printUserData($connection, $origin, $username)
     if ($result) {
 
         echo "User's details:";
-        echo "<table border ='1'>";
-        echo "<tr><td>username</td><td>email</td><td>password</td><td>firstname</td><td>surname</td><td>number</td><td>dob</td></tr>";
+        echo "<table>";
+        echo "<tr><th>username</th><th>email</th><th>password</th><th>firstname</th><th>surname</th><th>number</th><th>dob</th></tr>";
 
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr><td>{$row['username']}</td><td>{$row['email']}</td><td>{$row['password']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";

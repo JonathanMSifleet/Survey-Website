@@ -1,41 +1,61 @@
 html * {
-     font-family: 'Roboto', sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
- header {
-     clear: both;
-     margin-top: 0;
-     margin-bottom: 0;
+
+header {
+	clear: both;
+	margin-top: 0;
+	margin-bottom: 0;
 }
- nav {
-     background-color: #ffffff;
-     size: 100vw;
-     clear: both;
+
+nav {
+	background-color: #ffffff;
+	size: 100vw;
+	clear: both;
 }
- nav ul {
-     list-style-type: none;
-     width:100vw;
-     text-align: center;
-     padding: 0;
+
+nav ul {
+	list-style-type: none;
+	width: 100vw;
+	text-align: center;
+	padding: 0;
 }
- nav ul li {
-     float: left;
-     display: flex;
-     width:10vw;
-     height: 5vh;
-     padding:0;
-     margin-left:3%;
-     margin-right:3%;
+
+nav ul li {
+	float: left;
+	display: flex;
+	width: 10vw;
+	height: 5vh;
+	padding: 0;
+	margin-left: 3%;
+	margin-right: 3%;
 }
- nav li a {
+
+nav li a {
+	color: #ffffff;
+	text-decoration: none;
+	display: inline-block;
+	border-radius: 25px;
+	background-color: #4472C4;
+	font-size: 1em;
+	width: 100%;
+	height: 100%;
+}
+
+nav li a:hover {
+	background-color: #305189;
+}
+
+ table, th, td {
+     border: 1px solid black;
+     width: auto;
+     border-collapse: collapse;
+}
+ th {
      color: #ffffff;
-     text-decoration: none;
-     display:inline-block;
-     border-radius: 25px;
      background-color: #4472C4;
-     font-size: 1em;
-     width: 100%;
-     height:100%;
+     font-weight:normal;
 }
-a:hover {
-     background-color: #305189;
+ td {
+     background-color: #ffffff;
 }

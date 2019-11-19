@@ -61,7 +61,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 echo <<<_END
 </ul>
 </nav>
-<br><br>
+<br><br><br><br>
 <body>
 _END;
 ?>

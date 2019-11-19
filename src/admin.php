@@ -93,8 +93,8 @@ function displayListOfUsers($connection)
     echo "Or click a name from the table to view user's data:";
     echo "<br>";
 
-    echo "<table border ='1'>";
-    echo "<tr><td>username</td></tr>";
+    echo "<table>";
+    echo "<tr><th>username</th></tr>";
 
     while ($row = mysqli_fetch_assoc($result)) {
         // if row hyperlink is clicked, set superglobal with user's name
