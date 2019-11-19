@@ -142,7 +142,7 @@ function createQuestionOptionsTable($connection)
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE question_options (questionID VARCHAR(32), optionName VARCHAR(32), FOREIGN KEY (questionID) REFERENCES questions(questionID) ON DELETE CASCADE, PRIMARY KEY (questionID, optionName))";
+    $sql = "CREATE TABLE question_options (questionID VARCHAR(32), optionName VARCHAR(32), optionNo TINYINT, FOREIGN KEY (questionID) REFERENCES questions(questionID) ON DELETE CASCADE, PRIMARY KEY (questionID, optionName))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: questions<br>";
@@ -337,7 +337,7 @@ function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
     );
 
     for ($i = 0; $i <= 4; $i ++) {
-        $query = "INSERT INTO question_options (questionID, optionName) VALUES ('$arrayOfQuestionIDs[1]', '$arrayOfOptions[$i]')";
+        $query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$arrayOfQuestionIDs[1]', '$arrayOfOptions[$i]', '$i')";
         $result = mysqli_query($connection, $query);
 
         if ($result) {
@@ -358,7 +358,7 @@ function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
     );
 
     for ($i = 0; $i <= 4; $i ++) {
-        $query = "INSERT INTO question_options (questionID, optionName) VALUES ('$arrayOfQuestionIDs[3]', '$arrayOfOptions[$i]')";
+        $query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$arrayOfQuestionIDs[3]', '$arrayOfOptions[$i]', '$i')";
         $result = mysqli_query($connection, $query);
 
         if ($result) {
