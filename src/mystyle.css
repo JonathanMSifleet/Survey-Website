@@ -21,6 +21,7 @@ nav {
 nav ul {
 	list-style-type: none;
 	width: 100%;
+	height: 5%;
 	text-align: center;
 	padding: 0;
 }
@@ -68,7 +69,8 @@ td {
 	background-color: #ffffff;
 }
 
-h2, h3 {
+h2,
+h3 {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }

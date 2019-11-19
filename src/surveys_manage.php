@@ -81,14 +81,14 @@ function printSurveys($connection, $username, $userIsAdmin)
         echo "<table>";
 
         if ($userIsAdmin) {
-            echo "<tr><th>surveyID</th><th>username</th><th>title</th><th>topic</th><th>Survey Link</th><th>Delete Survey</th></tr>";
+            echo "<tr><th>Survey ID</th><th>Username</th><th>Title</th><th>Topic</th><th>Survey Link</th><th>Delete Survey</th></tr>";
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = http://localhost/answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
             }
         } else {
-            echo "<tr><td>surveyID</td><td>title</td><td>type</td><td>topic</td><td>Delete Survey</td></tr>";
+            echo "<tr><th>Survey ID</th><th>Title</th><th>Topic</th><th>Survey Link</th><th>Delete Survey</th></tr>";
             while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
+                echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = http://localhost/answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
             }
         }
         echo "</table>";

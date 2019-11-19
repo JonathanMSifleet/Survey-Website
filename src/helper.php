@@ -673,7 +673,8 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
         // if no data returned, we set result to true(success)/false(failure):
         if ($result) {
             // show a successful signup message:
-            echo "Account creation was successful<br>";
+            echo "Account creation was successful<br><br>";
+            echo "<a href = about.php>Click here to go to the main page</a>";
         } else {
             displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
             echo mysqli_error($connection) . "<br>";

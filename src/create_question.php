@@ -127,7 +127,7 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
         <option value ="dropdown">Dropdown</option>
         <option value ="longAnswer">Long answer</option>
         <option value ="multOption">Multiple options</option>
-        <option value ="Number">Number</option>
+        <option value ="number">Number</option>
         <option value ="shortAnswer">Short answer</option>      
         <option value ="time">Time</option>
       </select>  
