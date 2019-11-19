@@ -34,7 +34,8 @@ else {
         echo <<<_END
         <h2>$title</h2><br>
         <h3>Topic: $topic</h3>
-        $instructions<br>    
+        Instructions:<br>
+        $instructions    
         _END;
 
         displaySurvey($connection, $surveyID, $numQuestions);
@@ -86,6 +87,8 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
         $responseErrors = "";
     }
 
+    // [SS validation here]
+
     if ($responseErrors == "") {
 
         $currentUser = $_SESSION['username'];
@@ -95,7 +98,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
         $result = mysqli_query($connection, $query);
 
         if ($result) {
-            echo "<br>Response was successful<br>";
+            echo "<br><br>Response was successful<br>";
 
             $questionsAnswered = $_GET['questionsAnswered'];
             $questionsAnswered ++;
@@ -104,9 +107,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
                 $nextQuestionURL = "answer_survey.php?surveyID=$surveyID&questionsAnswered=$questionsAnswered";
                 echo "<a href = $nextQuestionURL> Click here to answer the next question </a>";
             } else {
-                echo "<br>";
-                echo "Survey completed!";
-                echo "<br>";
+                echo "<br>Survey completed!<br><br>";
                 echo "<a href = about.php> Click here to return to the main page </a>";
             }
         } else {
@@ -116,14 +117,14 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
         }
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
-        echo "Response couldn't be inserted, see validation messages";
+        echo "Response couldn't be inserted, see validation messages<br>";
     }
 }
 
 function displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
 {
-    echo "<br>Question " . ($_GET['questionsAnswered'] + 1);
-    echo "<br><br>" . $questionName . "<br>";
+    echo "<br><h4>Question " . ($_GET['questionsAnswered'] + 1) . "</h4>";
+    echo $questionName . "<br>";
 
     $predefinedOptions = array();
 
@@ -167,7 +168,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             echo $responseErrors;
             break;
         case ("number"):
-            echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<input type='text' name='surveyResponse' minlength ='1' value ='$surveyResponse'> $responseErrors";
             echo "<br>";
             break;
         case ("shortAnswer"):
