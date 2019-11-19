@@ -21,7 +21,7 @@ else {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    echo "<a href = create_database.php> Empty database </a>";
+    echo "<a href = init_database.php> Reinitialise database </a>";
     echo "<br><br>";
 
     // only display the page content if this is the admin account (all other users get a "you don't have permission..." message):
