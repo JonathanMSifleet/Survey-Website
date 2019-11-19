@@ -445,9 +445,9 @@ function printUserData($connection, $origin, $username)
 
     if ($result) {
 
-        echo "User's details:";
+        echo "Account details:";
         echo "<table>";
-        echo "<tr><th>username</th><th>email</th><th>password</th><th>firstname</th><th>surname</th><th>number</th><th>dob</th></tr>";
+        echo "<tr><th>Username</th><th>Email address</th><th>Password (hash)</th><th>First name</th><th>Surname</th><th>Phone Number</th><th>Date of Birth</th></tr>";
 
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr><td>{$row['username']}</td><td>{$row['email']}</td><td>{$row['password']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
@@ -532,6 +532,9 @@ function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLengt
     $currentURL = $_SERVER['REQUEST_URI'];
     $fieldToDisplay = ucfirst($fieldToChange);
 
+    echo "<form action='$currentURL' method='post'>";
+    echo "<br>Please fill in the following fields:<br>";
+
     if ($fieldToDisplay == "Dob") {
 
         $todaysDate = date('Y-m-d'); // get current date: +
@@ -539,24 +542,16 @@ function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLengt
         $minDate = calcEarliestDate($todaysDate);
         $maxDate = calcLatestDate($todaysDate);
 
-        echo <<<_END
-        <form action="$currentURL" method="post">
-          Please fill in the following fields:<br>
-          $fieldToDisplay: <input type="$fieldType" min=$minDate max=$maxDate name="newInput">
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
+        echo "$fieldToDisplay: <input type='$fieldType' min=$minDate max=$maxDate name='newInput'>";
     } else {
-        echo <<<_END
-        <form action="$currentURL" method="post">
-          Please fill in the following fields:<br>
-          $fieldToDisplay: <input type="$fieldType" name="newInput">
-          <br>
-          <input type="submit" value="Submit">
-        </form>
-        _END;
+        echo "$fieldToDisplay: <input type='$fieldType' name='newInput'>";
     }
+
+    echo <<<_END
+    <br><br>
+    <input type="submit" value="Submit">
+    </form>
+    _END;
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
@@ -568,10 +563,10 @@ function deleteAccount($connection, $username)
     if ($username == "admin") {
         echo "The admin account cannot be deleted";
     } else {
-        echo "Are you sure you want to delete the account " . $username . "? ";
+        echo "<br>Are you sure you want to delete the account " . $username . "?<br>";
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
         echo " ";
-        echo "<a href =admin.php?username=$username>Cancel</a>";
+        echo "<a href =admin.php?username=$username>Cancel</a><br>";
 
         if (isset($_GET["confirmDeletion"])) {
             $query = "DELETE FROM users WHERE username = '$username'";
@@ -712,12 +707,9 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
 {
     if ($numQuestionsInserted < $numQuestions) {
         $nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
-        echo "<a href= $nextQuestionURL> Click here to create new question </a>";
+        echo "<a href= $nextQuestionURL> Click here to create new question </a><br>";
     } else {
-
-        echo "<br>";
-        echo "Survey completed!";
-        echo "<br>";
+        echo "<br>Survey completed!<br>";
         echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a>";
     }
 }
@@ -726,9 +718,7 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
 //
 function echoVariable($variableToEcho)
 {
-    echo "<br>";
-    echo "Variable value: " . $variableToEcho;
-    echo "<br>";
+    echo "<br>Variable value: " . $variableToEcho . "<br>";
 }
 
 ?>

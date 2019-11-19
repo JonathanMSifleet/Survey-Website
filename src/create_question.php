@@ -92,6 +92,7 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
 
                 echo "<br>Now to create some options: <br>";
                 echo "<a href = create_option.php?questionID=$questionID&surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted&numQuestions=$numQuestions> Click here to create options </a>";
+                echo "<br>";
             } else {
 
                 displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
@@ -132,7 +133,7 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
         <option value ="time">Time</option>
       </select>  
       <br>
-      Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown or checkboxes
+      Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown, checkboxes or multiple choices
       <br>
       Required: <input type="checkbox" name="required" value="1">
       <br><br>

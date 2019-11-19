@@ -16,6 +16,9 @@ else {
     getOptions($connection, $numOptions, $questionID);
 }
 
+// finish of the HTML for this page:
+require_once "footer.php";
+
 function getOptions($connection, $numOptions, $questionID)
 {
     $arrayOfOptions = Array();
