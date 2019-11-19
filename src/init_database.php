@@ -1,10 +1,7 @@
 <?php
-// Create suitable test data for each of those tables
-// NOTE: this last one is VERY IMPORTANT - you need to include test data that enables the markers to test all of your site's functionality
-// read in the details of our MySQL server:
-require_once "header.php"; // for ease of use+
+require_once "header.php";
 require_once "credentials.php";
-// We'll use the procedural (rather than object oriented) mysqli calls
+
 // connect to the host:
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass);
 $time_pre = microtime(true);
@@ -23,10 +20,13 @@ createDefaultSurvey($connection);
 
 $time_post = microtime(true);
 $timeTaken = calculateTimeTaken($time_pre, $time_post);
-echo "<br>Time taken: " . $timeTaken . " seconds";
+echo "<br>Time taken: " . $timeTaken . " seconds<br>";
 
 // we're finished, close the connection:
 mysqli_close($connection);
+
+// finish off the HTML for this page:
+require_once "footer.php";
 
 function calculateTimeTaken($time_pre, $time_post)
 {
