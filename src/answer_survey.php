@@ -227,7 +227,7 @@ function determineValidSurvey($connection)
 //
 function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
 {
-    $query = "SELECT optionName FROM question_options WHERE questionID = '$questionID' ORDER BY optionName ASC";
+    $query = "SELECT optionName FROM question_options WHERE questionID = '$questionID'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
