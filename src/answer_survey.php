@@ -32,9 +32,9 @@ else {
         $numQuestions = $surveyInformation[3];
 
         echo <<<_END
-            $title <br><br>
-            Topic: $topic <br><br>
-            $instructions <br><br>    
+        $title <br><br>
+        Topic: $topic <br><br>
+        $instructions <br><br>    
         _END;
 
         displaySurvey($connection, $surveyID, $numQuestions);
@@ -122,7 +122,8 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
 
 function displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
 {
-    echo $questionName . "<br>";
+    echo "Question " . ($_GET['questionsAnswered'] + 1);
+    echo "<br><br>" . $questionName . "<br>";
 
     $predefinedOptions = array();
 
@@ -130,8 +131,9 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
         getPredefinedOptions($connection, $questionID, $predefinedOptions);
     }
 
+    echo "<br>Response:<br>";
+
     echo "<form action='' method='post'><br>";
-    echo "Response: <br>";
 
     switch ($questionType) {
         case ("checkboxes"):
@@ -143,6 +145,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             break;
         case ("date"):
             echo "<input type='date' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<br>";
             break;
         case ("dropdown"):
             echo "<select name ='surveyResponse'>";
@@ -154,6 +157,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             break;
         case ("longAnswer"):
             echo "<input type='text' name='surveyResponse' minlength='1' maxlength='65533' value ='$surveyResponse'> $responseErrors";
+            echo "<br>";
             break;
         case ("multOption"):
             for ($i = 0; $i < count($predefinedOptions); $i ++) {
@@ -163,15 +167,18 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             break;
         case ("number"):
             echo "<input type='' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<br>";
             break;
         case ("shortAnswer"):
             echo " <input type='text' name='surveyResponse' minlength='1' maxlength='500' value ='$surveyResponse'> $responseErrors";
+            echo "<br>";
             break;
         case ("time"):
             echo "<input type='time' name='surveyResponse' value ='$surveyResponse'> $responseErrors";
+            echo "<br>";
     }
 
-    echo "<br><br><input type='submit' value='Submit'>";
+    echo "<br><input type='submit' value='Submit'>";
     echo "</form><br>";
 }
 
