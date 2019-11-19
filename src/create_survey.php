@@ -71,7 +71,7 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $topic,
             // show a successful signup message:
             echo "Survey creation was successful";
             echo "<br>";
-            echo "<a href = 'create_question.php?surveyID=$surveyID&numQuestionsInserted=0'>Click here to create questions</a>";
+            echo "<a href = 'create_question.php?surveyID=$surveyID&numQuestionsInserted=0'>Click here to create questions</a><br>";
         } else {
             // show an unsuccessful signup message:
 

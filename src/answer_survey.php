@@ -87,7 +87,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
         $responseErrors = "";
     }
 
-    // [SS validation here]
+    $responseErrors = $responseErrors . createResponseErrors($questionType, $surveyResponse);
 
     if ($responseErrors == "") {
 
@@ -105,15 +105,14 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
 
             if ($questionsAnswered < $numQuestions) {
                 $nextQuestionURL = "answer_survey.php?surveyID=$surveyID&questionsAnswered=$questionsAnswered";
-                echo "<a href = $nextQuestionURL> Click here to answer the next question </a>";
+                echo "<a href = $nextQuestionURL>Click here to answer the next question</a><br>";
             } else {
                 echo "<br>Survey completed!<br><br>";
-                echo "<a href = about.php> Click here to return to the main page </a>";
+                echo "<a href = about.php> Click here to return to the main page</a><br>";
             }
         } else {
-
-            echo mysqli_error($connection) . "<br>";
             displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
+            echo "Error: " . mysqli_error($connection) . "<br>";
         }
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
@@ -121,10 +120,11 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
     }
 }
 
+//
+//
 function displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
 {
-    echo "<br><h4>Question " . ($_GET['questionsAnswered'] + 1) . "</h4>";
-    echo $questionName . "<br>";
+    echo "<br><h4>" . ($_GET['questionsAnswered'] + 1) . ": $questionName</h4>";
 
     $predefinedOptions = array();
 
@@ -257,6 +257,25 @@ function getSurveyInformation($connection, $surveyID, &$surveyInformation)
         }
     } else {
         echo mysqli_error($connection) . "<br>";
+    }
+}
+
+//
+//
+function createResponseErrors($questionType, $surveyResponse)
+{
+    switch ($questionType) {
+        case ("longAnswer"):
+            return validateStringLength($surveyResponse, 0, 65533);
+            break;
+        case ("number"):
+            return checkOnlyNumeric($surveyResponse);
+            break;
+        case ("shortAnswer"):
+            return validateStringLength($surveyResponse, 0, 500);
+            break;
+        default:
+            return "";
     }
 }
 

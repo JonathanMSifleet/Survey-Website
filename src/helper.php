@@ -119,19 +119,15 @@ function checkIsNonNumeric($field)
     return "";
 }
 
-// if the input is contains only numbers then return an empty string, if the data is invalid return a help message
+// if the input contains only numbers then return an empty string, if the data is invalid return a help message
 // this entire function is made by me:
 function checkOnlyNumeric($field)
 {
-    $charArray = str_split($field);
-    $lengthOfCharArray = count($charArray);
-
-    for ($i = 0; $i < $lengthOfCharArray; $i ++) {
-        if (is_numeric($charArray[$i]) == false) {
-            return "Must not contain any characters ";
-        }
+    if (is_numeric($field) == false) {
+        return "Must not contain any characters ";
+    } else {
+        return "";
     }
-    return "";
 }
 
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
