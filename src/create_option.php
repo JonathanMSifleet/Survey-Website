@@ -64,9 +64,8 @@ function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOption
 
             displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
         } else {
-            // show an unsuccessful signup message:
-            echo mysqli_error($connection) . "<br>";
             displayOptionForm($numOptions, $arrayOfOptionErrors);
+            echo "Error: " . mysqli_error($connection) . "<br>";
         }
     } else {
         displayOptionForm($numOptions, $arrayOfOptionErrors);

@@ -8,15 +8,19 @@ header {
 	margin-bottom: 0;
 }
 
+h1 {
+	font-size: 3em;
+}
+
 nav {
 	background-color: #ffffff;
-	size: 100vw;
+	size: 100%;
 	clear: both;
 }
 
 nav ul {
 	list-style-type: none;
-	width: 100vw;
+	width: 100%;
 	text-align: center;
 	padding: 0;
 }
@@ -24,7 +28,7 @@ nav ul {
 nav ul li {
 	float: left;
 	display: flex;
-	width: 10vw;
+	width: 10%;
 	height: 5vh;
 	padding: 0;
 	margin-left: 3%;
@@ -46,16 +50,25 @@ nav li a:hover {
 	background-color: #305189;
 }
 
- table, th, td {
-     border: 1px solid black;
-     width: auto;
-     border-collapse: collapse;
+table,
+th,
+td {
+	border: 1px solid black;
+	width: auto;
+	border-collapse: collapse;
 }
- th {
-     color: #ffffff;
-     background-color: #4472C4;
-     font-weight:normal;
+
+th {
+	color: #ffffff;
+	background-color: #4472C4;
+	font-weight: normal;
 }
- td {
-     background-color: #ffffff;
+
+td {
+	background-color: #ffffff;
+}
+
+h2, h3 {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }

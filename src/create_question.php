@@ -97,9 +97,8 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
                 displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
             }
         } else {
-            echo mysqli_error($connection) . "<br>";
-
             displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
+            echo "Error: " . mysqli_error($connection) . "<br>";
         }
     } else {
         // validation failed, show the form again with guidance:

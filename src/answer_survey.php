@@ -32,9 +32,9 @@ else {
         $numQuestions = $surveyInformation[3];
 
         echo <<<_END
-        $title <br><br>
-        Topic: $topic <br><br>
-        $instructions <br><br>    
+        <h2>$title</h2><br>
+        <h3>Topic: $topic</h3>
+        $instructions<br>    
         _END;
 
         displaySurvey($connection, $surveyID, $numQuestions);
@@ -95,7 +95,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
         $result = mysqli_query($connection, $query);
 
         if ($result) {
-            echo "Response was successful <br>";
+            echo "<br>Response was successful<br>";
 
             $questionsAnswered = $_GET['questionsAnswered'];
             $questionsAnswered ++;
@@ -122,7 +122,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
 
 function displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
 {
-    echo "Question " . ($_GET['questionsAnswered'] + 1);
+    echo "<br>Question " . ($_GET['questionsAnswered'] + 1);
     echo "<br><br>" . $questionName . "<br>";
 
     $predefinedOptions = array();
@@ -131,7 +131,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
         getPredefinedOptions($connection, $questionID, $predefinedOptions);
     }
 
-    echo "<br>Response:<br>";
+    echo "Response:<br>";
 
     echo "<form action='' method='post'><br>";
 
@@ -153,6 +153,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
                 echo "<option value='$predefinedOptions[$i]'>$predefinedOptions[$i]</option>";
             }
             echo "</select>";
+            echo "<br>";
             echo $responseErrors;
             break;
         case ("longAnswer"):
