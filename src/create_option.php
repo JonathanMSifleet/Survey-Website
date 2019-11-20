@@ -104,7 +104,6 @@ function getNumOptions($connection)
 
     // if no data returned, we set result to true(success)/false(failure):
     if ($result) {
-
         $row = mysqli_fetch_row($result);
 
         return $row[0];

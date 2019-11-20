@@ -32,10 +32,10 @@ else {
         $numQuestions = $surveyInformation[3];
 
         echo <<<_END
-        <h2>$title</h2><br>
-        <h3>Topic: $topic</h3>
-        Instructions:<br>
-        $instructions    
+            <h2>$title</h2><br>
+            <h3>Topic: $topic</h3>
+            Instructions:<br>
+            $instructions    
         _END;
 
         displaySurvey($connection, $surveyID, $numQuestions);

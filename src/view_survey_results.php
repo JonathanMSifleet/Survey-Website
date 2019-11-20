@@ -43,26 +43,6 @@ function getSurveyResults($connection, $surveyID)
         }
         echo "</tr>";
 
-        echo "<tr>";
-
-        for ($i = 0; $i < count($arrayOfQuestions); $i ++) {
-
-            $query = "SELECT username, response FROM responses WHERE questionID='{$arrayOfQuestions[$i]}'";
-            $result = mysqli_query($connection, $query);
-
-            if ($result) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $username = $row[0];
-                    $response = $row[1];
-                }
-            } else {
-                echo mysqli_error($connection) . "<br>";
-            }
-
-            echo "<td>$username</td><td>$response</td>";
-        }
-        echo "</tr>";
-
         echo "</table>";
     } else {
         echo "No questions found";
