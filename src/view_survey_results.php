@@ -30,7 +30,9 @@ function getSurveyResults($connection, $surveyID)
 {
     $arrayOfQuestions = array();
     $arrayOfQuestionIDs = array();
+    $arrayOfRespondents = array();
     getSurveyQuestions($connection, $surveyID, $arrayOfQuestions, $arrayOfQuestionIDs);
+    getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
     echo "<h3>Results:</h3>";
 
@@ -42,8 +44,13 @@ function getSurveyResults($connection, $surveyID)
 
         displayTableHeaders($arrayOfQuestions);
 
-        for ($i = 0; $i < $numResponses; $i ++) {
-            displaySurveyResponse($connection, $arrayOfQuestionIDs);
+        for ($j = 0; $j < count($arrayOfRespondents); $j ++) {
+
+            $username = $arrayOfRespondents[$j];
+
+            for ($i = 0; $i < $numResponses; $i ++) {
+                displaySurveyResponse($connection, $arrayOfQuestionIDs, $username);
+            }
         }
 
         echo "</table>";
@@ -80,13 +87,15 @@ function getSurveyName($connection, $surveyID)
     }
 }
 
-function displaySurveyResponse($connection, $arrayOfQuestionIDs)
+function displaySurveyResponse($connection, $arrayOfQuestionIDs, $username)
 {
     echo "<tr>";
 
+    echo "<td>$username</td>";
+
     for ($i = 0; $i < count($arrayOfQuestionIDs); $i ++) {
 
-        $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$i]}'";
+        $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$i]}' AND username = '$username'";
         $result = mysqli_query($connection, $query);
 
         if ($result) {
@@ -103,6 +112,7 @@ function displaySurveyResponse($connection, $arrayOfQuestionIDs)
 function displayTableHeaders($arrayOfQuestions)
 {
     echo "<tr>";
+    echo "<th>Username</th>";
     for ($i = 0; $i < count($arrayOfQuestions); $i ++) {
         echo "<th>{$arrayOfQuestions[$i]}</th>";
     }
@@ -116,6 +126,20 @@ function getNumResponses($connection, $surveyID)
 
     if ($result) {
         return mysqli_num_rows($result);
+    } else {
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+
+function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
+{
+    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $arrayOfRespondents[] = $row['username'];
+        }
     } else {
         echo mysqli_error($connection) . "<br>";
     }
