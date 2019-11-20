@@ -264,7 +264,7 @@ function createResponseErrors($questionType, $surveyResponse)
 {
     switch ($questionType) {
         case ("longAnswer"):
-            return validateStringLength($surveyResponse, 0, 65533);
+            return validateStringLength($surveyResponse, 0, 65535);
             break;
         case ("number"):
             return checkOnlyNumeric($surveyResponse);

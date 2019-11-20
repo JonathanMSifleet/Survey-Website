@@ -102,7 +102,7 @@ function createSurveyTable($connection)
         die("Error checking for survey table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE surveys (surveyID VARCHAR(32), username VARCHAR(20), title VARCHAR(64), instructions VARCHAR(500), numQuestions SMALLINT, topic VARCHAR(12), FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE, PRIMARY KEY (surveyID))";
+    $sql = "CREATE TABLE surveys (surveyID VARCHAR(32), username VARCHAR(20), title VARCHAR(64), instructions MEDIUMTEXT, numQuestions SMALLINT, topic VARCHAR(12), FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE, PRIMARY KEY (surveyID))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: surveys<br>";
@@ -162,7 +162,7 @@ function createResponseTable($connection)
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE responses (questionID VARCHAR(32), username VARCHAR(20), responseID VARCHAR(32), response VARCHAR(65533), FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE, FOREIGN KEY (questionID) REFERENCES questions(questionID) ON DELETE CASCADE, PRIMARY KEY (responseID))";
+    $sql = "CREATE TABLE responses (questionID VARCHAR(32), username VARCHAR(20), responseID VARCHAR(32), response MEDIUMTEXT, FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE, FOREIGN KEY (questionID) REFERENCES questions(questionID) ON DELETE CASCADE, PRIMARY KEY (responseID))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: responses<br>";
