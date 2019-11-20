@@ -64,12 +64,12 @@ function initCreateAccount($connection)
 
     // default values we show in the form:
     $username = "";
-    $firstname = ""; 
-    $surname = ""; 
+    $firstname = ""; // +
+    $surname = ""; // +
     $password = "";
     $email = "";
-    $number = ""; 
-    $dob = ""; 
+    $number = ""; // +
+    $dob = ""; // +
 
     $todaysDate = date('Y-m-d'); // get current date: +
 
@@ -87,8 +87,8 @@ function displayListOfUsers($connection)
 {
     // queries mysql table, outputs results to table
     // this is written by me:
-    $query = "SELECT username FROM users ORDER BY username ASC"; 
-    $result = mysqli_query($connection, $query); 
+    $query = "SELECT username FROM users ORDER BY username ASC"; // +
+    $result = mysqli_query($connection, $query); // +
 
     echo "Or click a name from the table to view user's data:";
     echo "<br>";
