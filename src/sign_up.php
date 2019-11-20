@@ -26,10 +26,10 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $username = "";
     $email = "";
     $password = "";
-    $firstname = ""; // +
-    $surname = ""; // +
-    $number = ""; // +
-    $dob = ""; // +
+    $firstname = ""; 
+    $surname = ""; 
+    $number = ""; 
+    $dob = ""; 
 
     if (isset($_POST['username'])) {
         // user just tried to sign up:

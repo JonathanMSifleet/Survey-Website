@@ -52,8 +52,8 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 
     // now validate the data (both strings must be between 1 and 16 characters long):
     // (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table)
-    $username_val = validateStringLength($username, 3, 16); // +
-    $password_val = validateStringLength($password, 6, 32); // +
+    $username_val = validateStringLength($username, 3, 16); 
+    $password_val = validateStringLength($password, 6, 32); 
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
     $errors = $username_val . $password_val;
@@ -64,13 +64,13 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         // currently only barryg, mandyb, or timmy can sign in... each with ANY password
         // you need to replace this code with code that checks the username and password against the relevant database table...
 
-        $query = "SELECT * FROM users WHERE username='$username'"; // +
-        $result = mysqli_query($connection, $query); // +
+        $query = "SELECT * FROM users WHERE username='$username'"; 
+        $result = mysqli_query($connection, $query); 
 
         // if there was a match then set the session variables and display a success message:
-        if (mysqli_num_rows($result) > 0) { // +
-            while ($row = mysqli_fetch_array($result)) { // +
-                if (password_verify($password, $row['password'])) { // +
+        if (mysqli_num_rows($result) > 0) { 
+            while ($row = mysqli_fetch_array($result)) { 
+                if (password_verify($password, $row['password'])) { 
                                                                     // set a session variable to record that this user has successfully logged in:
                     $_SESSION['loggedInSkeleton'] = true;
                     // and copy their username into the session data for use by our other scripts:
