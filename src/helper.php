@@ -66,7 +66,7 @@ function validateEmail($field, $minLength, $maxLength)
 }
 
 // if the data is valid return an empty string, if the data is invalid return a help message
-function validateStringLength($field, $minlength, $maxlength) // + edit function name
+function validateStringLength($field, $minlength, $maxlength) // edit function name
 {
     // echo "String length: " . strlen($field);
     if (strlen($field) < $minlength) {
@@ -244,13 +244,13 @@ function createArrayOfUsableCharacters()
 // this was created by me:
 function createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
-    $arrayOfErrors[0] = validateStringLength($username, 1, 20); // +
+    $arrayOfErrors[0] = validateStringLength($username, 1, 20);
     $arrayOfErrors[1] = validateStringLength($email, 1, 64);
     $arrayOfErrors[2] = validatePassword($password, 12, 32);
     $arrayOfErrors[3] = validateName($firstname, 2, 16); // see line below +
     $arrayOfErrors[4] = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
-    $arrayOfErrors[5] = validatePhoneNumber($number); // +
-    $arrayOfErrors[6] = validateDate($DOB); // +
+    $arrayOfErrors[5] = validatePhoneNumber($number);
+    $arrayOfErrors[6] = validateDate($DOB);
 }
 
 //
@@ -436,8 +436,8 @@ function printUserData($connection, $origin, $username)
 {
     echo "<br>";
 
-    $query = "SELECT * FROM users WHERE username = '$username'"; // +
-    $result = mysqli_query($connection, $query); // +
+    $query = "SELECT * FROM users WHERE username = '$username'";
+    $result = mysqli_query($connection, $query);
 
     if ($result) {
 
@@ -504,7 +504,7 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
                 echo "Insert a new password if your browser hasn't automatically saved your password";
             }
             $query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
-            $result = mysqli_query($connection, $query); // +
+            $result = mysqli_query($connection, $query);
 
             echo "<br>";
             if ($result) {
@@ -566,7 +566,7 @@ function deleteAccount($connection, $username)
 
         if (isset($_GET["confirmDeletion"])) {
             $query = "DELETE FROM users WHERE username = '$username'";
-            $result = mysqli_query($connection, $query); // +
+            $result = mysqli_query($connection, $query);
 
             echo "<br>";
             if ($result) {
@@ -646,7 +646,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 
     // this was created by me:
     // "should" return array, but instead edits array reference
-    createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors); // +
+    createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
 
     // concatenate all the validation results together ($errors will only be empty if ALL the data is valid): +
     $errors = implode('', $arrayOfAccountCreationErrors);
@@ -691,10 +691,10 @@ function sanitiseUserData($connection, &$username, &$email, &$password, &$firstn
     $username = sanitise($_POST['username'], $connection);
     $email = sanitise($_POST['email'], $connection);
     $password = sanitise($_POST['password'], $connection);
-    $firstname = sanitise($_POST['firstname'], $connection); // +
-    $surname = sanitise($_POST['surname'], $connection); // +
-    $number = sanitise($_POST['number'], $connection); // +
-    $dob = sanitise($_POST['dob'], $connection); // +
+    $firstname = sanitise($_POST['firstname'], $connection);
+    $surname = sanitise($_POST['surname'], $connection);
+    $number = sanitise($_POST['number'], $connection);
+    $dob = sanitise($_POST['dob'], $connection);
 }
 
 //
