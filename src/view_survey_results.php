@@ -19,13 +19,13 @@ echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTabl
 echo "</ul>";
 
 if (isset($_GET['viewResultsInTable'])) {
-    getSurveyResults($connection, $surveyID);
+    displaySurveyResults($connection, $surveyID);
 }
 
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function getSurveyResults($connection, $surveyID)
+function displaySurveyResults($connection, $surveyID)
 {
     $arrayOfQuestionNames = array();
     $arrayOfQuestionIDs = array();
@@ -33,17 +33,44 @@ function getSurveyResults($connection, $surveyID)
     getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
     getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
+    $numResponses = getNumResponses($connection, $surveyID);
+    $tableName = "response_CSV_" . $surveyID;
+
     echo "<h3>Results:</h3>";
 
-    $numResponses = getNumResponses($connection, $surveyID);
     echo "Number of results: " . $numResponses . "<br>";
 
-    echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
+    // echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
     if (!empty($arrayOfQuestionNames)) {
-        displayTableOfResults($connection, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+        getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+        displayTableOfResults($connection, $tableName, $arrayOfQuestionNames);
+        dropTable($connection, $tableName);
     } else {
         echo "No Responses found";
+    }
+}
+
+function getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
+{
+    dropTable($connection, $tableName);
+    createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
+    populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+}
+
+//
+//
+function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
+{
+    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $arrayOfRespondents[] = $row['username'];
+        }
+    } else {
+        echo mysqli_error($connection) . "<br>";
     }
 }
 
@@ -60,29 +87,125 @@ function getSurveyName($connection, $surveyID)
     }
 }
 
-function displaySurveyResponse($connection, $arrayOfQuestionIDs, $username)
+
+//
+//
+function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayOfQuestionIDs)
 {
-    echo "<tr>";
+    $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
+    $result = mysqli_query($connection, $query);
 
-    echo "<td>$username</td>";
-
-    for ($i = 0; $i < count($arrayOfQuestionIDs); $i++) {
-
-        $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$i]}' AND username = '$username'";
-        $result = mysqli_query($connection, $query);
-
-        if ($result) {
-            $row = mysqli_fetch_assoc($result);
-            echo "<td>{$row['response']}</td>";
-        } else {
-            echo mysqli_error($connection) . "<br>";
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $arrayOfQuestions[] = $row['questionName'];
+            $arrayOfQuestionIDs[] = $row['questionID'];
         }
+    } else {
+        echo mysqli_error($connection) . "<br>";
     }
-
-    echo "</tr>";
 }
 
-function displayTableHeaders($arrayOfQuestionNames)
+//
+//
+function getNumResponses($connection, $surveyID)
+{
+    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        return mysqli_num_rows($result);
+    } else {
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+
+function dropTable($connection, $tableName)
+{
+    $sql = "DROP TABLE IF EXISTS $tableName";
+    if (!mysqli_query($connection, $sql)) {
+        echo "Error checking for user table: " . mysqli_error($connection);
+    }
+}
+
+function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
+{
+
+    // make our table:
+    $query = "CREATE TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
+
+            $questionName = $arrayOfQuestionNames[$i];
+
+            $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
+            $result2 = mysqli_query($connection, $query);
+
+            if (!$result2) {
+                echo("Error: " . mysqli_error($connection));
+            }
+        }
+    } else {
+        echo("Error: " . mysqli_error($connection));
+    }
+}
+
+function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
+{
+    $dataToInsert = array();
+
+    for ($i = 0; $i < $numResponses; $i++) {
+        $username = $arrayOfRespondents[$i];
+        $dataToInsert[] = $username;
+
+        for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
+
+            $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+            $result = mysqli_query($connection, $query);
+
+            if ($result) {
+                $row = mysqli_fetch_assoc($result);
+                $dataToInsert[] = $row['response'];
+            } else {
+                echo mysqli_error($connection) . "<br>";
+            }
+        }
+        insertResponseIntoTable($connection, $tableName, $dataToInsert);
+        $dataToInsert = array();
+    }
+}
+
+function insertResponseIntoTable($connection, $tableName, $dataToInsert)
+{
+    $values = implode("','", $dataToInsert);
+    $values = "'" . $values . "'";
+
+    $query = "INSERT INTO $tableName VALUES ($values)";
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        echo mysqli_error($connection);
+    }
+}
+
+function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames)
+{
+    echo "<br>";
+
+    $query = "SELECT * FROM  $tableName ORDER BY username ASC";
+    $result = mysqli_query($connection, $query);
+    $numColumns = mysqli_num_fields($result);
+
+    echo "<table>";
+
+    displayHeaders($connection, $tableName, $arrayOfQuestionNames);
+    displayRows($result);
+
+    echo "</table>";
+}
+
+function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
 {
     echo "<tr>";
     echo "<th>Username</th>";
@@ -90,22 +213,21 @@ function displayTableHeaders($arrayOfQuestionNames)
         echo "<th>{$arrayOfQuestionNames[$i]}</th>";
     }
     echo "</tr>";
+
 }
 
-function displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
+function displayRows($result)
 {
-    echo "<br><br>";
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
 
-    echo "<table>";
+        // iterate through associative array:
+        foreach ($row as $i => $value) {
+            echo "<td>$value</td>";
+        }
 
-    displayTableHeaders($arrayOfQuestions);
-
-    for ($i = 0; $i < $numResponses; $i++) {
-        $username = $arrayOfRespondents[$i];
-        displaySurveyResponse($connection, $arrayOfQuestionIDs, $username);
+        echo "</tr>";
     }
-
-    echo "</table>";
 }
 
 ?>

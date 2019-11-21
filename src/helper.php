@@ -705,53 +705,6 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
 
 //
 //
-function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayOfQuestionIDs)
-{
-    $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $arrayOfQuestions[] = $row['questionName'];
-            $arrayOfQuestionIDs[] = $row['questionID'];
-        }
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
-}
-
-//
-//
-function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
-{
-    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $arrayOfRespondents[] = $row['username'];
-        }
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
-}
-
-//
-//
-function getNumResponses($connection, $surveyID)
-{
-    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        return mysqli_num_rows($result);
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
-}
-
-//
-//
 function echoVariable($variableToEcho)
 {
     echo "<br>Variable value: " . $variableToEcho . "<br>";
