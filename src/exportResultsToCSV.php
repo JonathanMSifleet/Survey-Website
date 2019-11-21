@@ -30,36 +30,41 @@ createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
 
 $dataToInsert = array();
 
-//for ($i = 0; $i < $numResponses; $i++) {
-$username = $arrayOfRespondents[0];
-$dataToInsert[] = $username;
+for ($i = 0; $i < $numResponses; $i++) {
+    $username = $arrayOfRespondents[$i];
+    $dataToInsert[] = $username;
 
-for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
+    for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
 
-    $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+        $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+        $result = mysqli_query($connection, $query);
+
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $dataToInsert[] = $row['response'];
+        } else {
+            echo mysqli_error($connection) . "<br>";
+        }
+    }
+    insertResponseIntoTable($connection, $tableName, $dataToInsert);
+    $dataToInsert = array();
+
+}
+
+
+function insertResponseIntoTable($connection, $tableName, $dataToInsert)
+{
+    $values = implode("','", $dataToInsert);
+    $values = "'" . $values . "'";
+
+    $query = "INSERT INTO $tableName VALUES ($values)";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-        $row = mysqli_fetch_assoc($result);
-        $dataToInsert[] = $row['response'];
+        echo "Success";
     } else {
-        echo mysqli_error($connection) . "<br>";
+        echo mysqli_error($connection);
     }
-}
-//}
-
-$values = implode("','", $dataToInsert);
-$values = "'".$values."'";
-
-echo "<br> $values <br>";
-
-$query = "INSERT INTO $tableName VALUES ($values)";
-$result = mysqli_query($connection, $query);
-
-if ($result) {
-    echo "Success";
-} else {
-    echo mysqli_error($connection);
 }
 
 function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
