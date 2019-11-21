@@ -1,5 +1,8 @@
 <?php
-require_once "header.php";
+
+require_once "credentials.php";
+
+require_once "helper.php";
 
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
@@ -17,7 +20,6 @@ getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuesti
 getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
 $numResponses = getNumResponses($connection, $surveyID);
-
 $tableName = "response_CSV_" . $surveyID;
 
 $sql = "DROP TABLE IF EXISTS $tableName";
@@ -25,30 +27,64 @@ $sql = "DROP TABLE IF EXISTS $tableName";
 if (!mysqli_query($connection, $sql)) {
     echo "Error checking for user table: " . mysqli_error($connection);
 }
-
 createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
+populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+exportTableToCSV($connection, $tableName, $arrayOfQuestionNames);
 
-$dataToInsert = array();
+function exportTableToCSV($connection, $tableName, $arrayOfQuestionNames)
+{
+    // output headers so that the file is downloaded rather than displayed
+    header('Content-type: text/csv');
+    header('Content-Disposition: attachment; filename="demo.csv"');
 
-for ($i = 0; $i < $numResponses; $i++) {
-    $username = $arrayOfRespondents[$i];
-    $dataToInsert[] = $username;
+    // do not cache the file
+    header('Pragma: no-cache');
+    header('Expires: 0');
 
-    for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
+    // create a file pointer connected to the output stream
+    $file = fopen('php://output', 'w');
 
-        $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
-        $result = mysqli_query($connection, $query);
+    // column headers:
 
-        if ($result) {
-            $row = mysqli_fetch_assoc($result);
-            $dataToInsert[] = $row['response'];
-        } else {
-            echo mysqli_error($connection) . "<br>";
+    $arrayOfColumnNames = $arrayOfQuestionNames;
+    array_unshift($arrayOfColumnNames, "Username");
+
+    fputcsv($file, $arrayOfColumnNames);
+
+    //query the database
+    $query = "SELECT * FROM $tableName ORDER BY username ASC";
+
+    if ($rows = mysqli_query($connection, $query)) {
+        // loop over the rows, outputting them
+        while ($row = mysqli_fetch_assoc($rows)) {
+            fputcsv($file, $row);
         }
     }
-    insertResponseIntoTable($connection, $tableName, $dataToInsert);
+}
+
+function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
+{
     $dataToInsert = array();
 
+    for ($i = 0; $i < $numResponses; $i++) {
+        $username = $arrayOfRespondents[$i];
+        $dataToInsert[] = $username;
+
+        for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
+
+            $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+            $result = mysqli_query($connection, $query);
+
+            if ($result) {
+                $row = mysqli_fetch_assoc($result);
+                $dataToInsert[] = $row['response'];
+            } else {
+                echo mysqli_error($connection) . "<br>";
+            }
+        }
+        insertResponseIntoTable($connection, $tableName, $dataToInsert);
+        $dataToInsert = array();
+    }
 }
 
 
@@ -60,9 +96,7 @@ function insertResponseIntoTable($connection, $tableName, $dataToInsert)
     $query = "INSERT INTO $tableName VALUES ($values)";
     $result = mysqli_query($connection, $query);
 
-    if ($result) {
-        echo "Success";
-    } else {
+    if (!$result) {
         echo mysqli_error($connection);
     }
 }
@@ -90,8 +124,5 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
         echo("Error: " . mysqli_error($connection));
     }
 }
-
-echo "<br>";
-require_once "footer.php";
 
 ?>
