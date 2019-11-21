@@ -729,6 +729,22 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
 
 //
 //
+function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
+{
+    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $arrayOfRespondents[] = $row['username'];
+        }
+    } else {
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+
+//
+//
 function echoVariable($variableToEcho)
 {
     echo "<br>Variable value: " . $variableToEcho . "<br>";

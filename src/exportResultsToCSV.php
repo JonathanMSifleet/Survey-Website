@@ -12,9 +12,20 @@ $surveyID = $_GET['surveyID'];
 
 $arrayOfQuestionNames = array();
 $arrayOfQuestionIDs = array();
+$arrayOfRespondents = array();
 getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
+
+$numResponses = getNumResponses($connection, $surveyID);
 
 createTable($connection, $surveyID, $arrayOfQuestionNames);
+
+$dataToInsert = array();
+
+for ($i = 0; $i < $numResponses; $i ++) {
+    $username = $arrayOfRespondents[$i];
+    $dataToInsert[] = $username;
+}
 
 function createTable($connection, $surveyID, $arrayOfQuestionNames)
 {
