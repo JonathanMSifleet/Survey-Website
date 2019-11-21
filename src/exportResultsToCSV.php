@@ -4,7 +4,7 @@ require_once "header.php";
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 // if the connection fails, we need to know, so allow this exit:
-if (! $connection) {
+if (!$connection) {
     die("Connection failed: " . $mysqli_connect_error);
 }
 
@@ -22,7 +22,7 @@ createTable($connection, $surveyID, $arrayOfQuestionNames);
 
 $dataToInsert = array();
 
-for ($i = 0; $i < $numResponses; $i ++) {
+for ($i = 0; $i < $numResponses; $i++) {
     $username = $arrayOfRespondents[$i];
     $dataToInsert[] = $username;
 }
@@ -36,19 +36,19 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames)
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-        for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
+        for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
 
             $questionName = $arrayOfQuestionNames[$i];
 
             $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
             $result2 = mysqli_query($connection, $query);
 
-            if (! $result2) {
-                echo ("Error: " . mysqli_error($connection));
+            if (!$result2) {
+                echo("Error: " . mysqli_error($connection));
             }
         }
     } else {
-        echo ("Error: " . mysqli_error($connection));
+        echo("Error: " . mysqli_error($connection));
     }
 }
 

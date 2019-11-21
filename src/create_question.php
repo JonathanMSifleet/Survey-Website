@@ -3,7 +3,7 @@
 // execute the header script:
 require_once "header.php";
 
-if (! isset($_SESSION['loggedInSkeleton'])) {
+if (!isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, show them suitable page content
@@ -13,7 +13,7 @@ else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
     // if the connection fails, we need to know, so allow this exit:
-    if (! $connection) {
+    if (!$connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
@@ -52,7 +52,7 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
             $required = 0;
         }
 
-        if (! ($type == "multOption" || $type == "dropdown" || $type == "checkboxes")) {
+        if (!($type == "multOption" || $type == "dropdown" || $type == "checkboxes")) {
             $numOptions = 1;
         }
 
@@ -83,7 +83,7 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
             echo "Question created succesfully<br>";
 
             $numQuestionsInserted = $_GET['numQuestionsInserted'];
-            $numQuestionsInserted ++;
+            $numQuestionsInserted++;
 
             $query = "UPDATE questions SET questionNo = '$numQuestionsInserted' WHERE questionID = '$questionID'";
             $result = mysqli_query($connection, $query);
@@ -114,7 +114,7 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
 function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
     $questionNo = $_GET['numQuestionsInserted'];
-    $questionNo ++;
+    $questionNo++;
 
     echo <<<_END
     <form action="" method="post">

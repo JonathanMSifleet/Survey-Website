@@ -111,7 +111,7 @@ function checkIsNonNumeric($field)
     $charArray = str_split($field);
     $lengthOfCharArray = count($charArray);
 
-    for ($i = 0; $i < $lengthOfCharArray; $i ++) {
+    for ($i = 0; $i < $lengthOfCharArray; $i++) {
         if (is_numeric($charArray[$i]) == true) {
             return "Must not contain any numbers ";
         }
@@ -156,10 +156,10 @@ function validateDate($field)
     $todaysDate = date('Y-m-d');
 
     $inputYear = substr($field, 0, 4);
-    $inputYear = (int) $inputYear;
+    $inputYear = (int)$inputYear;
 
     $todaysYear = substr($todaysDate, 0, 4);
-    $todaysYear = (int) $todaysYear;
+    $todaysYear = (int)$todaysYear;
 
     // $error = ("Todays date - 120 years = " . ($todaysDate-120) . " Input year: " . $inputYear);
     // return $error;
@@ -200,14 +200,14 @@ function generateAlphanumericString()
 
     $tempPassword[] = "";
 
-    for ($i = 0; $i <= 31; $i ++) {
+    for ($i = 0; $i <= 31; $i++) {
         $randNumber = rand(0, $lengthOfCharArray);
         $tempPassword[$i] = chr($charArray[$randNumber]);
     }
 
     $finalPassword = "";
 
-    for ($i = 0; $i <= 31; $i ++) {
+    for ($i = 0; $i <= 31; $i++) {
         $finalPassword = $finalPassword . $tempPassword[$i];
     }
 
@@ -222,19 +222,19 @@ function createArrayOfUsableCharacters()
 
     $j = 0;
 
-    for ($i = 48; $i <= 57; $i ++) {
+    for ($i = 48; $i <= 57; $i++) {
         $charArray[$j] = $i;
-        $j ++;
+        $j++;
     }
 
-    for ($i = 65; $i <= 90; $i ++) {
+    for ($i = 65; $i <= 90; $i++) {
         $charArray[$j] = $i;
-        $j ++;
+        $j++;
     }
 
-    for ($i = 97; $i <= 122; $i ++) {
+    for ($i = 97; $i <= 122; $i++) {
         $charArray[$j] = $i;
-        $j ++;
+        $j++;
     }
 
     return $charArray;
@@ -300,7 +300,7 @@ function containsAmpersand($inputString)
     $arrayOfChars = str_split($inputString);
     $inputLength = count($arrayOfChars);
 
-    for ($i = 0; $i < $inputLength; $i ++) {
+    for ($i = 0; $i < $inputLength; $i++) {
         if ($arrayOfChars[$i] == '&') {
             return true;
         }
@@ -324,7 +324,7 @@ function getAmpersandLocation($inputString)
     $arrayOfChars = str_split($inputString);
     $inputLength = count($arrayOfChars);
 
-    for ($i = 0; $i <= $inputLength; $i ++) {
+    for ($i = 0; $i <= $inputLength; $i++) {
         if ($arrayOfChars[$i] == '&') {
             return $i;
         }
@@ -400,7 +400,7 @@ function calcEarliestDate($todaysDate)
 {
     $minDate = $todaysDate;
     $minDate = substr($todaysDate, 0, 4);
-    $minDate = (int) $minDate;
+    $minDate = (int)$minDate;
     $minYear = $minDate - 120;
     $minDate = substr($todaysDate, 4, strlen($todaysDate));
     $minDate = $minYear . $minDate;
@@ -413,7 +413,7 @@ function calcLatestDate($todaysDate)
 {
     $maxDate = $todaysDate;
     $maxDate = substr($todaysDate, 0, 4);
-    $maxDate = (int) $maxDate;
+    $maxDate = (int)$maxDate;
     $maxYear = $maxDate - 13;
     $maxDate = substr($todaysDate, 4, strlen($todaysDate));
     $maxDate = $maxYear . $maxDate;
@@ -424,7 +424,7 @@ function calcLatestDate($todaysDate)
 //
 function initEmptyArray(&$array, $size)
 {
-    for ($i = 0; $i <= $size; $i ++) {
+    for ($i = 0; $i <= $size; $i++) {
         $array[$i] = "";
     }
 }

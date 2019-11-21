@@ -13,7 +13,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
     // if the connection fails, we need to know, so allow this exit:
-    if (! $connection) {
+    if (!$connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
@@ -26,10 +26,10 @@ if (isset($_SESSION['loggedInSkeleton'])) {
     $username = "";
     $email = "";
     $password = "";
-    $firstname = ""; 
-    $surname = ""; 
-    $number = ""; 
-    $dob = ""; 
+    $firstname = "";
+    $surname = "";
+    $number = "";
+    $dob = "";
 
     if (isset($_POST['username'])) {
         // user just tried to sign up:

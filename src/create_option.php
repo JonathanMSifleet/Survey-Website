@@ -3,7 +3,7 @@
 // execute the header script:
 require_once "header.php";
 
-if (! isset($_SESSION['loggedInSkeleton'])) {
+if (!isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, show them suitable page content
@@ -30,7 +30,7 @@ function getOptions($connection, $numOptions, $questionID)
 
         $arrayOfOptions = $_POST['options'];
 
-        for ($i = 0; $i < count($arrayOfOptions); $i ++) {
+        for ($i = 0; $i < count($arrayOfOptions); $i++) {
             $arrayOfOptions[$i] = sanitise($arrayOfOptions[$i], $connection);
         }
 
@@ -53,7 +53,7 @@ function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOption
         // get question ID
         $questionID = $_GET['questionID'];
 
-        for ($i = 0; $i < count($arrayOfOptions); $i ++) {
+        for ($i = 0; $i < count($arrayOfOptions); $i++) {
             $query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$questionID', '$arrayOfOptions[$i]', '$i')";
             $result = mysqli_query($connection, $query);
         }
@@ -84,8 +84,8 @@ function displayOptionForm($numOptions, $arrayOfOptionErrors)
 
     $optionNum = 0;
 
-    for ($i = 0; $i < $numOptions; $i ++) {
-        $optionNum ++;
+    for ($i = 0; $i < $numOptions; $i++) {
+        $optionNum++;
         echo "Option $optionNum: <input type='text' name='options[]' minlength='1' maxlength='32' required> $arrayOfOptionErrors[$i] <br><br>";
     }
 
@@ -117,7 +117,7 @@ function getNumOptions($connection)
 //
 function createArrayOfOptionErrors($arrayOfOptions, &$arrayOfOptionErrors)
 {
-    for ($i = 0; $i < count($arrayOfOptions); $i ++) {
+    for ($i = 0; $i < count($arrayOfOptions); $i++) {
         $arrayOfOptionErrors[$i] = validateStringLength($arrayOfOptions[$i], 1, 64);
     }
 }

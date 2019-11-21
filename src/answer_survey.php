@@ -2,7 +2,7 @@
 // execute the header script:
 require_once "header.php";
 
-if (! isset($_SESSION['loggedInSkeleton'])) {
+if (!isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, show them suitable page content
@@ -12,7 +12,7 @@ else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
     // if the connection fails, we need to know, so allow this exit:
-    if (! $connection) {
+    if (!$connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
@@ -59,7 +59,7 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     $answerRequired = $temp[3];
     $responseErrors = "";
 
-    if (! empty($_POST['checkboxResponse'])) {
+    if (!empty($_POST['checkboxResponse'])) {
 
         $surveyResponse = implode(', ', $_POST['checkboxResponse']);
 
@@ -101,7 +101,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
             echo "<br><br>Response was successful<br>";
 
             $questionsAnswered = $_GET['questionsAnswered'];
-            $questionsAnswered ++;
+            $questionsAnswered++;
 
             if ($questionsAnswered < $numQuestions) {
                 $nextQuestionURL = "answer_survey.php?surveyID=$surveyID&questionsAnswered=$questionsAnswered";
@@ -138,7 +138,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
 
     switch ($questionType) {
         case ("checkboxes"):
-            for ($i = 0; $i < count($predefinedOptions); $i ++) {
+            for ($i = 0; $i < count($predefinedOptions); $i++) {
                 echo "<input type='checkbox' name='checkboxResponse[]' value ='$predefinedOptions[$i]'>$predefinedOptions[$i]</input>";
                 echo "<br>";
             }
@@ -150,7 +150,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             break;
         case ("dropdown"):
             echo "<select name ='surveyResponse'>";
-            for ($i = 0; $i < count($predefinedOptions); $i ++) {
+            for ($i = 0; $i < count($predefinedOptions); $i++) {
                 echo "<option value='$predefinedOptions[$i]'>$predefinedOptions[$i]</option>";
             }
             echo "</select>";
@@ -162,7 +162,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
             echo "<br>";
             break;
         case ("multOption"):
-            for ($i = 0; $i < count($predefinedOptions); $i ++) {
+            for ($i = 0; $i < count($predefinedOptions); $i++) {
                 echo "<input type='radio' name='surveyResponse' value='$predefinedOptions[$i]'>$predefinedOptions[$i]<br>";
             }
             echo $responseErrors;

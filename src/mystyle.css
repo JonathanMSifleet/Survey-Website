@@ -1,76 +1,76 @@
 html * {
-	font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 header {
-	clear: both;
-	margin-top: 0;
-	margin-bottom: 0;
+    clear: both;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 h1 {
-	font-size: 3em;
+    font-size: 3em;
 }
 
 nav {
-	background-color: #ffffff;
-	size: 100%;
-	clear: both;
+    background-color: #ffffff;
+    size: 100%;
+    clear: both;
 }
 
 nav ul {
-	list-style-type: none;
-	width: 100%;
-	height: 5%;
-	text-align: center;
-	padding: 0;
+    list-style-type: none;
+    width: 100%;
+    height: 5%;
+    text-align: center;
+    padding: 0;
 }
 
 nav ul li {
-	float: left;
-	display: flex;
-	width: 10%;
-	height: 5vh;
-	padding: 0;
-	margin-left: 3%;
-	margin-right: 3%;
+    float: left;
+    display: flex;
+    width: 10%;
+    height: 5vh;
+    padding: 0;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 
 nav li a {
-	color: #ffffff;
-	text-decoration: none;
-	display: inline-block;
-	border-radius: 25px;
-	background-color: #4472C4;
-	font-size: 1em;
-	width: 100%;
-	height: 100%;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 25px;
+    background-color: #4472C4;
+    font-size: 1em;
+    width: 100%;
+    height: 100%;
 }
 
 nav li a:hover {
-	background-color: #305189;
+    background-color: #305189;
 }
 
 table,
 th,
 td {
-	border: 1px solid black;
-	width: auto;
-	border-collapse: collapse;
+    border: 1px solid black;
+    width: auto;
+    border-collapse: collapse;
 }
 
 th {
-	color: #ffffff;
-	background-color: #4472C4;
-	font-weight: normal;
+    color: #ffffff;
+    background-color: #4472C4;
+    font-weight: normal;
 }
 
 td {
-	background-color: #ffffff;
+    background-color: #ffffff;
 }
 
 h2,
 h3 {
-	margin-top: 5px;
-	margin-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

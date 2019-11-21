@@ -4,7 +4,7 @@ require_once "header.php";
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 // if the connection fails, we need to know, so allow this exit:
-if (! $connection) {
+if (!$connection) {
     die("Connection failed: " . $mysqli_connect_error);
 }
 
@@ -41,7 +41,7 @@ function getSurveyResults($connection, $surveyID)
 
     echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
-    if (! empty($arrayOfQuestionNames)) {
+    if (!empty($arrayOfQuestionNames)) {
         displayTableOfResults($connection, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
     } else {
         echo "No Responses found";
@@ -67,7 +67,7 @@ function displaySurveyResponse($connection, $arrayOfQuestionIDs, $username)
 
     echo "<td>$username</td>";
 
-    for ($i = 0; $i < count($arrayOfQuestionIDs); $i ++) {
+    for ($i = 0; $i < count($arrayOfQuestionIDs); $i++) {
 
         $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$i]}' AND username = '$username'";
         $result = mysqli_query($connection, $query);
@@ -87,7 +87,7 @@ function displayTableHeaders($arrayOfQuestionNames)
 {
     echo "<tr>";
     echo "<th>Username</th>";
-    for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
+    for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
         echo "<th>{$arrayOfQuestionNames[$i]}</th>";
     }
     echo "</tr>";
@@ -111,7 +111,7 @@ function displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionI
 
     displayTableHeaders($arrayOfQuestions);
 
-    for ($i = 0; $i < $numResponses; $i ++) {
+    for ($i = 0; $i < $numResponses; $i++) {
         $username = $arrayOfRespondents[$i];
         displaySurveyResponse($connection, $arrayOfQuestionIDs, $username);
     }

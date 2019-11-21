@@ -12,7 +12,7 @@ error_reporting(0);
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 error_reporting(1);
 
-if (! $connection) {
+if (!$connection) {
     echo "<br>You must first create the database before the site can be used<br>";
     echo "<a href = init_database.php> Initialise database </a>";
 } elseif (isset($_SESSION['loggedInSkeleton'])) {
