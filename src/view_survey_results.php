@@ -16,7 +16,6 @@ echo "<br>How would you like to view results?<br>";
 
 echo "<ul>";
 echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
-// echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewRawData=true>View raw data</a></li>";
 echo "</ul>";
 
 if (isset($_GET['viewResultsInTable'])) {
@@ -95,6 +94,8 @@ function displayTableHeaders($arrayOfQuestionNames)
 
 function displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
+    echo "<br><br>";
+
     echo "<table>";
 
     displayTableHeaders($arrayOfQuestions);
@@ -106,8 +107,5 @@ function displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionI
 
     echo "</table>";
 }
-
-echo "<br>";
-require_once "footer.php";
 
 ?>

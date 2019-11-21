@@ -22,14 +22,11 @@ getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 $numResponses = getNumResponses($connection, $surveyID);
 $tableName = "response_CSV_" . $surveyID;
 
-$sql = "DROP TABLE IF EXISTS $tableName";
-// no data returned, we just test for true(success)/false(failure):
-if (!mysqli_query($connection, $sql)) {
-    echo "Error checking for user table: " . mysqli_error($connection);
-}
+dropTable($connection, $tableName);
 createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
 populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
 exportTableToCSV($connection, $tableName, $arrayOfQuestionNames);
+dropTable($connection, $tableName);
 
 function exportTableToCSV($connection, $tableName, $arrayOfQuestionNames)
 {
@@ -87,7 +84,6 @@ function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRes
     }
 }
 
-
 function insertResponseIntoTable($connection, $tableName, $dataToInsert)
 {
     $values = implode("','", $dataToInsert);
@@ -122,6 +118,14 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
         }
     } else {
         echo("Error: " . mysqli_error($connection));
+    }
+}
+
+function dropTable($connection, $tableName)
+{
+    $sql = "DROP TABLE IF EXISTS $tableName";
+    if (!mysqli_query($connection, $sql)) {
+        echo "Error checking for user table: " . mysqli_error($connection);
     }
 }
 
