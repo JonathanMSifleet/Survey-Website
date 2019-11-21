@@ -1,12 +1,5 @@
 <?php
 
-// Things to notice:
-// This script holds the sanitisation function that we pass all our user data to
-// This script holds the validation functions that double-check our user data is valid
-// You can add new PHP functions to validate different kinds of user data (e.g., emails, dates) by following the same convention:
-// if the data is valid return an empty string, if the data is invalid return a help message
-// You are encouraged to create/add your own PHP functions here to make frequently used code easier to handle
-
 // function to sanitise (clean) user data:
 function sanitise($str, $connection)
 {
@@ -547,7 +540,7 @@ function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLengt
     <br><br>
     <input type="submit" value="Submit">
     </form>
-    _END;
+_END;
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
@@ -631,7 +624,7 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
       <br>
       <input type="submit" value="Submit">
     </form>
-    _END;
+_END;
 }
 
 //

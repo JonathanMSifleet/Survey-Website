@@ -103,7 +103,7 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $
       <br>
       <input type="submit" value="Submit">
     </form>
-    _END;
+_END;
 }
 
 //

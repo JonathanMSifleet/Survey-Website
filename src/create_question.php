@@ -139,7 +139,7 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
       <br><br>
       <input type="submit" value="Submit">
     </form>
-    _END;
+_END;
 
     echo "<br>";
 }

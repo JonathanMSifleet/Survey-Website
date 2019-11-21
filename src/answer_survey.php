@@ -35,8 +35,8 @@ else {
             <h2>$title</h2><br>
             <h3>Topic: $topic</h3>
             Instructions:<br>
-            $instructions    
-        _END;
+            $instructions
+_END;
 
         displaySurvey($connection, $surveyID, $numQuestions);
     }
