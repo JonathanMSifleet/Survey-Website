@@ -78,25 +78,21 @@ function printSurveys($connection, $username, $userIsAdmin)
 
     $result = mysqli_query($connection, $query);
 
-    if ($result !== null) {
+    echo "<table>";
 
-        echo "<table>";
-
-        if ($userIsAdmin) {
-            echo "<tr><th>Survey ID</th><th>Username</th><th>Title</th><th>Topic</th><th>Survey link</th><th>View results</th><th>Delete survey</th></tr>";
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0>Survey link</a></td><td><a href = view_survey_results.php?surveyID={$row['surveyID']}>View Results</a><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
-            }
-        } else {
-            echo "<tr><th>Survey ID</th><th>Title</th><th>Topic</th><th>Survey link</th><th>Delete survey</th></tr>";
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
-            }
+    if ($userIsAdmin) {
+        echo "<tr><th>Survey ID</th><th>Username</th><th>Title</th><th>Topic</th><th>Survey link</th><th>View results</th><th>Delete survey</th></tr>";
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0>Survey link</a></td><td><a href = view_survey_results.php?surveyID={$row['surveyID']}>View Results</a><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
         }
-        echo "</table>";
     } else {
-        echo "At present, there are no surveys to display<br>";
+        echo "<tr><th>Survey ID</th><th>Title</th><th>Topic</th><th>Survey link</th><th>Delete survey</th></tr>";
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
+        }
     }
+    echo "</table>";
+
 }
 
 // finish off the HTML for this page:
