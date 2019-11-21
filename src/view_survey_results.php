@@ -44,13 +44,9 @@ function getSurveyResults($connection, $surveyID)
 
         displayTableHeaders($arrayOfQuestions);
 
-        for ($j = 0; $j < count($arrayOfRespondents); $j ++) {
-
-            $username = $arrayOfRespondents[$j];
-
-            for ($i = 0; $i < $numResponses; $i ++) {
-                displaySurveyResponse($connection, $arrayOfQuestionIDs, $username);
-            }
+        for ($i = 0; $i < $numResponses; $i ++) {
+            $username = $arrayOfRespondents[$i];
+            displaySurveyResponse($connection, $arrayOfQuestionIDs, $username);
         }
 
         echo "</table>";
