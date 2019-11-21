@@ -10,12 +10,14 @@ if (! $connection) {
 
 $surveyID = $_GET['surveyID'];
 
-function createTable($connection, $surveyID)
-{
-    $arrayOfQuestions = array();
-    $arrayOfQuestionIDs = array();
-    getSurveyQuestions($connection, $surveyID, $arrayOfQuestions, $arrayOfQuestionIDs);
+$arrayOfQuestionNames = array();
+$arrayOfQuestionIDs = array();
+getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 
+createTable($connection, $surveyID, $arrayOfQuestionNames);
+
+function createTable($connection, $surveyID, $arrayOfQuestionNames)
+{
     $tableName = "response_CSV_" . $surveyID;
 
     // make our table:
@@ -23,9 +25,9 @@ function createTable($connection, $surveyID)
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-        for ($i = 0; $i < count($arrayOfQuestions); $i ++) {
+        for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
 
-            $questionName = $arrayOfQuestions[$i];
+            $questionName = $arrayOfQuestionNames[$i];
 
             $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
             $result2 = mysqli_query($connection, $query);
@@ -38,5 +40,8 @@ function createTable($connection, $surveyID)
         echo ("Error: " . mysqli_error($connection));
     }
 }
+
+echo "<br>";
+require_once "footer.php";
 
 ?>

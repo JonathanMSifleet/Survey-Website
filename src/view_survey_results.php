@@ -28,10 +28,10 @@ require_once "footer.php";
 
 function getSurveyResults($connection, $surveyID)
 {
-    $arrayOfQuestions = array();
+    $arrayOfQuestionNames = array();
     $arrayOfQuestionIDs = array();
     $arrayOfRespondents = array();
-    getSurveyQuestions($connection, $surveyID, $arrayOfQuestions, $arrayOfQuestionIDs);
+    getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
     getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
     echo "<h3>Results:</h3>";
@@ -41,8 +41,8 @@ function getSurveyResults($connection, $surveyID)
 
     echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
-    if (! empty($arrayOfQuestions)) {
-        displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+    if (! empty($arrayOfQuestionNames)) {
+        displayTableOfResults($connection, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
     } else {
         echo "No Responses found";
     }
@@ -83,12 +83,12 @@ function displaySurveyResponse($connection, $arrayOfQuestionIDs, $username)
     echo "</tr>";
 }
 
-function displayTableHeaders($arrayOfQuestions)
+function displayTableHeaders($arrayOfQuestionNames)
 {
     echo "<tr>";
     echo "<th>Username</th>";
-    for ($i = 0; $i < count($arrayOfQuestions); $i ++) {
-        echo "<th>{$arrayOfQuestions[$i]}</th>";
+    for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
+        echo "<th>{$arrayOfQuestionNames[$i]}</th>";
     }
     echo "</tr>";
 }
@@ -132,5 +132,8 @@ function displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionI
 
     echo "</table>";
 }
+
+echo "<br>";
+require_once "footer.php";
 
 ?>
