@@ -93,18 +93,6 @@ function displayTableHeaders($arrayOfQuestionNames)
     echo "</tr>";
 }
 
-function getNumResponses($connection, $surveyID)
-{
-    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        return mysqli_num_rows($result);
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
-}
-
 function displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
     echo "<table>";

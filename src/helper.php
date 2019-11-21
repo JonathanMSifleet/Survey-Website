@@ -738,6 +738,20 @@ function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 
 //
 //
+function getNumResponses($connection, $surveyID)
+{
+    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        return mysqli_num_rows($result);
+    } else {
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+
+//
+//
 function echoVariable($variableToEcho)
 {
     echo "<br>Variable value: " . $variableToEcho . "<br>";

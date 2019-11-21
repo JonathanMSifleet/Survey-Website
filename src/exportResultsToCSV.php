@@ -18,21 +18,55 @@ getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
 $numResponses = getNumResponses($connection, $surveyID);
 
-createTable($connection, $surveyID, $arrayOfQuestionNames);
+$tableName = "response_CSV_" . $surveyID;
+
+$sql = "DROP TABLE IF EXISTS $tableName";
+// no data returned, we just test for true(success)/false(failure):
+if (!mysqli_query($connection, $sql)) {
+    echo "Error checking for user table: " . mysqli_error($connection);
+}
+
+createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
 
 $dataToInsert = array();
 
-for ($i = 0; $i < $numResponses; $i++) {
-    $username = $arrayOfRespondents[$i];
-    $dataToInsert[] = $username;
+//for ($i = 0; $i < $numResponses; $i++) {
+$username = $arrayOfRespondents[0];
+$dataToInsert[] = $username;
+
+for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
+
+    $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        $row = mysqli_fetch_assoc($result);
+        $dataToInsert[] = $row['response'];
+    } else {
+        echo mysqli_error($connection) . "<br>";
+    }
+}
+//}
+
+$values = implode("','", $dataToInsert);
+$values = "'".$values."'";
+
+echo "<br> $values <br>";
+
+$query = "INSERT INTO $tableName VALUES ($values)";
+$result = mysqli_query($connection, $query);
+
+if ($result) {
+    echo "Success";
+} else {
+    echo mysqli_error($connection);
 }
 
-function createTable($connection, $surveyID, $arrayOfQuestionNames)
+function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
-    $tableName = "response_CSV_" . $surveyID;
 
     // make our table:
-    $query = "CREATE TABLE $tableName (username VARCHAR(20),  PRIMARY KEY(username))";
+    $query = "CREATE TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
