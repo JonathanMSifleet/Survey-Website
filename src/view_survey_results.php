@@ -15,7 +15,7 @@ echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 echo "<br>How would you like to view results?<br>";
 
 echo "<ul>";
-echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View results in a table</a></li>";
+echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
 // echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewRawData=true>View raw data</a></li>";
 echo "</ul>";
 
@@ -37,21 +37,14 @@ function getSurveyResults($connection, $surveyID)
     echo "<h3>Results:</h3>";
 
     $numResponses = getNumResponses($connection, $surveyID);
+    echo "Number of results: " . $numResponses;
+
+    echo "<a href = view_survey_results.php?surveyID=$surveyID&exportResultsToCSV=true>Export results to CSV</a>";
 
     if (! empty($arrayOfQuestions)) {
-
-        echo "<table>";
-
-        displayTableHeaders($arrayOfQuestions);
-
-        for ($i = 0; $i < $numResponses; $i ++) {
-            $username = $arrayOfRespondents[$i];
-            displaySurveyResponse($connection, $arrayOfQuestionIDs, $username);
-        }
-
-        echo "</table>";
+        displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
     } else {
-        echo "No questions found";
+        echo "No Responses found";
     }
 }
 
@@ -139,6 +132,20 @@ function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
     } else {
         echo mysqli_error($connection) . "<br>";
     }
+}
+
+function displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
+{
+    echo "<table>";
+
+    displayTableHeaders($arrayOfQuestions);
+
+    for ($i = 0; $i < $numResponses; $i ++) {
+        $username = $arrayOfRespondents[$i];
+        displaySurveyResponse($connection, $arrayOfQuestionIDs, $username);
+    }
+
+    echo "</table>";
 }
 
 ?>
