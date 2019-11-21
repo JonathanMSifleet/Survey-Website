@@ -37,29 +37,14 @@ function getSurveyResults($connection, $surveyID)
     echo "<h3>Results:</h3>";
 
     $numResponses = getNumResponses($connection, $surveyID);
-    echo "Number of results: " . $numResponses;
+    echo "Number of results: " . $numResponses . "<br>";
 
-    echo "<a href = view_survey_results.php?surveyID=$surveyID&exportResultsToCSV=true>Export results to CSV</a>";
+    echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
     if (! empty($arrayOfQuestions)) {
         displayTableOfResults($connection, $arrayOfQuestions, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
     } else {
         echo "No Responses found";
-    }
-}
-
-function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayOfQuestionIDs)
-{
-    $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $arrayOfQuestions[] = $row['questionName'];
-            $arrayOfQuestionIDs[] = $row['questionID'];
-        }
-    } else {
-        echo mysqli_error($connection) . "<br>";
     }
 }
 
