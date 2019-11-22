@@ -10,34 +10,97 @@ if (!$connection) {
 
 $surveyID = $_GET['surveyID'];
 
+$arrayOfQuestionNames = array();
+$arrayOfQuestionIDs = array();
+getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+
 echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 
-echo "<br>How would you like to view results?<br>";
+echo "<br>How would you like to do?<br>";
 
 echo "<ul>";
 echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
+echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
 echo "</ul>";
 
 if (isset($_GET['viewResultsInTable'])) {
-    displaySurveyResults($connection, $surveyID);
+    displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+}
+
+if (isset($_GET['showListOfQuestionsToDelete'])) {
+    displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 }
 
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function displaySurveyResults($connection, $surveyID)
+function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
 {
-    $arrayOfQuestionNames = array();
-    $arrayOfQuestionIDs = array();
+    echo "Pick a question to delete:<br>";
+
+    echo "<ul>";
+    for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
+        echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
+    }
+    echo "</ul>";
+
+    if (isset($_GET['deleteQuestion'])) {
+        $numQuestions = count($arrayOfQuestionNames);
+
+        initDeleteQuestion($connection, $surveyID, $numQuestions);
+    }
+
+}
+
+function initDeleteQuestion($connection, $surveyID, $numQuestions)
+{
+    $shouldUpdateTable = false;
+    $shouldUpdateTable = deleteQuestion($connection);
+    updateTableNumQuestions($connection, $surveyID, $numQuestions);
+
+}
+
+function updateTableNumQuestions($connection, $surveyID, $numQuestions)
+{
+
+    $numQuestions--;
+
+    $query = "UPDATE surveys SET numQuestions = '$numQuestions' WHERE surveyID='$surveyID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        echo "Question delete successfully<br>";
+    } else {
+        echo mysqli_error($connection);
+    }
+
+}
+
+function deleteQuestion($connection)
+{
+    $questionID = $_GET['deleteQuestion'];
+
+    $query = "DELETE FROM questions WHERE questionID = '$questionID'";
+    $result = mysqli_query($connection, $query);
+
+    if ($result) {
+        return true;
+    } else {
+        echo mysqli_error($connection);
+        return false;
+    }
+}
+
+function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
+{
+
     $arrayOfRespondents = array();
-    getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
     getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
     $numResponses = getNumResponses($connection, $surveyID);
     $tableName = "response_CSV_" . $surveyID;
     $_SESSION['tableName'] = $tableName;
     $_SESSION['questionNames'] = $arrayOfQuestionNames;
-
 
     echo "<h3>Results:</h3>";
 
@@ -49,7 +112,7 @@ function displaySurveyResults($connection, $surveyID)
         getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
         displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
     } else {
-        echo "No Responses found";
+        echo "<br><br>No Responses found<br>";
     }
 
     if (isset($_GET['username'])) {
@@ -212,6 +275,7 @@ function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $
 
 function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
 {
+
     echo "<tr>";
     echo "<th>Username</th>";
     for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
