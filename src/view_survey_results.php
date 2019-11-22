@@ -134,7 +134,7 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
 
     // make our table:
-    $query = "CREATE TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
+    $query = "CREATE TEMPORARY TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
