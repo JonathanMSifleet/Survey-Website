@@ -7,12 +7,12 @@ $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 $tableName = $_SESSION['tableName'];
 $arrayOfQuestionNames = $_SESSION['questionNames'];
-$fileName = substr($tableName,14, strlen($tableName));
+$fileName = substr($tableName, 14, strlen($tableName));
 $fileName = "results_" . $fileName . ".csv";
 
 // output headers so that the file is downloaded rather than displayed
 header('Content-type: text/csv');
-header('Content-Disposition: attachment; filename='.$fileName);
+header('Content-Disposition: attachment; filename=' . $fileName);
 
 // do not cache the file
 header('Pragma: no-cache');

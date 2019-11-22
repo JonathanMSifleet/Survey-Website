@@ -91,7 +91,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
     if ($responseErrors == "") {
 
         $currentUser = $_SESSION['username'];
-        $responseID = md5($surveyID . $currentUser . $surveyResponse);
+        $responseID = md5($surveyID . $questionID . $currentUser . $surveyResponse);
 
         $query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
         $result = mysqli_query($connection, $query);
@@ -188,7 +188,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
 function getQuestionData($connection, $surveyID, &$temp)
 {
     $questionToAnswer = $_GET['questionsAnswered'];
-    $questionToAnswer++;
+    //$questionToAnswer++;
 
     $query = "SELECT questionName, questionID, type, required FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
     $result = mysqli_query($connection, $query);

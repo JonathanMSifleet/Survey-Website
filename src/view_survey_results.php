@@ -47,9 +47,20 @@ function displaySurveyResults($connection, $surveyID)
 
     if (!empty($arrayOfQuestionNames)) {
         getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
-        displayTableOfResults($connection, $tableName, $arrayOfQuestionNames);
+        displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
     } else {
         echo "No Responses found";
+    }
+
+    if (isset($_GET['username'])) {
+        $query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+        $result = mysqli_query($connection, $query);
+
+        if ($result) {
+            echo "Success";
+        } else {
+            echo mysqli_error($connection);
+        }
     }
 }
 
@@ -64,7 +75,7 @@ function getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionN
 //
 function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 {
-    $query = "SELECT DISTINCT username FROM responses WHERE surveyID = '$surveyID'"; // $responseID'";
+    $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID= '$surveyID'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
@@ -125,7 +136,7 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
 
     // make our table:
-    $query = "CREATE TEMPORARY TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
+    $query = "CREATE TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
@@ -183,7 +194,7 @@ function insertResponseIntoTable($connection, $tableName, $dataToInsert)
     }
 }
 
-function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames)
+function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID)
 {
     echo "<br>";
 
@@ -191,10 +202,10 @@ function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames)
     $result = mysqli_query($connection, $query);
     $numColumns = mysqli_num_fields($result);
 
-    echo "<table>";
+    echo "<br><table>";
 
     displayHeaders($connection, $tableName, $arrayOfQuestionNames);
-    displayRows($result);
+    displayRows($result, $surveyID);
 
     echo "</table>";
 }
@@ -206,11 +217,16 @@ function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
     for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
         echo "<th>{$arrayOfQuestionNames[$i]}</th>";
     }
+
+    if ($_SESSION['username'] == "admin") {
+        echo "<th>Delete response</th>";
+    }
+
     echo "</tr>";
 
 }
 
-function displayRows($result)
+function displayRows($result, $surveyID)
 {
     while ($row = mysqli_fetch_assoc($result)) {
         echo "<tr>";
@@ -218,6 +234,10 @@ function displayRows($result)
         // iterate through associative array:
         foreach ($row as $i => $value) {
             echo "<td>$value</td>";
+        }
+
+        if ($_SESSION['username'] == "admin") {
+            echo "<td><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true&username={$row['Username']}>Delete</a></td>";
         }
 
         echo "</tr>";
