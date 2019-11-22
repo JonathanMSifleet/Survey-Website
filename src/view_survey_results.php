@@ -64,7 +64,7 @@ function getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionN
 //
 function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 {
-    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
+    $query = "SELECT DISTINCT username FROM responses WHERE surveyID = '$surveyID'"; // $responseID'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
