@@ -52,7 +52,7 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     $surveyResponse = "";
 
     $temp = Array();
-    getSurveyQuestion($connection, $surveyID, $temp);
+    getQuestionData($connection, $surveyID, $temp);
     $questionName = $temp[0];
     $questionID = $temp[1];
     $questionType = $temp[2];
@@ -68,7 +68,6 @@ function displaySurvey($connection, $surveyID, $numQuestions)
         insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
     } elseif (isset($_POST['surveyResponse'])) {
 
-        // SANITISATION (see helper.php for the function definition)
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
 
         insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
@@ -186,14 +185,16 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
 
 //
 //
-function getSurveyQuestion($connection, $surveyID, &$temp)
+function getQuestionData($connection, $surveyID, &$temp)
 {
     $questionToAnswer = $_GET['questionsAnswered'];
+    $questionToAnswer++;
 
     $query = "SELECT questionName, questionID, type, required FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
+
         while ($row = mysqli_fetch_assoc($result)) {
             $temp[0] = $row['questionName'];
             $temp[1] = $row['questionID'];

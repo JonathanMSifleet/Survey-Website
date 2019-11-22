@@ -48,7 +48,6 @@ function displaySurveyResults($connection, $surveyID)
     if (!empty($arrayOfQuestionNames)) {
         getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
         displayTableOfResults($connection, $tableName, $arrayOfQuestionNames);
-        //dropTable($connection, $tableName);
     } else {
         echo "No Responses found";
     }

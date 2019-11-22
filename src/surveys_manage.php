@@ -1,11 +1,5 @@
 <?php
 
-// Things to notice:
-// Listing the available surveys for each user will probably involve accessing the contents of another TABLE in your database
-// Give users options such as to CREATE a new survey, EDIT a survey, ANALYSE a survey, or DELETE a survey, might be a nice idea
-// You will probably want to make some additional PHP scripts that let your users CREATE and EDIT surveys and the questions they contain
-// REMEMBER: Your admin will want a slightly different view of this page so they can MANAGE all of the users' surveys
-
 // execute the header script:
 require_once "header.php";
 
@@ -27,18 +21,9 @@ else {
     echo "<a href = create_survey.php>Create a survey</a>";
     echo "<br>";
     echo "<br>";
+    echo "<h3>Surveys:</h3>";
 
-    $username = $_SESSION['username'];
-
-    if ($username == "admin") {
-        echo "User surveys:";
-        $userIsAdmin = true;
-    } else {
-        echo "Your surveys";
-        $userIsAdmin = false;
-    }
-
-    printSurveys($connection, $username, $userIsAdmin);
+    printSurveys($connection);
 
     if (isset($_GET['deleteSurvey'])) {
         echo "<br>";
@@ -47,6 +32,7 @@ else {
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
         echo " ";
         echo "<a href =surveys_manage.php>Cancel</a>";
+        echo "<br>";
 
         if (isset($_GET["confirmDeletion"])) {
 
@@ -58,7 +44,7 @@ else {
             echo "<br>";
 
             if ($result) {
-                echo "Survey deleted";
+                echo "Survey deleted<br>";
             } else {
                 echo mysqli_error($connection);
             }
@@ -68,8 +54,16 @@ else {
 
 //
 //
-function printSurveys($connection, $username, $userIsAdmin)
+function printSurveys($connection)
 {
+    $username = $_SESSION['username'];
+
+    if ($username == "admin") {
+        $userIsAdmin = true;
+    } else {
+        $userIsAdmin = false;
+    }
+
     if ($userIsAdmin) {
         $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
     } else {
