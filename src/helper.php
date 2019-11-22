@@ -703,6 +703,14 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
     }
 }
 
+function dropTable($connection, $tableName)
+{
+    $sql = "DROP TABLE IF EXISTS $tableName";
+    if (!mysqli_query($connection, $sql)) {
+        echo "Error checking for user table: " . mysqli_error($connection);
+    }
+}
+
 //
 //
 function echoVariable($variableToEcho)

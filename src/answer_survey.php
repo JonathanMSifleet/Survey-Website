@@ -91,7 +91,7 @@ function insertReponse($connection, $surveyID, $questionID, $questionName, $ques
     if ($responseErrors == "") {
 
         $currentUser = $_SESSION['username'];
-        $responseID = md5($currentUser . $surveyResponse);
+        $responseID = md5($surveyID . $currentUser . $surveyResponse);
 
         $query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
         $result = mysqli_query($connection, $query);

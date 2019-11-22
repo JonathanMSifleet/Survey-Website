@@ -2,6 +2,7 @@
 session_start();
 
 require_once "credentials.php";
+require_once "helper.php";
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 $tableName = $_SESSION['tableName'];
@@ -40,5 +41,7 @@ if ($result) {
 }
 
 fclose($file);
+
+dropTable($connection, $tableName)
 
 ?>
