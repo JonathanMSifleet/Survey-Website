@@ -35,17 +35,20 @@ function displaySurveyResults($connection, $surveyID)
 
     $numResponses = getNumResponses($connection, $surveyID);
     $tableName = "response_CSV_" . $surveyID;
+    $_SESSION['tableName'] = $tableName;
+    $_SESSION['questionNames'] = $arrayOfQuestionNames;
+
 
     echo "<h3>Results:</h3>";
 
     echo "Number of results: " . $numResponses . "<br>";
 
-    // echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
+    echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
     if (!empty($arrayOfQuestionNames)) {
         getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
         displayTableOfResults($connection, $tableName, $arrayOfQuestionNames);
-        dropTable($connection, $tableName);
+        //dropTable($connection, $tableName);
     } else {
         echo "No Responses found";
     }

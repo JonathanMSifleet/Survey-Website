@@ -1,32 +1,44 @@
-/* exportTableToCSV($connection, $tableName, $arrayOfQuestionNames);
+<?php
+session_start();
 
-function exportTableToCSV($connection, $tableName, $arrayOfQuestionNames)
-{
-    // output headers so that the file is downloaded rather than displayed
-    header('Content-type: text/csv');
-    header('Content-Disposition: attachment; filename="demo.csv"');
+require_once "credentials.php";
+$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-    // do not cache the file
-    header('Pragma: no-cache');
-    header('Expires: 0');
+$tableName = $_SESSION['tableName'];
+$arrayOfQuestionNames = $_SESSION['questionNames'];
+$fileName = substr($tableName,14, strlen($tableName));
+$fileName = "results_" . $fileName . ".csv";
 
-    // create a file pointer connected to the output stream
-    $file = fopen('php://output', 'w');
+// output headers so that the file is downloaded rather than displayed
+header('Content-type: text/csv');
+header('Content-Disposition: attachment; filename='.$fileName);
 
-    // column headers:
+// do not cache the file
+header('Pragma: no-cache');
+header('Expires: 0');
 
-    $arrayOfColumnNames = $arrayOfQuestionNames;
-    array_unshift($arrayOfColumnNames, "Username");
+// create a file pointer connected to the output stream
+$file = fopen('php://output', 'w');
 
-    fputcsv($file, $arrayOfColumnNames);
+// column headers:
+$arrayOfColumnNames = $arrayOfQuestionNames;
+array_unshift($arrayOfColumnNames, "Username");
 
-    //query the database
-    $query = "SELECT * FROM $tableName ORDER BY username ASC";
+fputcsv($file, $arrayOfColumnNames);
 
-    if ($rows = mysqli_query($connection, $query)) {
-        // loop over the rows, outputting them
-        while ($row = mysqli_fetch_assoc($rows)) {
-            fputcsv($file, $row);
-        }
+//query the database
+$query = "SELECT * FROM $tableName ORDER BY username ASC";
+$result = mysqli_query($connection, $query);
+
+if ($result) {
+    // loop over the rows, outputting them
+    while ($row = mysqli_fetch_assoc($result)) {
+        fputcsv($file, $row);
     }
-} */
+    // free result set
+    mysqli_free_result($result);
+}
+
+fclose($file);
+
+?>
