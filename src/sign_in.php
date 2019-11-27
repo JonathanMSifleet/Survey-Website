@@ -69,10 +69,12 @@ if (isset($_SESSION['loggedInSkeleton'])) {
                     $show_signin_form = true;
                     // show an unsuccessful signin message:
                     echo "Username not found or password is wrong<br>";
+                    echo "<a href = sign_in.php>Click here to try again</a><br>";
                 }
             } // end of while
         } else {
             echo "Username not found or password is wrong<br>";
+            echo "<a href = sign_in.php>Click here to try again</a><br>";
         }
     } else {
         // validation failed, show the form again with guidance:
