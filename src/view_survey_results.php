@@ -24,7 +24,17 @@ echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestio
 echo "</ul>";
 
 if (isset($_GET['viewResultsInTable'])) {
-    displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+
+    // get num of responses
+
+    $arrayOfRespondents = array();
+    getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
+
+    if (count($arrayOfRespondents) != 0) {
+        displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents);
+    } else {
+        echo "No survey responses<br>";
+    }
 }
 
 if (isset($_GET['showListOfQuestionsToDelete'])) {
@@ -67,8 +77,7 @@ function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames,
 
 function initDeleteQuestion($connection, $surveyID, $numQuestions)
 {
-    $shouldUpdateTable = false;
-    $shouldUpdateTable = deleteQuestion($connection);
+    deleteQuestion($connection);
     updateTableNumQuestions($connection, $surveyID, $numQuestions);
     //updateAllQuestionNums($connection); // finish this function
 
@@ -97,21 +106,15 @@ function deleteQuestion($connection)
     $query = "DELETE FROM questions WHERE questionID = '$questionID'";
     $result = mysqli_query($connection, $query);
 
-    if ($result) {
-        return true;
-    } else {
+    if (!$result) {
         echo mysqli_error($connection);
-        return false;
     }
 }
 
-function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
+function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents)
 {
 
-    $arrayOfRespondents = array();
-    getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
-
-    $numResponses = getNumResponses($connection, $surveyID);
+    $numResponses = count($arrayOfRespondents);
     $tableName = "response_CSV_" . $surveyID;
     $_SESSION['tableName'] = $tableName;
     $_SESSION['questionNames'] = $arrayOfQuestionNames;
@@ -197,18 +200,6 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
 
 //
 //
-function getNumResponses($connection, $surveyID)
-{
-    $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID =questions.questionID WHERE surveyID = '$surveyID'";
-    $result = mysqli_query($connection, $query);
-
-    if ($result) {
-        return mysqli_num_rows($result);
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
-}
-
 function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
 
