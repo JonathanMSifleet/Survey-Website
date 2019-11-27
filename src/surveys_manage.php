@@ -13,13 +13,27 @@ else {
     if (!$connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
-
     echo "<a href = create_survey.php>Create a survey</a>";
     echo "<br><br>";
     echo "<h3>Surveys:</h3>";
-
-    printSurveys($connection);
-
+    // get num of surveys:
+    $username = $_SESSION['username'];
+    if ($username == "admin") {
+        $userIsAdmin = true;
+    } else {
+        $userIsAdmin = false;
+    }
+    if ($userIsAdmin) {
+        $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
+    } else {
+        $query = "SELECT surveyID, title, topic FROM surveys where username='$username' ORDER BY username ASC";
+    }
+    $result = mysqli_query($connection, $query);
+    if (mysqli_num_rows($result) != 0) {
+        printSurveys($connection, $result, $userIsAdmin, $username);
+    } else {
+        echo "No surveys found<br>";
+    }
     if (isset($_GET['deleteSurvey'])) {
         echo "<br>";
         echo "Are you sure you want to delete the survey " . $_GET['surveyID'] . "? ";
@@ -41,25 +55,15 @@ else {
             }
         }
     }
+    // finish off the HTML for this page:
+    require_once "footer.php";
 }
-//
-//
-function printSurveys($connection)
-{
-    $username = $_SESSION['username'];
-    if ($username == "admin") {
-        $userIsAdmin = true;
-    } else {
-        $userIsAdmin = false;
-    }
-    if ($userIsAdmin) {
-        $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
-    } else {
-        $query = "SELECT surveyID, title, topic FROM surveys where username='$username' ORDER BY username ASC";
-    }
-    $result = mysqli_query($connection, $query);
-    echo "<table>";
 
+//
+//
+function printSurveys($connection, $result, $userIsAdmin, $username)
+{
+    echo "<table>";
     if ($userIsAdmin) {
         echo "<tr><th>Survey ID</th><th>Username</th><th>Title</th><th>Topic</th><th>Survey link</th><th>View results</th><th>Delete survey</th></tr>";
         while ($row = mysqli_fetch_assoc($result)) {
@@ -74,6 +78,4 @@ function printSurveys($connection)
     echo "</table>";
 }
 
-// finish off the HTML for this page:
-require_once "footer.php";
 ?>
