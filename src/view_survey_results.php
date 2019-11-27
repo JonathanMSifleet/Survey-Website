@@ -16,51 +16,51 @@ getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuesti
 
 echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 
-echo "<br>How would you like to do?<br>";
+$numQuestions = count($arrayOfQuestionNames);
 
-echo "<ul>";
-echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
-echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
-echo "</ul>";
+if ($numQuestions == 0) {
+    echo "This survey has no questions<br>";
+} else {
 
-if (isset($_GET['viewResultsInTable'])) {
-    displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
-}
+    echo "<br>How would you like to do?<br>";
 
-if (isset($_GET['showListOfQuestionsToDelete'])) {
-    displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+    echo "<ul>";
+    echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
+    echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
+    echo "</ul>";
+
+    if (isset($_GET['viewResultsInTable'])) {
+        displaySurveyResults($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+    }
+
+    if (isset($_GET['showListOfQuestionsToDelete'])) {
+        displayQuestionsToDelete($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+    }
 }
 
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
+function displayQuestionsToDelete($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs)
 {
-    $numQuestions = count($arrayOfQuestionNames);
+    echo "Pick a question to delete:<br>";
 
-    if ($numQuestions == 0) {
-        echo "</ul>";
-        echo "There are no questions to delete<br>";
-    } else {
-        echo "Pick a question to delete:<br>";
+    echo "<ul>";
 
-        echo "<ul>";
+    for ($i = 0; $i < $numQuestions; $i++) {
+        echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
+    }
+    echo "</ul>";
 
-        for ($i = 0; $i < $numQuestions; $i++) {
-            echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
-        }
-        echo "</ul>";
+    if (isset($_GET['deleteQuestion'])) {
 
-        if (isset($_GET['deleteQuestion'])) {
+        echo "<br> Are you sure?<br><br>";
+        echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
+        echo " ";
+        echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
 
-            echo "<br> Are you sure?<br><br>";
-            echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
-            echo " ";
-            echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
-
-            if (isset($_GET['confirmDeletion'])) {
-                initDeleteQuestion($connection, $surveyID, $numQuestions);
-            }
+        if (isset($_GET['confirmDeletion'])) {
+            initDeleteQuestion($connection, $surveyID, $numQuestions);
         }
     }
 }
@@ -70,7 +70,12 @@ function initDeleteQuestion($connection, $surveyID, $numQuestions)
     $shouldUpdateTable = false;
     $shouldUpdateTable = deleteQuestion($connection);
     updateTableNumQuestions($connection, $surveyID, $numQuestions);
-    //updateAllQuestionNums($connection); // finish this function
+    updateAllQuestionNums($connection); // finish this function
+
+}
+
+function updateAllQuestionNums($connection)
+{
 
 }
 
