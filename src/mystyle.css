@@ -14,7 +14,6 @@ h1 {
 
 nav {
     background-color: #ffffff;
-    size: 100%;
     clear: both;
 }
 
@@ -29,11 +28,11 @@ nav ul {
 nav ul li {
     float: left;
     display: flex;
-    width: 10%;
+    width: 12%;
     height: 5vh;
     padding: 0;
-    margin-left: 3%;
-    margin-right: 3%;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
 nav li a {
