@@ -91,8 +91,7 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
             if ($type == "multOption" || $type == "dropdown" || $type == "checkboxes") {
 
                 echo "<br>Now to create some options: <br>";
-                echo "<a href = create_option.php?questionID=$questionID&surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted&numQuestions=$numQuestions> Click here to create options </a>";
-                echo "<br>";
+                echo "<a href = create_option.php?questionID=$questionID&surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted&numQuestions=$numQuestions> Click here to create options </a><br>";
             } else {
 
                 displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
@@ -140,8 +139,6 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
       <input type="submit" value="Submit">
     </form>
 _END;
-
-    echo "<br>";
 }
 
 //

@@ -19,8 +19,7 @@ else {
     }
 
     echo "<a href = create_survey.php>Create a survey</a>";
-    echo "<br>";
-    echo "<br>";
+    echo "<br><br>";
     echo "<h3>Surveys:</h3>";
 
     printSurveys($connection);

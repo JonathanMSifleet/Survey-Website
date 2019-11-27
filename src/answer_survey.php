@@ -180,7 +180,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
     }
 
     echo "<br><input type='submit' value='Submit'>";
-    echo "</form><br>";
+    echo "</form>";
 }
 
 //

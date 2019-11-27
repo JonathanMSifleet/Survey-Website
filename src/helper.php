@@ -699,7 +699,7 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
         echo "<a href= $nextQuestionURL> Click here to create new question </a><br>";
     } else {
         echo "<br>Survey completed!<br>";
-        echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a>";
+        echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a><br>";
     }
 }
 
