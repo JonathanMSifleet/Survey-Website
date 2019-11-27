@@ -216,8 +216,6 @@ function getNumResponses($connection, $surveyID)
 
 function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
-
-    // make our table:
     $query = "CREATE TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
     $result = mysqli_query($connection, $query);
 
@@ -225,7 +223,6 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
         for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
 
             $questionName = $arrayOfQuestionNames[$i];
-
             $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
             $result2 = mysqli_query($connection, $query);
 
