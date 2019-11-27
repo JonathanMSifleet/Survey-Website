@@ -185,7 +185,7 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
 //
 function getNumResponses($connection, $surveyID)
 {
-    $query = "SELECT DISTINCT username FROM responses"; // $responseID'";
+    $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID =questions.questionID WHERE surveyID = '$surveyID'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
