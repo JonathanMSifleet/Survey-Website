@@ -44,7 +44,7 @@ if (isset($_GET['showListOfQuestionsToDelete'])) {
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
+function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
     $numQuestions = count($arrayOfQuestionNames);
 
@@ -69,18 +69,38 @@ function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames,
             echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
 
             if (isset($_GET['confirmDeletion'])) {
-                initDeleteQuestion($connection, $surveyID, $numQuestions);
+                initDeleteQuestion($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
             }
         }
     }
 }
 
-function initDeleteQuestion($connection, $surveyID, $numQuestions)
+function initDeleteQuestion($connection, $surveyID, $numQuestions, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
     deleteQuestion($connection);
     updateTableNumQuestions($connection, $surveyID, $numQuestions);
-    //updateAllQuestionNums($connection); // finish this function
 
+    $arrayOfQuestionIDs = array();
+    getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+
+    updateAllQuestionNums($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs); // finish this function
+
+}
+
+function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
+{
+    $j = 0;
+
+    for ($i = 0; $i < count($arrayOfQuestionIDs); $i++) {
+        $query = "UPDATE questions SET questionNo = '$j' WHERE surveyID = '$surveyID' AND questionID = '{$arrayOfQuestionIDs[$i]}'";
+        $result = mysqli_query($connection, $query);
+
+        if (!$result) {
+            echo mysqli_error($connection);
+        } else {
+            $j++;
+        }
+    }
 }
 
 function updateTableNumQuestions($connection, $surveyID, $numQuestions)
@@ -137,7 +157,7 @@ function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $ar
         $result = mysqli_query($connection, $query);
 
         if ($result) {
-            echo "Success";
+            echo "<br>Successfully deleted response<br>";
         } else {
             echo mysqli_error($connection);
         }
