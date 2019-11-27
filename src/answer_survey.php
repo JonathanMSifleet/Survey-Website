@@ -16,34 +16,80 @@ else {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    if (determineValidSurvey($connection) == false) {
+    $surveyID = $_GET['surveyID'];
+    $username = $username = $_SESSION['username'];
+
+    if (determineValidSurvey($connection, $surveyID) == false) {
         echo "Invalid survey ID";
     } else {
 
-        $surveyID = $_GET['surveyID'];
+        if (hasUserRespondedToSurvey($connection, $surveyID, $username)) {
 
-        $surveyInformation = array();
+            echo "You have already answered the survey<br>";
+            echo "<a href = {$_SERVER['REQUEST_URI']}&displaySurvey=true>Click here to update your response</a><br>";
 
-        getSurveyInformation($connection, $surveyID, $surveyInformation);
+            if (isset($_GET['displaySurvey'])) {
+                dropUserResponse($connection, $surveyID, $username);
+                getSurveyData($connection, $surveyID);
+            }
 
-        $title = $surveyInformation[0];
-        $topic = $surveyInformation[1];
-        $instructions = $surveyInformation[2];
-        $numQuestions = $surveyInformation[3];
+        } else {
+            getSurveyData($connection, $surveyID);
+        }
+    }
+}
 
-        echo <<<_END
+// finish of the HTML for this page:
+require_once "footer.php";
+
+function dropUserResponse($connection, $surveyID, $username)
+{
+    $query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE username = '$username' AND surveyID = '$surveyID'";
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        echo mysqli_error($connection);
+    }
+
+}
+
+function getSurveyData($connection, $surveyID)
+{
+    $surveyID = $_GET['surveyID'];
+
+    $surveyInformation = array();
+
+    getSurveyInformation($connection, $surveyID, $surveyInformation);
+
+    $title = $surveyInformation[0];
+    $topic = $surveyInformation[1];
+    $instructions = $surveyInformation[2];
+    $numQuestions = $surveyInformation[3];
+
+    echo <<<_END
             <h2>$title</h2><br>
             <h3>Topic: $topic</h3>
             Instructions:<br>
             $instructions
 _END;
 
-        displaySurvey($connection, $surveyID, $numQuestions);
-    }
+    displaySurvey($connection, $surveyID, $numQuestions);
 }
 
-// finish of the HTML for this page:
-require_once "footer.php";
+function hasUserRespondedToSurvey($connection, $surveyID, $username)
+{
+    $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID = '$surveyID' AND username = '$username'";
+    $result = mysqli_query($connection, $query);
+    if ($result) {
+        if (mysqli_num_rows($result) != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        echo mysqli_error($connection);
+    }
+}
 
 //
 //
@@ -208,10 +254,8 @@ function getQuestionData($connection, $surveyID, &$temp)
 
 //
 //
-function determineValidSurvey($connection)
+function determineValidSurvey($connection, $surveyID)
 {
-    $surveyID = $_GET['surveyID'];
-
     $query = "SELECT * FROM surveys WHERE surveyID='$surveyID'";
     $result = mysqli_query($connection, $query);
 
