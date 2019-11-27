@@ -36,27 +36,33 @@ require_once "footer.php";
 
 function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
 {
-    echo "Pick a question to delete:<br>";
+    $numQuestions = count($arrayOfQuestionNames);
 
-    echo "<ul>";
-    for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
-        echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
-    }
-    echo "</ul>";
+    if ($numQuestions == 0) {
+        echo "</ul>";
+        echo "There are no questions to delete<br>";
+    } else {
+        echo "Pick a question to delete:<br>";
 
-    if (isset($_GET['deleteQuestion'])) {
-        $numQuestions = count($arrayOfQuestionNames);
+        echo "<ul>";
 
-        echo "<br> Are you sure?<br><br>";
-        echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
-        echo " ";
-        echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
+        for ($i = 0; $i < $numQuestions; $i++) {
+            echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
+        }
+        echo "</ul>";
 
-        if (isset($_GET['confirmDeletion'])) {
-            initDeleteQuestion($connection, $surveyID, $numQuestions);
+        if (isset($_GET['deleteQuestion'])) {
+
+            echo "<br> Are you sure?<br><br>";
+            echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
+            echo " ";
+            echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
+
+            if (isset($_GET['confirmDeletion'])) {
+                initDeleteQuestion($connection, $surveyID, $numQuestions);
+            }
         }
     }
-
 }
 
 function initDeleteQuestion($connection, $surveyID, $numQuestions)
