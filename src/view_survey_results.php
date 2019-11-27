@@ -5,16 +5,19 @@ $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 if (!$connection) {
     die("Connection failed: " . $mysqli_connect_error);
 }
+
 $surveyID = $_GET['surveyID'];
 $arrayOfQuestionNames = array();
 $arrayOfQuestionIDs = array();
 getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+
 echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 echo "<br>How would you like to do?<br>";
 echo "<ul>";
 echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
 echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
 echo "</ul>";
+
 if (isset($_GET['viewResultsInTable'])) {
     displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 }
@@ -32,21 +35,27 @@ function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames,
     } else {
         echo "Pick a question to delete:<br>";
         echo "<ul>";
+
         for ($i = 0; $i < $numQuestions; $i++) {
             echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
         }
+
         echo "</ul>";
+
         if (isset($_GET['deleteQuestion'])) {
+
             echo "<br> Are you sure?<br><br>";
             echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
             echo " ";
             echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
+
             if (isset($_GET['confirmDeletion'])) {
                 initDeleteQuestion($connection, $surveyID, $numQuestions);
             }
         }
     }
 }
+
 function initDeleteQuestion($connection, $surveyID, $numQuestions)
 {
     $shouldUpdateTable = false;
@@ -54,22 +63,27 @@ function initDeleteQuestion($connection, $surveyID, $numQuestions)
     updateTableNumQuestions($connection, $surveyID, $numQuestions);
     //updateAllQuestionNums($connection); // finish this function
 }
+
 function updateTableNumQuestions($connection, $surveyID, $numQuestions)
 {
     $numQuestions--;
+
     $query = "UPDATE surveys SET numQuestions = '$numQuestions' WHERE surveyID='$surveyID'";
     $result = mysqli_query($connection, $query);
+
     if ($result) {
         echo "Question deleted successfully<br>";
     } else {
         echo mysqli_error($connection);
     }
 }
+
 function deleteQuestion($connection)
 {
     $questionID = $_GET['deleteQuestion'];
     $query = "DELETE FROM questions WHERE questionID = '$questionID'";
     $result = mysqli_query($connection, $query);
+
     if ($result) {
         return true;
     } else {
@@ -77,23 +91,28 @@ function deleteQuestion($connection)
         return false;
     }
 }
+
 function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
 {
     $arrayOfRespondents = array();
     getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
     $numResponses = getNumResponses($connection, $surveyID);
+
     $tableName = "response_CSV_" . $surveyID;
     $_SESSION['tableName'] = $tableName;
     $_SESSION['questionNames'] = $arrayOfQuestionNames;
+
     echo "<h3>Results:</h3>";
     echo "Number of results: " . $numResponses . "<br>";
     echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
+
     if (!empty($arrayOfQuestionNames)) {
         getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
         displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
     } else {
         echo "<br><br>No Responses found<br>";
     }
+
     if (isset($_GET['username'])) {
         $query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
         $result = mysqli_query($connection, $query);
@@ -104,18 +123,21 @@ function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $ar
         }
     }
 }
+
 function getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
     dropTable($connection, $tableName);
     createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
     populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
 }
+
 //
 //
 function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 {
     $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID= '$surveyID'";
     $result = mysqli_query($connection, $query);
+
     if ($result) {
         while ($row = mysqli_fetch_assoc($result)) {
             $arrayOfRespondents[] = $row['username'];
@@ -124,10 +146,12 @@ function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
         echo mysqli_error($connection) . "<br>";
     }
 }
+
 function getSurveyName($connection, $surveyID)
 {
     $query = "SELECT title FROM surveys WHERE surveyID = '$surveyID'";
     $result = mysqli_query($connection, $query);
+
     if ($result) {
         $row = mysqli_fetch_row($result);
         return $row[0];
@@ -135,12 +159,14 @@ function getSurveyName($connection, $surveyID)
         echo mysqli_error($connection) . "<br>";
     }
 }
+
 //
 //
 function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayOfQuestionIDs)
 {
     $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
     $result = mysqli_query($connection, $query);
+
     if ($result) {
         while ($row = mysqli_fetch_assoc($result)) {
             $arrayOfQuestions[] = $row['questionName'];
@@ -150,6 +176,7 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
         echo mysqli_error($connection) . "<br>";
     }
 }
+
 //
 //
 function getNumResponses($connection, $surveyID)
@@ -162,16 +189,20 @@ function getNumResponses($connection, $surveyID)
         echo mysqli_error($connection) . "<br>";
     }
 }
+
 function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
     // make our table:
     $query = "CREATE TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
     $result = mysqli_query($connection, $query);
+
     if ($result) {
         for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
             $questionName = $arrayOfQuestionNames[$i];
+
             $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
             $result2 = mysqli_query($connection, $query);
+
             if (!$result2) {
                 echo("Error: " . mysqli_error($connection));
             }
@@ -180,15 +211,20 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
         echo("Error: " . mysqli_error($connection));
     }
 }
+
 function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
     $dataToInsert = array();
     for ($i = 0; $i < $numResponses; $i++) {
+
         $username = $arrayOfRespondents[$i];
         $dataToInsert[] = $username;
+
         for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
+
             $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
             $result = mysqli_query($connection, $query);
+
             if ($result) {
                 $row = mysqli_fetch_assoc($result);
                 $dataToInsert[] = $row['response'];
@@ -200,27 +236,34 @@ function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRes
         $dataToInsert = array();
     }
 }
+
 function insertResponseIntoTable($connection, $tableName, $dataToInsert)
 {
     $values = implode("','", $dataToInsert);
     $values = "'" . $values . "'";
     $query = "INSERT INTO $tableName VALUES ($values)";
     $result = mysqli_query($connection, $query);
+
     if (!$result) {
         echo mysqli_error($connection);
     }
 }
+
 function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID)
 {
     echo "<br>";
     $query = "SELECT * FROM  $tableName ORDER BY username ASC";
     $result = mysqli_query($connection, $query);
     $numColumns = mysqli_num_fields($result);
+
     echo "<br><table>";
+
     displayHeaders($connection, $tableName, $arrayOfQuestionNames);
     displayRows($result, $surveyID);
+
     echo "</table>";
 }
+
 function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
 {
     echo "<tr>";
@@ -233,6 +276,7 @@ function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
     }
     echo "</tr>";
 }
+
 function displayRows($result, $surveyID)
 {
     while ($row = mysqli_fetch_assoc($result)) {
@@ -247,4 +291,5 @@ function displayRows($result, $surveyID)
         echo "</tr>";
     }
 }
+
 ?>

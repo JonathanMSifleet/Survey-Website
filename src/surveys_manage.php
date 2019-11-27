@@ -1,8 +1,6 @@
 <?php
-
 // execute the header script:
 require_once "header.php";
-
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
 if (!isset($_SESSION['loggedInSkeleton'])) {
@@ -10,9 +8,7 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, show them suitable page content
 else {
-
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
     // if the connection fails, we need to know, so allow this exit:
     if (!$connection) {
         die("Connection failed: " . $mysqli_connect_error);
@@ -34,14 +30,10 @@ else {
         echo "<br>";
 
         if (isset($_GET["confirmDeletion"])) {
-
             $surveyID = $_GET['surveyID'];
-
             $query = "DELETE FROM surveys WHERE surveyID = '$surveyID'";
             $result = mysqli_query($connection, $query);
-
             echo "<br>";
-
             if ($result) {
                 echo "Survey deleted<br>";
             } else {
@@ -50,27 +42,22 @@ else {
         }
     }
 }
-
 //
 //
 function printSurveys($connection)
 {
     $username = $_SESSION['username'];
-
     if ($username == "admin") {
         $userIsAdmin = true;
     } else {
         $userIsAdmin = false;
     }
-
     if ($userIsAdmin) {
         $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
     } else {
         $query = "SELECT surveyID, title, topic FROM surveys where username='$username' ORDER BY username ASC";
     }
-
     $result = mysqli_query($connection, $query);
-
     echo "<table>";
 
     if ($userIsAdmin) {
@@ -85,10 +72,8 @@ function printSurveys($connection)
         }
     }
     echo "</table>";
-
 }
 
 // finish off the HTML for this page:
 require_once "footer.php";
-
 ?>
