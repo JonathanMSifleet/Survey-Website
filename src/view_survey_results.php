@@ -47,14 +47,7 @@ function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames,
     if (isset($_GET['deleteQuestion'])) {
         $numQuestions = count($arrayOfQuestionNames);
 
-        echo "<br> Are you sure?<br><br>";
-        echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=null&confirmDeletion=true> Yes</a>";
-        echo " ";
-        echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
-
-        if (isset($_GET['confirmDeletion'])) {
-            initDeleteQuestion($connection, $surveyID, $numQuestions);
-        }
+        initDeleteQuestion($connection, $surveyID, $numQuestions);
     }
 
 }
@@ -64,7 +57,7 @@ function initDeleteQuestion($connection, $surveyID, $numQuestions)
     $shouldUpdateTable = false;
     $shouldUpdateTable = deleteQuestion($connection);
     updateTableNumQuestions($connection, $surveyID, $numQuestions);
-    //updateAllQuestionNums($connection); // finish this function
+
 }
 
 function updateTableNumQuestions($connection, $surveyID, $numQuestions)
@@ -76,7 +69,7 @@ function updateTableNumQuestions($connection, $surveyID, $numQuestions)
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-        echo "Question deleted successfully<br>";
+        echo "Question delete successfully<br>";
     } else {
         echo mysqli_error($connection);
     }
