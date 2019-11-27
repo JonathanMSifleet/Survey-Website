@@ -22,30 +22,7 @@ else {
     echo "<br><br>";
     echo "<h3>Surveys:</h3>";
 
-
-    // get num of surveys:
-
-    $username = $_SESSION['username'];
-
-    if ($username == "admin") {
-        $userIsAdmin = true;
-    } else {
-        $userIsAdmin = false;
-    }
-
-    if ($userIsAdmin) {
-        $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
-    } else {
-        $query = "SELECT surveyID, title, topic FROM surveys where username='$username' ORDER BY username ASC";
-    }
-
-    $result = mysqli_query($connection, $query);
-
-    if (mysqli_num_rows($result) != 0) {
-        printSurveys($connection, $result, $userIsAdmin, $username);
-    } else {
-        echo "No surveys found<br>";
-    }
+    printSurveys($connection);
 
     if (isset($_GET['deleteSurvey'])) {
         echo "<br>";
@@ -72,16 +49,28 @@ else {
             }
         }
     }
-
-    // finish off the HTML for this page:
-    require_once "footer.php";
-
 }
 
 //
 //
-function printSurveys($connection, $result, $userIsAdmin, $username)
+function printSurveys($connection)
 {
+    $username = $_SESSION['username'];
+
+    if ($username == "admin") {
+        $userIsAdmin = true;
+    } else {
+        $userIsAdmin = false;
+    }
+
+    if ($userIsAdmin) {
+        $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
+    } else {
+        $query = "SELECT surveyID, title, topic FROM surveys where username='$username' ORDER BY username ASC";
+    }
+
+    $result = mysqli_query($connection, $query);
+
     echo "<table>";
 
     if ($userIsAdmin) {
@@ -98,5 +87,8 @@ function printSurveys($connection, $result, $userIsAdmin, $username)
     echo "</table>";
 
 }
+
+// finish off the HTML for this page:
+require_once "footer.php";
 
 ?>

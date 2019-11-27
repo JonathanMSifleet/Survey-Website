@@ -16,53 +16,40 @@ getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuesti
 
 echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 
-$numQuestions = count($arrayOfQuestionNames);
+echo "<br>How would you like to do?<br>";
 
-if ($numQuestions == 0) {
-    echo "This survey has no questions<br>";
-} else {
+echo "<ul>";
+echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
+echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
+echo "</ul>";
 
-    echo "<br>How would you like to do?<br>";
+if (isset($_GET['viewResultsInTable'])) {
+    displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+}
 
-    echo "<ul>";
-    echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
-    echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
-    echo "</ul>";
-
-    if (isset($_GET['viewResultsInTable'])) {
-        displaySurveyResults($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
-    }
-
-    if (isset($_GET['showListOfQuestionsToDelete'])) {
-        displayQuestionsToDelete($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
-    }
+if (isset($_GET['showListOfQuestionsToDelete'])) {
+    displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 }
 
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function displayQuestionsToDelete($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs)
+function displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs)
 {
     echo "Pick a question to delete:<br>";
 
     echo "<ul>";
-
-    for ($i = 0; $i < $numQuestions; $i++) {
+    for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
         echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
     }
     echo "</ul>";
 
     if (isset($_GET['deleteQuestion'])) {
+        $numQuestions = count($arrayOfQuestionNames);
 
-        echo "<br> Are you sure?<br><br>";
-        echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
-        echo " ";
-        echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
-
-        if (isset($_GET['confirmDeletion'])) {
-            initDeleteQuestion($connection, $surveyID, $numQuestions);
-        }
+        initDeleteQuestion($connection, $surveyID, $numQuestions);
     }
+
 }
 
 function initDeleteQuestion($connection, $surveyID, $numQuestions)
@@ -70,12 +57,6 @@ function initDeleteQuestion($connection, $surveyID, $numQuestions)
     $shouldUpdateTable = false;
     $shouldUpdateTable = deleteQuestion($connection);
     updateTableNumQuestions($connection, $surveyID, $numQuestions);
-    updateAllQuestionNums($connection); // finish this function
-
-}
-
-function updateAllQuestionNums($connection)
-{
 
 }
 
@@ -88,7 +69,7 @@ function updateTableNumQuestions($connection, $surveyID, $numQuestions)
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-        echo "Question deleted successfully<br>";
+        echo "Question delete successfully<br>";
     } else {
         echo mysqli_error($connection);
     }
@@ -216,6 +197,8 @@ function getNumResponses($connection, $surveyID)
 
 function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
+
+    // make our table:
     $query = "CREATE TABLE $tableName (Username VARCHAR(20),  PRIMARY KEY(username))";
     $result = mysqli_query($connection, $query);
 
@@ -223,6 +206,7 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
         for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
 
             $questionName = $arrayOfQuestionNames[$i];
+
             $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
             $result2 = mysqli_query($connection, $query);
 
