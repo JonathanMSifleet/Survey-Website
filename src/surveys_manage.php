@@ -17,8 +17,6 @@ else {
     echo "<br><br>";
     echo "<h3>Surveys:</h3>";
 
-    // [get num of surveys]
-
     $username = $_SESSION['username'];
 
     if ($username == "admin") {
@@ -34,18 +32,20 @@ else {
     }
 
     $result = mysqli_query($connection, $query);
+
     if (mysqli_num_rows($result) != 0) {
         printSurveys($connection, $result, $userIsAdmin, $username);
     } else {
         echo "No surveys found<br>";
     }
+
     if (isset($_GET['deleteSurvey'])) {
 
         echo "<br> Are you sure you want to delete the survey " . $_GET['surveyID'] . "?<br>";
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
         echo " ";
         echo "<a href =surveys_manage.php>Cancel</a><br>";
-        
+
         if (isset($_GET["confirmDeletion"])) {
             $surveyID = $_GET['surveyID'];
             $query = "DELETE FROM surveys WHERE surveyID = '$surveyID'";
