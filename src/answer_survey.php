@@ -23,16 +23,19 @@ else {
         echo "Invalid survey ID";
     } else {
 
-        if (hasUserRespondedToSurvey($connection, $surveyID, $username)) {
+        if ($_GET['questionsAnswered'] == 0) {
+            if (hasUserRespondedToSurvey($connection, $surveyID, $username)) {
 
-            echo "You have already answered the survey<br>";
-            echo "<a href = {$_SERVER['REQUEST_URI']}&displaySurvey=true>Click here to update your response</a><br>";
+                echo "You have already answered the survey<br>";
+                echo "<a href = {$_SERVER['REQUEST_URI']}&displaySurvey=true>Click here to update your response</a><br>";
 
-            if (isset($_GET['displaySurvey'])) {
-                dropUserResponse($connection, $surveyID, $username);
+                if (isset($_GET['displaySurvey'])) {
+                    dropUserResponse($connection, $surveyID, $username);
+                    getSurveyData($connection, $surveyID);
+                }
+            } else {
                 getSurveyData($connection, $surveyID);
             }
-
         } else {
             getSurveyData($connection, $surveyID);
         }
@@ -107,15 +110,13 @@ function displaySurvey($connection, $surveyID, $numQuestions)
     if (!empty($_POST['checkboxResponse'])) {
 
         $surveyResponse = implode(', ', $_POST['checkboxResponse']);
-
         $surveyResponse = sanitise($surveyResponse, $connection);
 
-        insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+        insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
     } elseif (isset($_POST['surveyResponse'])) {
 
         $surveyResponse = sanitise($_POST['surveyResponse'], $connection);
-
-        insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+        insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
     } else {
         displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
     }
@@ -123,7 +124,7 @@ function displaySurvey($connection, $surveyID, $numQuestions)
 
 //
 //
-function insertReponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions)
+function insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions)
 {
     if ($answerRequired == 1 && $surveyResponse == "") {
         $responseErrors = "Answer required!";
