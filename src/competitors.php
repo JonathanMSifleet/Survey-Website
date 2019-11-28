@@ -50,10 +50,21 @@ else {
         <div class="column">
              <h2>Survey Monkey</h2>
              <h3>Layout</h3>
+             <img src="imgs/SurveyMonkey/Layout.png" style="max-width:50%;" align="right" alt="Image of Survey Monkey layout">
+             <p> Survey Monkey is incredibly “visually busy”, it has many more elements on the page compared to other websites, but it does use material design and has a very square design. Survey Monkey’s UI can be very overwhelming at first which I believe is a huge detriment to its layout. Furthermore, Survey Monkey has almost no customisation options for the free account and the only options include eight different coloured themes, ranging from green to orange. Not only is the layout of Survey Monkey complex, it not customisable without paying money.</p>
+             
+             <img src="imgs/SurveyMonkey/Templates.png" style="max-width:50%;" align="right" alt="Image of Survey Monkey teamplates">
              <h3>Ease of use</h3>
+             <p>As a continuation of the layout, the ease of use follows the ground-work that its layout set out. When creating a question, there are so many options to choose from which can be overwhelming and may make the user struggle to decide which question would be best for them to choose. Although it could be considered a benefit to have so many question types and different settings such as turning a survey into a quiz, adding labels or adding other options to the question other than the pre-defined ones, it is easy to feel swamped.</p>
+             <p>To create as an effective survey as using a site such as Google Forms, the creator of the survey could easily spend hours trying to make the perfect survey. I would argue that the time being spent on making that perfect survey could be significantly reduced by making the survey with Forms, and the resulting survey would be almost as effective.</p>
+             <p>When creating a survey, rather than creating your own (which I seriously do not recommend), you can choose a survey from a template. I counted over twenty-five templates, which contains pre-made questions which I found were surprisingly useful as they covered almost all questions I could think of. For example, when doing a website feedback survey, the questions were: overall, how well does our website meet your needs, how easy was it to find what you were looking for on our website, did it take you more or less time than you expected to find what you were looking for on our website etc…</p>
+             
              <h3>User account set-up / login</h3>
+            
              <h3>Question types</h3>
+            
              <h3>Analysis tools</h3>
+        
         </div>
 
 _END;
