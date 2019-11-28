@@ -18,17 +18,16 @@ else {
     }
 
     $surveyID = $_GET['surveyID'];
-
     $numQuestions = getNoOfSurveyQuestions($connection, $surveyID); // by removing survey's number of questions, user cannot edit it from url bar
 
+    // begin to create a new question:
     initNewQuestions($connection, $surveyID, $numQuestions);
 
     // finish of the HTML for this page:
     require_once "footer.php";
 }
 
-//
-//
+// gets question data from user:
 function initNewQuestions($connection, $surveyID, $numQuestions)
 {
     $arrayOfQuestionErrors = array();
@@ -41,31 +40,34 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
 
     if (isset($_POST['questionName'])) {
 
-        // SANITISATION (see helper.php for the function definition)
+        // if the question is set, sanitise the data:
         $questionName = sanitise($_POST['questionName'], $connection);
         $type = sanitise($_POST['type'], $connection);
         $numOptions = sanitise($_POST['numOptions'], $connection);
 
+        // determine whether question is a mandatory question:
         if (isset($_POST['required'])) {
             $required = 1;
         } else {
             $required = 0;
         }
 
+        // edits the number of options a question has if it should only have 1:
         if (!($type == "multOption" || $type == "dropdown" || $type == "checkboxes")) {
             $numOptions = 1;
         }
 
+        // insert question into database:
         insertQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors);
     } else {
         displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
     }
 }
 
-//
-//
+// inserts question into database if its valid
 function insertQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors)
 {
+    // create a list of errors:
     createArrayOfQuestionErrors($questionName, $type, $numOptions, $arrayOfQuestionErrors);
     $errors = implode('', $arrayOfQuestionErrors);
 
@@ -88,15 +90,16 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
             $query = "UPDATE questions SET questionNo = '$numQuestionsInserted' WHERE questionID = '$questionID'";
             $result = mysqli_query($connection, $query);
 
+            // shows prompt to create question options if it can have pre-defined options:
             if ($type == "multOption" || $type == "dropdown" || $type == "checkboxes") {
-
                 echo "<br>Now to create some options: <br>";
                 echo "<a href = create_option.php?questionID=$questionID&surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted&numQuestions=$numQuestions> Click here to create options </a><br>";
             } else {
-
+                // if it doesn't have pre-defined options show the create question prompt:
                 displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
             }
         } else {
+            // else display an error:
             displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors);
             echo "Error: " . mysqli_error($connection) . "<br>";
         }
@@ -108,13 +111,13 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
     }
 }
 
-//
-//
+// displays the create question form:
 function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
 {
     $questionNo = $_GET['numQuestionsInserted'];
     $questionNo++;
 
+    // display form:
     echo <<<_END
     <form action="" method="post">
       Question $questionNo: <br><br>
@@ -141,8 +144,7 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
 _END;
 }
 
-//
-//
+// gets the number of questions a survey has from the database:
 function getNoOfSurveyQuestions($connection, $surveyID)
 {
     $query = "SELECT numQuestions FROM surveys WHERE surveyID = '$surveyID'";
@@ -160,8 +162,7 @@ function getNoOfSurveyQuestions($connection, $surveyID)
     }
 }
 
-//
-//
+// creates an array of question errors:
 function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayOfQuestionErrors)
 {
     $arrayOfQuestionErrors[0] = validateStringLength($questionName, 4, 64);
