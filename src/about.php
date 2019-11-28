@@ -1,13 +1,10 @@
 <?php
-// Things to notice:
-// This is an empty page where you can provide a simple overview and description of your site
-// Consider it the 'welcome' page for your survey web site
 
 // execute the header script:
 require_once "header.php";
 
+// list of features:
 echo <<<_END
-
 <h3>Features:</h3>
 <ul>
 <li>Creation of surveys</li>
@@ -25,6 +22,8 @@ echo <<<_END
 </ul>
 _END;
 
+// check if database exists, if it does then show prompt to answer
+// default survey, if it doesn't, show prompt to create database:
 error_reporting(0);
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 error_reporting(1);

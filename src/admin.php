@@ -75,6 +75,7 @@ function initCreateAccount($connection)
 
     if (isset($_POST['username'])) {
         // account tried to be created
+        // sanitise dataa then attempt to create account:
         sanitiseUserData($connection, $username, $email, $password, $firstname, $surname, $number, $dob);
         createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
     } else {
@@ -85,8 +86,8 @@ function initCreateAccount($connection)
 
 function displayListOfUsers($connection)
 {
-    // queries mysql table, outputs results to table
-    // this is written by me:
+    // queries mysql table for list of users, outputs list of users to table
+    // if no errors are encountered
     $query = "SELECT username FROM users ORDER BY username ASC";
     $result = mysqli_query($connection, $query);
 
