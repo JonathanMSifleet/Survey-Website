@@ -122,7 +122,7 @@ function createQuestionTable($connection)
         die("Error checking for existing table: " . mysqli_error($connection));
     }
     // make our table:
-    $sql = "CREATE TABLE questions (questionID VARCHAR(32), surveyID VARCHAR(32), questionNo TINYINT, questionName VARCHAR(128), type VARCHAR(32), numOptions SMALLINT, required BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID) ON DELETE CASCADE, PRIMARY KEY (questionID))";
+    $sql = "CREATE TABLE questions (questionID VARCHAR(32), surveyID VARCHAR(32), questionNo TINYINT, questionName VARCHAR(128), type VARCHAR(12), numOptions SMALLINT, required BOOLEAN, FOREIGN KEY (surveyID) REFERENCES surveys(surveyID) ON DELETE CASCADE, PRIMARY KEY (questionID))";
     // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: questions<br>";

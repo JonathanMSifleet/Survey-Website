@@ -32,7 +32,6 @@ require_once "footer.php";
 function getSurveyData($connection, $surveyID)
 {
     $surveyID = $_GET['surveyID'];
-
     $surveyInformation = array();
 
     getSurveyInformation($connection, $surveyID, $surveyInformation);
