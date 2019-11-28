@@ -98,7 +98,7 @@ function checkIsNonNumeric($field)
     $charArray = str_split($field);
     $lengthOfCharArray = count($charArray);
 
-    for ($i = 0; $i < $lengthOfCharArray; $i++) {
+    for ($i = 0; $i < $lengthOfCharArray; $i ++) {
         if (is_numeric($charArray[$i]) == true) {
             return "Must not contain any numbers ";
         }
@@ -140,10 +140,10 @@ function validateDate($field)
     $todaysDate = date('Y-m-d');
 
     $inputYear = substr($field, 0, 4);
-    $inputYear = (int)$inputYear;
+    $inputYear = (int) $inputYear;
 
     $todaysYear = substr($todaysDate, 0, 4);
-    $todaysYear = (int)$todaysYear;
+    $todaysYear = (int) $todaysYear;
 
     if ($todaysYear - $inputYear > 120) {
         return "You must be less than 120 years old";
@@ -179,14 +179,14 @@ function generateAlphanumericString()
 
     $tempPassword[] = "";
 
-    for ($i = 0; $i <= 31; $i++) {
+    for ($i = 0; $i <= 31; $i ++) {
         $randNumber = rand(0, $lengthOfCharArray);
         $tempPassword[$i] = chr($charArray[$randNumber]);
     }
 
     $finalPassword = "";
 
-    for ($i = 0; $i <= 31; $i++) {
+    for ($i = 0; $i <= 31; $i ++) {
         $finalPassword = $finalPassword . $tempPassword[$i];
     }
 
@@ -199,23 +199,23 @@ function createArrayOfUsableCharacters()
     $charArray[] = "";
 
     $j = 0;
-    
+
     // get characters 0 to 9
-    for ($i = 48; $i <= 57; $i++) {
+    for ($i = 48; $i <= 57; $i ++) {
         $charArray[$j] = $i;
-        $j++;
+        $j ++;
     }
-    
+
     // get capital letters
-    for ($i = 65; $i <= 90; $i++) {
+    for ($i = 65; $i <= 90; $i ++) {
         $charArray[$j] = $i;
-        $j++;
+        $j ++;
     }
 
     // get lower case letters
-    for ($i = 97; $i <= 122; $i++) {
+    for ($i = 97; $i <= 122; $i ++) {
         $charArray[$j] = $i;
-        $j++;
+        $j ++;
     }
 
     return $charArray;
@@ -280,9 +280,9 @@ function containsAmpersand($inputString)
     // convert input into array of chars
     $arrayOfChars = str_split($inputString);
     $inputLength = count($arrayOfChars);
-    
+
     // for each char in array, check if it is the '&' symbol
-    for ($i = 0; $i < $inputLength; $i++) {
+    for ($i = 0; $i < $inputLength; $i ++) {
         if ($arrayOfChars[$i] == '&') {
             return true;
         }
@@ -307,7 +307,7 @@ function getAmpersandLocation($inputString)
 
     // for each char in array, check if it is the '&' symbol
     // if found, return the location of the symbol
-    for ($i = 0; $i <= $inputLength; $i++) {
+    for ($i = 0; $i <= $inputLength; $i ++) {
         if ($arrayOfChars[$i] == '&') {
             return $i;
         }
@@ -382,7 +382,7 @@ function calcEarliestDate($todaysDate)
 {
     $minDate = $todaysDate;
     $minDate = substr($todaysDate, 0, 4);
-    $minDate = (int)$minDate;
+    $minDate = (int) $minDate;
     $minYear = $minDate - 120;
     $minDate = substr($todaysDate, 4, strlen($todaysDate));
     $minDate = $minYear . $minDate;
@@ -394,7 +394,7 @@ function calcLatestDate($todaysDate)
 {
     $maxDate = $todaysDate;
     $maxDate = substr($todaysDate, 0, 4);
-    $maxDate = (int)$maxDate;
+    $maxDate = (int) $maxDate;
     $maxYear = $maxDate - 13;
     $maxDate = substr($todaysDate, 4, strlen($todaysDate));
     $maxDate = $maxYear . $maxDate;
@@ -404,7 +404,7 @@ function calcLatestDate($todaysDate)
 // initialises every element in an array with a null value
 function initEmptyArray(&$array, $size)
 {
-    for ($i = 0; $i <= $size; $i++) {
+    for ($i = 0; $i <= $size; $i ++) {
         $array[$i] = "";
     }
 }
@@ -419,12 +419,12 @@ function printUserData($connection, $origin, $username)
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-        
+
         // displays the table headers for the users data
         echo "Account details:";
         echo "<table>";
         echo "<tr><th>Username</th><th>Email address</th><th>Password (hash)</th><th>First name</th><th>Surname</th><th>Phone Number</th><th>Date of Birth</th></tr>";
-        
+
         // displays the user data
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr><td>{$row['username']}</td><td>{$row['email']}</td><td>{$row['password']}</td><td>{$row['firstname']}</td><td>{$row['surname']}</td><td>{$row['number']}</td><td>{$row['dob']}</td></tr>";
@@ -467,7 +467,7 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
 
         echo "Change user details:";
         echo "<br>";
-        
+
         // validate date
         $todaysDate = date('Y-m-d'); // get current date:
         $newInput = sanitise($_POST['newInput'], $connection);
@@ -547,7 +547,7 @@ function deleteAccount($connection, $username)
         echo "<a href ={$_SERVER['REQUEST_URI']}&confirmDeletion=true>Yes</a>";
         echo " ";
         echo "<a href =admin.php?username=$username>Cancel</a><br>";
-        
+
         // if confirmation is given delete the account from the database:
         if (isset($_GET["confirmDeletion"])) {
             $query = "DELETE FROM users WHERE username = '$username'";
@@ -623,7 +623,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
     if (checkIfLengthZero($password)) {
         $password = generateAlphanumericString();
     }
-    
+
     // creates an array of account errors
     createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
 
@@ -689,7 +689,7 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
 function dropTable($connection, $tableName)
 {
     $sql = "DROP TABLE IF EXISTS $tableName";
-    if (!mysqli_query($connection, $sql)) {
+    if (! mysqli_query($connection, $sql)) {
         echo "Error checking for user table: " . mysqli_error($connection);
     }
 }

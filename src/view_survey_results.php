@@ -4,7 +4,7 @@ require_once "header.php";
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 // if the connection fails, we need to know, so allow this exit:
-if (!$connection) {
+if (! $connection) {
     die("Connection failed: " . $mysqli_connect_error);
 }
 
@@ -22,7 +22,6 @@ echo "<ul>";
 echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true>View raw results</a></li>";
 echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
 echo "</ul>";
-
 
 // if user has decided to view survey results
 // display the survey results:
@@ -66,7 +65,7 @@ function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames
 
         echo "<ul>";
 
-        for ($i = 0; $i < $numQuestions; $i++) {
+        for ($i = 0; $i < $numQuestions; $i ++) {
             echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
         }
         echo "</ul>";
@@ -100,7 +99,6 @@ function initDeleteQuestion($connection, $surveyID, $numQuestions, &$arrayOfQues
 
     // updates each questions question number in question table:
     updateAllQuestionNums($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs); // finish this function
-
 }
 
 // updates each questions question number in question table:
@@ -108,14 +106,14 @@ function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionNames, &
 {
     $j = 0;
 
-    for ($i = 0; $i < count($arrayOfQuestionIDs); $i++) {
+    for ($i = 0; $i < count($arrayOfQuestionIDs); $i ++) {
         $query = "UPDATE questions SET questionNo = '$j' WHERE surveyID = '$surveyID' AND questionID = '{$arrayOfQuestionIDs[$i]}'";
         $result = mysqli_query($connection, $query);
 
-        if (!$result) {
+        if (! $result) {
             echo mysqli_error($connection);
         } else {
-            $j++;
+            $j ++;
         }
     }
 }
@@ -123,8 +121,7 @@ function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionNames, &
 // updates the number of questions the survey has in the database:
 function updateTableNumQuestions($connection, $surveyID, $numQuestions)
 {
-
-    $numQuestions--;
+    $numQuestions --;
 
     $query = "UPDATE surveys SET numQuestions = '$numQuestions' WHERE surveyID='$surveyID'";
     $result = mysqli_query($connection, $query);
@@ -134,7 +131,6 @@ function updateTableNumQuestions($connection, $surveyID, $numQuestions)
     } else {
         echo mysqli_error($connection);
     }
-
 }
 
 // delete the question from the table:
@@ -145,7 +141,7 @@ function deleteQuestion($connection)
     $query = "DELETE FROM questions WHERE questionID = '$questionID'";
     $result = mysqli_query($connection, $query);
 
-    if (!$result) {
+    if (! $result) {
         echo mysqli_error($connection);
     }
 }
@@ -153,7 +149,6 @@ function deleteQuestion($connection)
 // displays the survey results in a table:
 function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents)
 {
-
     $numResponses = count($arrayOfRespondents);
     $tableName = "response_CSV_" . $surveyID;
     $_SESSION['tableName'] = $tableName;
@@ -165,7 +160,7 @@ function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $ar
 
     echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
-    if (!empty($arrayOfQuestionNames)) {
+    if (! empty($arrayOfQuestionNames)) {
         // gets results:
         getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
         // displays table of results:
@@ -230,7 +225,6 @@ function getSurveyName($connection, $surveyID)
     }
 }
 
-
 // fetches an array of survey questions from database:
 function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayOfQuestionIDs)
 {
@@ -254,19 +248,19 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
     $result = mysqli_query($connection, $query);
 
     if ($result) {
-        for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
+        for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
 
             $questionName = $arrayOfQuestionNames[$i];
 
             $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
             $result2 = mysqli_query($connection, $query);
 
-            if (!$result2) {
-                echo("Error: " . mysqli_error($connection));
+            if (! $result2) {
+                echo ("Error: " . mysqli_error($connection));
             }
         }
     } else {
-        echo("Error: " . mysqli_error($connection));
+        echo ("Error: " . mysqli_error($connection));
     }
 }
 
@@ -275,11 +269,11 @@ function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRes
 {
     $dataToInsert = array();
 
-    for ($i = 0; $i < $numResponses; $i++) {
+    for ($i = 0; $i < $numResponses; $i ++) {
         $username = $arrayOfRespondents[$i];
         $dataToInsert[] = $username;
 
-        for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
+        for ($j = 0; $j < count($arrayOfQuestionIDs); $j ++) {
 
             $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
             $result = mysqli_query($connection, $query);
@@ -305,7 +299,7 @@ function insertResponseIntoTable($connection, $tableName, $dataToInsert)
     $query = "INSERT INTO $tableName VALUES ($values)";
     $result = mysqli_query($connection, $query);
 
-    if (!$result) {
+    if (! $result) {
         echo mysqli_error($connection);
     }
 }
@@ -330,10 +324,9 @@ function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $
 // displays the table headers:
 function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
 {
-
     echo "<tr>";
     echo "<th>Username</th>";
-    for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
+    for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
         echo "<th>{$arrayOfQuestionNames[$i]}</th>";
     }
 
@@ -342,7 +335,6 @@ function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
     }
 
     echo "</tr>";
-
 }
 
 // display the table rows:

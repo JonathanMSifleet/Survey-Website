@@ -27,7 +27,7 @@ array_unshift($arrayOfColumnNames, "Username");
 
 fputcsv($file, $arrayOfColumnNames);
 
-//query the database
+// query the database
 $query = "SELECT * FROM $tableName ORDER BY username ASC";
 $result = mysqli_query($connection, $query);
 

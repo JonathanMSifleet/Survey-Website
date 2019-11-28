@@ -55,7 +55,7 @@ function calculateTimeTaken($time_pre, $time_post)
 function dropDatabase($connection, $dbname)
 {
     // exit the script with a useful message if there was an error:
-    if (!$connection) {
+    if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
     // build a statement to create a new database:
@@ -72,7 +72,7 @@ function dropDatabase($connection, $dbname)
 function createDatabase($connection, $dbname)
 {
     // exit the script with a useful message if there was an error:
-    if (!$connection) {
+    if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
     // build a statement to create a new database:
@@ -87,7 +87,7 @@ function createDatabase($connection, $dbname)
     mysqli_select_db($connection, $dbname);
 }
 
-//create user table:
+// create user table:
 function createUserTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -100,7 +100,7 @@ function createUserTable($connection)
     }
     // make our table:
     $sql = "CREATE TABLE users (username VARCHAR(20), firstname VARCHAR(16), surname VARCHAR(20), password VARCHAR(60), email VARCHAR(64), number VARCHAR(11), dob DATE, PRIMARY KEY(username))"; // phone number is a varchar rather than using tel, because tel relies on american formatting, and there is no html tag for an integer
-    // no data returned, we just test for true(success)/false(failure):
+                                                                                                                                                                                                  // no data returned, we just test for true(success)/false(failure):
     if (mysqli_query($connection, $sql)) {
         echo "Table created successfully: users<br>";
     } else {
@@ -256,7 +256,7 @@ function insertDefaultUsers($connection)
     $dobs[] = '1997-11-19';
 
     // loop through the arrays above and add rows to the table:
-    for ($i = 0; $i < count($usernames); $i++) {
+    for ($i = 0; $i < count($usernames); $i ++) {
         // this is made by me:
         if ($i == 0) {
             $passwords[$i] = 'secret'; // manually overrides admin password
@@ -265,7 +265,7 @@ function insertDefaultUsers($connection)
         }
         // ///////
         $passwords[$i] = encryptInput($passwords[$i]); // encrypt password before entering DB
-        // create the SQL query to be executed
+                                                       // create the SQL query to be executed
         $sql = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$usernames[$i]','$firstnames[$i]','$surnames[$i]','$passwords[$i]','$emails[$i]','$numbers[$i]', '$dobs[$i]')";
         // run the above query '$sql' on our DB
         // no data returned, we just test for true(success)/false(failure):
@@ -276,7 +276,6 @@ function insertDefaultUsers($connection)
         }
     }
 }
-
 
 // create default survey
 function createDefaultSurvey($connection)
@@ -336,7 +335,7 @@ function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
         "1"
     );
 
-    for ($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 5; $i ++) {
         $questionID = md5($surveyID . $arrayOfQuestions[$i]);
         $query = "INSERT INTO questions (questionID, surveyID, questionNo, questionName, type, numOptions, required) VALUES ('$questionID', '$surveyID','$i', '$arrayOfQuestions[$i]', '$arrayOfQuestionTypes[$i]', '$arrayOfNumOptions[$i]','1')";
         $result = mysqli_query($connection, $query);
@@ -363,7 +362,7 @@ function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
         "Very satisfied"
     );
 
-    for ($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 5; $i ++) {
         $query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$arrayOfQuestionIDs[1]', '$arrayOfOptions[$i]', '$i')";
         $result = mysqli_query($connection, $query);
 
@@ -384,7 +383,7 @@ function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
         "Highly likely"
     );
 
-    for ($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 5; $i ++) {
         $query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$arrayOfQuestionIDs[3]', '$arrayOfOptions[$i]', '$i')";
         $result = mysqli_query($connection, $query);
 

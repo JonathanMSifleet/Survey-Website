@@ -3,14 +3,14 @@
 require_once "header.php";
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
-if (!isset($_SESSION['loggedInSkeleton'])) {
+if (! isset($_SESSION['loggedInSkeleton'])) {
     // user isn't logged in, display a message saying they must be:
     echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, show them suitable page content
 else {
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
     // if the connection fails, we need to know, so allow this exit:
-    if (!$connection) {
+    if (! $connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
 

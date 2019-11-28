@@ -1,5 +1,4 @@
 <?php
-
 echo <<<_END
     <footer>
     <br>
