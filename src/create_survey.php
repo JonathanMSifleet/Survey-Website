@@ -23,8 +23,7 @@ else {
 // finish of the HTML for this page:
 require_once "footer.php";
 
-//
-//
+// get survey data from user:
 function initNewSurvey($connection)
 {
     $arrayOfSurveyErrors = array();
@@ -37,29 +36,31 @@ function initNewSurvey($connection)
 
     if (isset($_POST['title'])) {
 
-        // SANITISATION (see helper.php for the function definition)
+        // sanitise survey data:
         $title = sanitise($_POST['title'], $connection);
         $instructions = sanitise($_POST['instructions'], $connection);
         $numQuestions = sanitise($_POST['noOfQuestions'], $connection);
         $topic = sanitise($_POST['topic'], $connection);
 
+        // insert survey into database:
         createSurvey($connection, $title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
     } else {
+        // display create survey form:
         displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
     }
 }
 
-//
-//
+// inserts survey into database:
 function createSurvey($connection, $title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors)
 {
+    // creates array of survey data:
     createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
     $errors = implode('', $arrayOfSurveyErrors);
 
+    // if there are no errors insert the survey into the database:
     if ($errors == "") {
 
         // try to insert new survey:
-
         $currentUser = $_SESSION['username'];
         $surveyID = md5($currentUser . $title);
 
@@ -71,10 +72,10 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $topic,
             // show a successful signup message:
             echo "Survey creation was successful";
             echo "<br>";
+            // show prompt to create the questions for the survey:
             echo "<a href = 'create_question.php?surveyID=$surveyID&numQuestionsInserted=0'>Click here to create questions</a><br>";
         } else {
-            // show an unsuccessful signup message:
-
+            // show an unsuccessful message:
             echo mysqli_error($connection) . "<br>";
             displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
         }
@@ -84,8 +85,7 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $topic,
     }
 }
 
-//
-//
+// displays create survey form:
 function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors)
 {
 
@@ -106,8 +106,7 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $
 _END;
 }
 
-//
-//
+// creates an array of invalid survey data:
 function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic, &$arrayOfSurveyErrors)
 {
     $arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);

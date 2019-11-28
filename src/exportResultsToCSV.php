@@ -39,9 +39,10 @@ if ($result) {
     // free result set
     mysqli_free_result($result);
 }
-
+// closes csv:
 fclose($file);
 
-dropTable($connection, $tableName)
+// drops table from database:
+dropTable($connection, $tableName);
 
 ?>

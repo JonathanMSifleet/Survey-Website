@@ -4,10 +4,18 @@ require_once "credentials.php";
 
 // connect to the host:
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass);
+
+// add code for if DB doesn't exist, run the code below:
+// if it does exist and admin is user run the code below:
+// otherwise display error that user must be admin:
+
+// begin timer:
 $time_pre = microtime(true);
 
+// if database exists, drop it:
 dropDatabase($connection, $dbname);
 
+// create database and tables:
 createDatabase($connection, $dbname);
 createUserTable($connection);
 createSurveyTable($connection);
@@ -15,11 +23,16 @@ createQuestionTable($connection);
 createQuestionOptionsTable($connection);
 createResponseTable($connection);
 
+// insert default users into database;
 insertDefaultUsers($connection);
+// insert default survey into database:
 createDefaultSurvey($connection);
 
+// stop timer:
 $time_post = microtime(true);
+// calculate difference between stop and start time:
 $timeTaken = calculateTimeTaken($time_pre, $time_post);
+// display time taken to initiate database:
 echo "<br>Time taken: " . $timeTaken . " seconds<br>";
 
 // we're finished, close the connection:
@@ -28,6 +41,7 @@ mysqli_close($connection);
 // finish off the HTML for this page:
 require_once "footer.php";
 
+// calculates time taken between survey being initiated and it being finished:
 function calculateTimeTaken($time_pre, $time_post)
 {
     $timeTaken = $time_post - $time_pre;
@@ -37,6 +51,7 @@ function calculateTimeTaken($time_pre, $time_post)
     return $timeTaken;
 }
 
+// if database exists, drop it:
 function dropDatabase($connection, $dbname)
 {
     // exit the script with a useful message if there was an error:
@@ -53,6 +68,7 @@ function dropDatabase($connection, $dbname)
     }
 }
 
+// create database:
 function createDatabase($connection, $dbname)
 {
     // exit the script with a useful message if there was an error:
@@ -71,6 +87,7 @@ function createDatabase($connection, $dbname)
     mysqli_select_db($connection, $dbname);
 }
 
+//create user table:
 function createUserTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -91,6 +108,7 @@ function createUserTable($connection)
     }
 }
 
+// create survey table:
 function createSurveyTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -111,6 +129,7 @@ function createSurveyTable($connection)
     }
 }
 
+// create question table:
 function createQuestionTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -131,6 +150,7 @@ function createQuestionTable($connection)
     }
 }
 
+// create question options table:
 function createQuestionOptionsTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -151,6 +171,7 @@ function createQuestionOptionsTable($connection)
     }
 }
 
+// create response table:
 function createResponseTable($connection)
 {
     // if there's an old version of our table, then drop it:
@@ -171,6 +192,7 @@ function createResponseTable($connection)
     }
 }
 
+// insert default users into table:
 function insertDefaultUsers($connection)
 {
     // put some data in our table:
@@ -232,7 +254,7 @@ function insertDefaultUsers($connection)
     $surnames[] = 'Sweet';
     $numbers[] = '07123456716';
     $dobs[] = '1997-11-19';
-    // end of editted section
+
     // loop through the arrays above and add rows to the table:
     for ($i = 0; $i < count($usernames); $i++) {
         // this is made by me:
@@ -242,7 +264,7 @@ function insertDefaultUsers($connection)
             $passwords[$i] = generateAlphanumericString();
         }
         // ///////
-        $passwords[$i] = encryptInput($passwords[$i]); // encrypt password before entering DB +
+        $passwords[$i] = encryptInput($passwords[$i]); // encrypt password before entering DB
         // create the SQL query to be executed
         $sql = "INSERT INTO users (username, firstname, surname, password, email, number, dob) VALUES ('$usernames[$i]','$firstnames[$i]','$surnames[$i]','$passwords[$i]','$emails[$i]','$numbers[$i]', '$dobs[$i]')";
         // run the above query '$sql' on our DB
@@ -255,6 +277,8 @@ function insertDefaultUsers($connection)
     }
 }
 
+
+// create default survey
 function createDefaultSurvey($connection)
 {
     $surveyID = "";
@@ -267,6 +291,7 @@ function createDefaultSurvey($connection)
     insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs);
 }
 
+// insert default survey into database:
 function insertDefaultSurvey($connection, &$surveyID)
 {
     $title = "Website Feedback";
@@ -284,6 +309,7 @@ function insertDefaultSurvey($connection, &$surveyID)
     }
 }
 
+// insert default survey questions into database:
 function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
 {
     $arrayOfQuestions = array(
@@ -324,6 +350,7 @@ function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
     }
 }
 
+// insert default question options into survey:
 function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
 {
 

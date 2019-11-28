@@ -1,22 +1,16 @@
 <?php
 
-// Things to notice:
-// This script is called by every other script (via require_once)
-// It begins the HTML output, with the customary tags, that will produce each of the pages on the web site
-// It starts the session and displays a different set of menu links depending on whether the user is logged in or not...
-// ... And, if they are logged in, whether or not they are the admin
-// It also reads in the credentials for our database connection from credentials.php
-
 // database connection details:
 require_once "credentials.php";
 
-// our helper functions:
+// loads shared functions:
 require_once "helper.php";
 
 // start/restart the session:
 // this allows use to make use of session variables
 session_start();
 
+// loads style sheet and other header information:
 echo <<<_END
     <!DOCTYPE html>
     <html>
@@ -34,7 +28,6 @@ _END;
 if (isset($_SESSION['loggedInSkeleton'])) {
     // THIS PERSON IS LOGGED IN
     // show the logged in menu options:
-
     echo <<<_END
             <li><a href='about.php'>About</a></li>
             <li><a href='surveys_manage.php'>My Surveys</a></li>
