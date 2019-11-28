@@ -19,20 +19,23 @@ else {
 
     echo "<h3>My responses:</h3>";
 
-    drawResponseTable($connection);
+    // display response table:
+    displayResponseTable($connection);
 
 }
 
 // finish of the HTML for this page:
 require_once "footer.php";
 
-function drawResponseTable($connection)
+// displays table of responses:
+function displayResponseTable($connection)
 {
 
     $query = "SELECT title, username, surveyID FROM surveys WHERE username = '{$_SESSION['username']}'";
     $result = mysqli_query($connection, $query);
 
     if ($result) {
+        // displays table:
         echo "<table>";
         echo "<tr><th>Survey name</th><th>Survey author</th><th>Your responses</th></tr>";
 

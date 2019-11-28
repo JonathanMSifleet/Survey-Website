@@ -13,18 +13,22 @@ else {
     if (!$connection) {
         die("Connection failed: " . $mysqli_connect_error);
     }
+
+    // display create question prompt:
     echo "<a href = create_survey.php>Create a survey</a>";
     echo "<br><br>";
     echo "<h3>Surveys:</h3>";
 
     $username = $_SESSION['username'];
 
+    // determine if user is admin:
     if ($username == "admin") {
         $userIsAdmin = true;
     } else {
         $userIsAdmin = false;
     }
 
+    // if user is admin, display different results:
     if ($userIsAdmin) {
         $query = "SELECT surveyID, username, title, topic FROM surveys ORDER BY username ASC";
     } else {
@@ -33,12 +37,15 @@ else {
 
     $result = mysqli_query($connection, $query);
 
+    // if surveys exist into database, display them:
     if (mysqli_num_rows($result) != 0) {
         printSurveys($connection, $result, $userIsAdmin, $username);
     } else {
+        // otherwise display no surveys found message:
         echo "No surveys found<br>";
     }
 
+    // display survey deletion confirmation message:
     if (isset($_GET['deleteSurvey'])) {
 
         echo "<br> Are you sure you want to delete the survey " . $_GET['surveyID'] . "?<br>";
@@ -46,6 +53,7 @@ else {
         echo " ";
         echo "<a href =surveys_manage.php>Cancel</a><br>";
 
+        // if confirmation is confirmed, delete survey from database:
         if (isset($_GET["confirmDeletion"])) {
             $surveyID = $_GET['surveyID'];
             $query = "DELETE FROM surveys WHERE surveyID = '$surveyID'";

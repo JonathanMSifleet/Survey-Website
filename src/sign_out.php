@@ -1,9 +1,5 @@
 <?php
 
-// Things to notice:
-// The main job of this script is to end the user's session
-// Meaning we want to destroy the current session data
-
 // execute the header script:
 require_once "header.php";
 

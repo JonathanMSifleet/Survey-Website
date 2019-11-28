@@ -23,20 +23,26 @@ echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTabl
 echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
 echo "</ul>";
 
+
+// if user has decided to view survey results
+// display the survey results:
 if (isset($_GET['viewResultsInTable'])) {
 
-    // get num of responses
-
+    // gets array of survey respondents
     $arrayOfRespondents = array();
     getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
     if (count($arrayOfRespondents) != 0) {
+        // if the survey has respondents, display the survey results:
         displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents);
     } else {
+        // otherwise show message that survey has no respondents:
         echo "No survey responses<br>";
     }
 }
 
+// if the user has instead decided to delete a survey's question,
+// then display the list of questions to delete:
 if (isset($_GET['showListOfQuestionsToDelete'])) {
     displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 }
@@ -44,14 +50,18 @@ if (isset($_GET['showListOfQuestionsToDelete'])) {
 // finish off the HTML for this page:
 require_once "footer.php";
 
+// displays list of questions to delete:
 function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
     $numQuestions = count($arrayOfQuestionNames);
 
+    // if survey has no questions, show message
+    // saying so:
     if ($numQuestions == 0) {
         echo "</ul>";
         echo "There are no questions to delete<br>";
     } else {
+        // otherwise, display list of questions to delete:
         echo "Pick a question to delete:<br>";
 
         echo "<ul>";
@@ -61,6 +71,7 @@ function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames
         }
         echo "</ul>";
 
+        // shows confirmation of deletion prompt:
         if (isset($_GET['deleteQuestion'])) {
 
             echo "<br> Are you sure?<br><br>";
@@ -68,6 +79,7 @@ function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames
             echo " ";
             echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
 
+            // if confirmation is given, delete the question from the database:
             if (isset($_GET['confirmDeletion'])) {
                 initDeleteQuestion($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
             }
@@ -75,18 +87,23 @@ function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames
     }
 }
 
+// required to delete a question from a database:
 function initDeleteQuestion($connection, $surveyID, $numQuestions, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
+    // deletes the question from the database:
     deleteQuestion($connection);
+    // updates the number of questions the survey has in the database:
     updateTableNumQuestions($connection, $surveyID, $numQuestions);
 
     $arrayOfQuestionIDs = array();
     getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 
+    // updates each questions question number in question table:
     updateAllQuestionNums($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs); // finish this function
 
 }
 
+// updates each questions question number in question table:
 function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
     $j = 0;
@@ -103,6 +120,7 @@ function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionNames, &
     }
 }
 
+// updates the number of questions the survey has in the database:
 function updateTableNumQuestions($connection, $surveyID, $numQuestions)
 {
 
@@ -119,6 +137,7 @@ function updateTableNumQuestions($connection, $surveyID, $numQuestions)
 
 }
 
+// delete the question from the table:
 function deleteQuestion($connection)
 {
     $questionID = $_GET['deleteQuestion'];
@@ -131,6 +150,7 @@ function deleteQuestion($connection)
     }
 }
 
+// displays the survey results in a table:
 function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents)
 {
 
@@ -146,16 +166,21 @@ function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $ar
     echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
     if (!empty($arrayOfQuestionNames)) {
+        // gets results:
         getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+        // displays table of results:
         displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
     } else {
+        // if no results found, display message saying so:
         echo "<br><br>No Responses found<br>";
     }
 
+    // if admin decides to delete a users responses from a survey, delete their responses from the database:
     if (isset($_GET['username'])) {
         $query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
         $result = mysqli_query($connection, $query);
 
+        // display success message if there are no errors:
         if ($result) {
             echo "<br>Successfully deleted response<br>";
         } else {
@@ -164,15 +189,19 @@ function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $ar
     }
 }
 
+// handles the required operation for creating a user-friendly
+// results table:
 function getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
+    // if the user-friendly table for this survey exists, drop it:
     dropTable($connection, $tableName);
+    // create the user-friendly table:
     createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
+    // insert responses into the user-friendly table:
     populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
 }
 
-//
-//
+// gets array of survey respondents from the database:
 function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 {
     $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID= '$surveyID'";
@@ -187,6 +216,7 @@ function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
     }
 }
 
+// gets the survey's name based off the surveyID from the database:
 function getSurveyName($connection, $surveyID)
 {
     $query = "SELECT title FROM surveys WHERE surveyID = '$surveyID'";
@@ -201,8 +231,7 @@ function getSurveyName($connection, $surveyID)
 }
 
 
-//
-//
+// fetches an array of survey questions from database:
 function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayOfQuestionIDs)
 {
     $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
@@ -218,8 +247,7 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
     }
 }
 
-//
-//
+// inserts the user-friendly table into the database:
 function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
     $query = "CREATE TABLE $tableName (Username VARCHAR(20), PRIMARY KEY(username))";
@@ -242,6 +270,7 @@ function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
     }
 }
 
+// inserts the responses to the survey into the user-friendly table:
 function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
     $dataToInsert = array();
@@ -267,6 +296,7 @@ function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRes
     }
 }
 
+// actually inserts the responses:
 function insertResponseIntoTable($connection, $tableName, $dataToInsert)
 {
     $values = implode("','", $dataToInsert);
@@ -280,6 +310,7 @@ function insertResponseIntoTable($connection, $tableName, $dataToInsert)
     }
 }
 
+// displays the user-friendly table of results:
 function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID)
 {
     echo "<br>";
@@ -296,6 +327,7 @@ function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $
     echo "</table>";
 }
 
+// displays the table headers:
 function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
 {
 
@@ -313,6 +345,7 @@ function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
 
 }
 
+// display the table rows:
 function displayRows($result, $surveyID)
 {
     while ($row = mysqli_fetch_assoc($result)) {
