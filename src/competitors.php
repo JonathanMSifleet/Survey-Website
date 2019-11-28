@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 } // the user must be signed-in, show them suitable page content
 else {
     echo <<<_END
-  <div class="column">
+        <div class="column">
         <h2>Google Forms</h2>
         <h3>Layout</h3>
         <img src="imgs/Forms/Layout.png" style="max-width:50%;" align="right" alt="Image of Google Forms layout">
@@ -45,7 +45,16 @@ else {
         <h3>Analysis tools</h3>
         <img src="imgs/Forms/Graphs.png" style="max-width:50%;" align="right" alt="Image of Google templates">
         <p>Forms enables the survey creator to view either an individual’s response or all the responses with analysis applied in the form of charts such as pie charts, bar charts, etc. By viewing the data from responses in charts, it highlights the most popular results whilst simultaneously giving the creator of the survey an easy-to-understand summary of the survey’s results. In addition to the visual display of data that the graphs and charts give the user, Forms also shows the user how many people voted for each answer which bolsters its ability to summarise data that the creator of the survey may find useful. Additionally, Forms can also record the respondent’s email which could also be useful if the survey creator wanted to ask the respondent some follow-up questions. The respondent does have to consent to their email being recorded which does bypass any privacy issues the user may have.</p>
-</div>
+        </div>
+
+        <div class="column">
+             <h2>Survey Monkey</h2>
+             <h3>Layout</h3>
+             <h3>Ease of use</h3>
+             <h3>User account set-up / login</h3>
+             <h3>Question types</h3>
+             <h3>Analysis tools</h3>
+        </div>
 
 _END;
 }
