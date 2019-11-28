@@ -60,8 +60,11 @@ else {
              <p>When creating a survey, rather than creating your own (which I seriously do not recommend), you can choose a survey from a template. I counted over twenty-five templates, which contains pre-made questions which I found were surprisingly useful as they covered almost all questions I could think of. For example, when doing a website feedback survey, the questions were: overall, how well does our website meet your needs, how easy was it to find what you were looking for on our website, did it take you more or less time than you expected to find what you were looking for on our website etc…</p>
              
              <h3>User account set-up / login</h3>
-            
+             <p>Many websites features such as complex question types, survey analysis (insights and trends), data exportation, visual customisation etc. are paid features. Although the website is completely usable and feature-packed, I was a bit thrown back by the thought that I would have to spend money to use advanced features on a website that could easily be modified to be ad-supported.</p>
+             <p>Although an account is required to create surveys (which is to be expected by now), you can create and sign-in to your survey monkey account with other popular websites and services you may use such as Facebook, Google, Office365 and LinkedIn. I think this is a great feature as not having to go through the laborious process of creating a new account, entering your details, creating a new password isn’t an enjoyable process.</p>
+             
              <h3>Question types</h3>
+             <p></p>
             
              <h3>Analysis tools</h3>
         
