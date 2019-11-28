@@ -22,12 +22,36 @@ else {
     if (determineValidSurvey($connection, $surveyID) == false) {
         echo "Invalid survey ID";
     } else {
-        getSurveyData($connection, $surveyID);
+
+        if (hasUserRespondedToSurvey($connection, $surveyID, $username)) {
+
+            echo "You have already answered the survey<br>";
+            echo "<a href = {$_SERVER['REQUEST_URI']}&displaySurvey=true>Click here to update your response</a><br>";
+
+            if (isset($_GET['displaySurvey'])) {
+                dropUserResponse($connection, $surveyID, $username);
+                getSurveyData($connection, $surveyID);
+            }
+
+        } else {
+            getSurveyData($connection, $surveyID);
+        }
     }
 }
 
 // finish of the HTML for this page:
 require_once "footer.php";
+
+function dropUserResponse($connection, $surveyID, $username)
+{
+    $query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE username = '$username' AND surveyID = '$surveyID'";
+    $result = mysqli_query($connection, $query);
+
+    if (!$result) {
+        echo mysqli_error($connection);
+    }
+
+}
 
 function getSurveyData($connection, $surveyID)
 {
@@ -49,6 +73,21 @@ function getSurveyData($connection, $surveyID)
 _END;
 
     displaySurvey($connection, $surveyID, $numQuestions);
+}
+
+function hasUserRespondedToSurvey($connection, $surveyID, $username)
+{
+    $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID = '$surveyID' AND username = '$username'";
+    $result = mysqli_query($connection, $query);
+    if ($result) {
+        if (mysqli_num_rows($result) != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        echo mysqli_error($connection);
+    }
 }
 
 //
