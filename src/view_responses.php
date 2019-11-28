@@ -17,7 +17,7 @@ else {
         die("Connection failed: " . $mysqli_connect_error);
     }
 
-    echo "<h3>Your responses:</h3>";
+    echo "<h3>My responses:</h3>";
 
     drawResponseTable($connection);
 
