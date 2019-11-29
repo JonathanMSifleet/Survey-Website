@@ -41,7 +41,9 @@ echo <<<_END
    <p>Forms enables the survey creator to view either an individual’s response or all the responses with analysis applied in the form of charts such as pie charts, bar charts, etc. By viewing the data from responses in charts, it highlights the most popular results whilst simultaneously giving the creator of the survey an easy-to-understand summary of the survey’s results. In addition to the visual display of data that the graphs and charts give the user, Forms also shows the user how many people voted for each answer which bolsters its ability to summarise data that the creator of the survey may find useful. Additionally, Forms can also record the respondent’s email which could also be useful if the survey creator wanted to ask the respondent some follow-up questions. The respondent does have to consent to their email being recorded which does bypass any privacy issues the user may have.</p>
    
    <h3>Conclusion</h3>
-   
+   <p>Google Forms stands as an easy-to-use yet powerful survey website, with a sleek, modern, unobtrusive and simplistic design which in my opinion, will serve the needs of all but the most hard-core power-users adequately.</p>
+   <p>The number and choice of question-types act as a balance between powerful and just enough in quantity which is a massive benefit to Forms.</p>
+   <p>Following the trend of its other core functionality, the analysis aspect of Forms provides a robust graphing system and the ability to view individual survey responses, which in turn create for an overwhelming good system for analysing survey responses.</p>
    </div>
 
    <div class="column">
