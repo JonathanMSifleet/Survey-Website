@@ -53,7 +53,7 @@ else {
              <img src="imgs/SurveyMonkey/Layout.png" style="max-width:50%;" align="right" alt="Image of Survey Monkey layout">
              <p> Survey Monkey is incredibly “visually busy”, it has many more elements on the page compared to other websites, but it does use material design and has a very square design. Survey Monkey’s UI can be very overwhelming at first which I believe is a huge detriment to its layout. Furthermore, Survey Monkey has almost no customisation options for the free account and the only options include eight different coloured themes, ranging from green to orange. Not only is the layout of Survey Monkey complex, it not customisable without paying money.</p>
              
-             <img src="imgs/SurveyMonkey/Templates.png" style="max-width:50%;" align="right" alt="Image of Survey Monkey teamplates">
+             <img src="imgs/SurveyMonkey/Templates.png" style="max-width:50%;" align="right" alt="Image of Survey Monkey templates">
              <h3>Ease of use</h3>
              <p>As a continuation of the layout, the ease of use follows the ground-work that its layout set out. When creating a question, there are so many options to choose from which can be overwhelming and may make the user struggle to decide which question would be best for them to choose. Although it could be considered a benefit to have so many question types and different settings such as turning a survey into a quiz, adding labels or adding other options to the question other than the pre-defined ones, it is easy to feel swamped.</p>
              <p>To create as an effective survey as using a site such as Google Forms, the creator of the survey could easily spend hours trying to make the perfect survey. I would argue that the time being spent on making that perfect survey could be significantly reduced by making the survey with Forms, and the resulting survey would be almost as effective.</p>
@@ -64,7 +64,8 @@ else {
              <p>Although an account is required to create surveys (which is to be expected by now), you can create and sign-in to your survey monkey account with other popular websites and services you may use such as Facebook, Google, Office365 and LinkedIn. I think this is a great feature as not having to go through the laborious process of creating a new account, entering your details, creating a new password isn’t an enjoyable process.</p>
              
              <h3>Question types</h3>
-             <p></p>
+             <img src="imgs/SurveyMonkey/QuestionTypes.png" style="max-width:50%;" align="right" alt="Image of Survey Monkey question types">
+             <p>Compared to Google Forms, Survey Monkey has a plethora of question types, which could include every question type a user could want, especially as some of the less common question-types are locked behind a pay-wall. Despite being very complete in its offerings, Survey Monkey’s more complex questions that I alluded to earlier, can be recreated using other types of questions. For example, a star rating can be recreated with a dropdown, or a ranking could be made using a text response. I believe that whilst Survey Monkey has undoubtedly the best selection, many of which are unnecessary.</p>
             
              <h3>Analysis tools</h3>
         
