@@ -45,6 +45,9 @@ else {
         <h3>Analysis tools</h3>
         <img src="imgs/Forms/Graphs.png" style="max-width:50%;" align="right" alt="Image of Google templates">
         <p>Forms enables the survey creator to view either an individual’s response or all the responses with analysis applied in the form of charts such as pie charts, bar charts, etc. By viewing the data from responses in charts, it highlights the most popular results whilst simultaneously giving the creator of the survey an easy-to-understand summary of the survey’s results. In addition to the visual display of data that the graphs and charts give the user, Forms also shows the user how many people voted for each answer which bolsters its ability to summarise data that the creator of the survey may find useful. Additionally, Forms can also record the respondent’s email which could also be useful if the survey creator wanted to ask the respondent some follow-up questions. The respondent does have to consent to their email being recorded which does bypass any privacy issues the user may have.</p>
+        
+        <h3>Conclusion</h3>
+        
         </div>
 
         <div class="column">
@@ -68,7 +71,21 @@ else {
              <p>Compared to Google Forms, Survey Monkey has a plethora of question types, which could include every question type a user could want, especially as some of the less common question-types are locked behind a pay-wall. Despite being very complete in its offerings, Survey Monkey’s more complex questions that I alluded to earlier, can be recreated using other types of questions. For example, a star rating can be recreated with a dropdown, or a ranking could be made using a text response. I believe that whilst Survey Monkey has undoubtedly the best selection, many of which are unnecessary.</p>
             
              <h3>Analysis tools</h3>
-        
+             <p>Survey Monkey has a very good suite of utilities for analysing survey results and shares many similarities with Google Forms. Survey monkey can generate charts for closed-questions and can also analyse the following for individual responses:</p>
+             <ul>
+             <li>Who submitted the response (if you tracked responses)</li>
+             <li>The collector through which the response was submitted</li>
+             <li>The start and end date and time</li>
+             <li>The time spent entering a response</li>
+             <li>Response completeness</li>
+             <li>The IP address of the respondent</li>
+             </ul>
+             <p>By allowing the survey-creator to view the telemetry above, the creator can analyse the telemetry themselves and get a good set of metadata about the survey itself and how the survey could be improved, e.g. shorten the survey if it has low completeness or a long time elapsed between the user starting and finishing the survey.</p>
+             <p>For open-ended responses, one paid feature is that Survey Monkey will analyse the text for themes and recurring words, but as I do not have a paid account I am unable to test this feature. You also cannot export summary data such as PDFs, charts, etc. without a paid plan either which is certainly a shame.</p>
+             <p>Furthermore, responses can be filtered by certain rules which can be comprised of survey completeness, respondent metadata, the time period in which the survey was answered in, and by the question and answer.</p>
+            
+             <h3>Conclusion</h3>
+
         </div>
 
 _END;
