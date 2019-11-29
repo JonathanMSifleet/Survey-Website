@@ -47,6 +47,7 @@ _END;
     // show the logged out menu options:
     echo <<<_END
     <li><a href='about.php'>About</a></li>
+    <li><a href='competitors.php'>Design and Analysis</a></li>
     <li><a href='sign_up.php'>Sign Up</a></li>
     <li><a href='sign_in.php'>Sign In</a></li>
 _END;
