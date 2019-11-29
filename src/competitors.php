@@ -3,6 +3,7 @@
 require_once "header.php";
 
 echo <<<_END
+   <div class="columns">
    <div class="column">
    <h2>Google Forms</h2>
    <h3>Layout</h3>
@@ -85,7 +86,50 @@ echo <<<_END
    <h3>Conclusion</h3>
 
    </div>
+   </div>
+   
+   <div class="rows">
+   
+   <div class="landscape">
+   
+   <h2>Third website</h2>
+   
+   <h3>Layout</h3>
 
+   <h3>Ease of use</h3>
+
+   <h3>User account set-up / login</h3>
+
+   <h3>Question types</h3>
+
+   <h3>Answering a survey</h3>
+  
+   <h3>Analysis tools</h3>
+ 
+   <h3>Conclusion</h3>
+   </div>
+   
+   <div class="landscape">
+   
+   <h2>Conclusion</h2>
+   
+   <h3>Layout</h3>
+
+   <h3>Ease of use</h3>
+
+   <h3>User account set-up / login</h3>
+
+   <h3>Question types</h3>
+
+   <h3>Answering a survey</h3>
+  
+   <h3>Analysis tools</h3>
+ 
+   <h3>Things I'm leaving out</h3>
+
+   </div>
+   </div>
+   
 _END;
 
 // finish off the HTML for this page:
