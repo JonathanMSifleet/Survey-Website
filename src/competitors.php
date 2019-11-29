@@ -41,7 +41,9 @@ else {
         </ul>
         <p>I think that Forms has just the right selection of questions as it fulfils all the possible questions, I think I would need, and the question types that it is missing can be recreated using other question types. For example, Survey Monkey includes a star rating system, but this can be recreated using a dropdown.</p>
         <p>Despite my praise for its number of questions, I think more complex question types such as rankings or scales that its competitors have, could be included but I think this functionality could be added in the paragraph option for forms.</p>
-
+        
+        <h3>Answering a survey</h3>
+        
         <h3>Analysis tools</h3>
         <img src="imgs/Forms/Graphs.png" style="max-width:50%;" align="right" alt="Image of Google templates">
         <p>Forms enables the survey creator to view either an individual’s response or all the responses with analysis applied in the form of charts such as pie charts, bar charts, etc. By viewing the data from responses in charts, it highlights the most popular results whilst simultaneously giving the creator of the survey an easy-to-understand summary of the survey’s results. In addition to the visual display of data that the graphs and charts give the user, Forms also shows the user how many people voted for each answer which bolsters its ability to summarise data that the creator of the survey may find useful. Additionally, Forms can also record the respondent’s email which could also be useful if the survey creator wanted to ask the respondent some follow-up questions. The respondent does have to consent to their email being recorded which does bypass any privacy issues the user may have.</p>
@@ -70,6 +72,8 @@ else {
              <img src="imgs/SurveyMonkey/QuestionTypes.png" style="max-width:50%;" align="right" alt="Image of Survey Monkey question types">
              <p>Compared to Google Forms, Survey Monkey has a plethora of question types, which could include every question type a user could want, especially as some of the less common question-types are locked behind a pay-wall. Despite being very complete in its offerings, Survey Monkey’s more complex questions that I alluded to earlier, can be recreated using other types of questions. For example, a star rating can be recreated with a dropdown, or a ranking could be made using a text response. I believe that whilst Survey Monkey has undoubtedly the best selection, many of which are unnecessary.</p>
             
+             <h3>Answering a survey</h3>
+  
              <h3>Analysis tools</h3>
              <p>Survey Monkey has a very good suite of utilities for analysing survey results and shares many similarities with Google Forms. Survey monkey can generate charts for closed-questions and can also analyse the following for individual responses:</p>
              <ul>
