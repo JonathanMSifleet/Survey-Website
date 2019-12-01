@@ -34,7 +34,7 @@ if (! $connection) {
 } elseif (isset($_SESSION['loggedInSkeleton'])) {
     echo "<a href=  answer_survey.php?surveyID=af57a209f9e756664ef282d11a385c70&questionsAnswered=0> Click here to answer the default survey</a><br>";
 } else {
-    echo "Please log in or sign-up to access site functionality<br>";
+    echo "Please <a href = sign_in.php>log in</a> or <a href = sign_up.php>sign-up</a> to access site functionality<br>";
 }
 // finish of the HTML for this page:
 require_once "footer.php";

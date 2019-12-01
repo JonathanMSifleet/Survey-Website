@@ -39,7 +39,7 @@ echo <<<_END
    
    <h3>Analysis tools</h3>
    <img src="imgs/Forms/Graphs.png" style="max-width:50%;" align="right" alt="Image of Google templates">
-   <p>Forms enables the survey creator to view either an individual’s response or all the responses with analysis applied in the form of charts such as pie charts, bar charts, etc. By viewing the data from responses in charts, it highlights the most popular results whilst simultaneously giving the creator of the survey an easy-to-understand summary of the survey’s results. In addition to the visual display of data that the graphs and charts give the user, Forms also shows the user how many people voted for each answer which bolsters its ability to summarise data that the creator of the survey may find useful. Additionally, Forms can also record the respondent’s email which could also be useful if the survey creator wanted to ask the respondent some follow-up questions. The respondent does have to consent to their email being recorded which does bypass any privacy issues the user may have.</p>
+   <p>Forms enables the survey creator to view either an individual’s response or all the responses with the analysis applied in the form of charts such as pie charts, bar charts, etc. By viewing the data from responses in charts, it highlights the most popular results whilst simultaneously giving the creator of the survey an easy-to-understand summary of the survey’s results. In addition to the visual display of data that the graphs and charts give the user, Forms also shows the user how many people voted for each answer which bolsters its ability to summarise data that the creator of the survey may find useful. Additionally, Forms can also record the respondent’s email which could also be useful if the survey creator wanted to ask the respondent some follow-up questions. The respondent does have to consent to their email being recorded which does bypass any privacy issues the user may have.</p>
    
    <h3>Conclusion</h3>
    <p>Google Forms stands as an easy-to-use yet powerful survey website, with a sleek, modern, unobtrusive and simplistic design which in my opinion, will serve the needs of all but the most hard-core power-users adequately.</p>
@@ -84,7 +84,8 @@ echo <<<_END
    <p>Furthermore, responses can be filtered by certain rules which can be comprised of survey completeness, respondent metadata, the time period in which the survey was answered in, and by the question and answer.</p>
   
    <h3>Conclusion</h3>
-
+   <p>Survey Monkey serves, in my opinion, as an overly complicated but especially feature-rich survey website; the biggest shame is that most of the features I've alluded to through this review are locked behind a pay-wall.</p>
+   <p>There is a fantastic selection of templates with pre-defined questions which can allow for a survey to made extremely quickly and an excellent set of methods for analysing survey results. Ultimately though, Survey Monkey's target audience is much different from who I envision to be mine.</p>
    </div>
    </div>
    
