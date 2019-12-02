@@ -37,7 +37,7 @@ echo <<<_END
         <p>Despite my praise for its number of questions, I think more complex question types such as rankings or scales that its competitors have, could be included but I think this functionality could be added in the paragraph option for forms.</p>
 
         <h3>Analysis tools</h3>
-        <img src="imgs/Forms/Graphs.png" style="max-width:50%;" align="right" alt="Image of Google templates">
+        <img src="imgs/Forms/Results.png" style="max-width:50%;" align="right" alt="Image of Google templates">
         <p>Forms enables the survey creator to view either an individual’s response or all the responses with the analysis applied in the form of charts such as pie charts, bar charts, etc. By viewing the data from responses in charts, it highlights the most popular results whilst simultaneously giving the creator of the survey an easy-to-understand summary of the survey’s results. In addition to the visual display of data that the graphs and charts give the user, Forms also shows the user how many people voted for each answer which bolsters its ability to summarise data that the creator of the survey may find useful. Additionally, Forms can also record the respondent’s email which could also be useful if the survey creator wanted to ask the respondent some follow-up questions. The respondent does have to consent to their email being recorded which does bypass any privacy issues the user may have.</p>
 
         <h3>Conclusion</h3>
@@ -84,28 +84,7 @@ echo <<<_END
         <p>Survey Monkey serves, in my opinion, as an overly complicated but especially feature-rich survey website; the biggest shame is that most of the features I've alluded to through this review are locked behind a pay-wall.</p>
         <p>There is a fantastic selection of templates with pre-defined questions which can allow for a survey to made extremely quickly and an excellent set of methods for analysing survey results. Ultimately though, Survey Monkey's target audience is much different from who I envision to be mine.</p>
     </div>
-</div>
-
-<div class="columnSection">
-    <div class="column">
-        <h2>Survey Planet</h2>
-
-        <h3>Layout</h3>
-        <p>Like the other three websites, Survey Planet uses material-design but has a visual layout much different from both Google Forms and Survey Monkey. When creating a survey, it’s settings, question, theme etc. can be found on a left sidebar, whilst when creating a new question, a question's title, type, pre-defined options, and other miscellaneous settings can be found on the sidebar instead. Although I was a little confused as to how to add options and set a title when creating my first survey, I think Survey Planet's approach to survey-creation is exceedingly good.</p>
-        <p>Perhaps the largest benefit to Survey Planet's design is that the survey-creator can see a preview of the survey they are creating and even pseudo-answer the questions they have created to see how the survey respondent will interact with the survey, which I thought was an amazing feature.
-            <p>
-
-                <h3>Ease of use</h3>
-                <p>One major disadvantage that Survey Planet has, is that in order to save a question that you have created, you must manually save the question but clicking a button in the top right. My issue with this requirement is that most other survey websites I have tested have an auto-save functionality. The interrupt between believing you have finished creating the question and the website asking you if you would like to save or discard the question you have made is quite tiresome.</p>
-                <h3>User account set-up / login</h3>
-
-                <h3>Question types</h3>
-
-                <h3>Analysis tools</h3>
-
-                <h3>Conclusion</h3>
-    </div>
-
+    
     <div class="column">
         <h2>Conclusion</h2>
         <h3>Layout</h3>
@@ -122,6 +101,36 @@ echo <<<_END
 
         <h3>Things I'm leaving out</h3>
 
+    </div>
+    
+</div>
+
+<div class="columnSection">
+    <div class="column">
+        <h2>Survey Planet</h2>
+
+        <h3>Layout</h3>
+        <p>Like the other three websites, Survey Planet uses material-design but has a visual layout much different from both Google Forms and Survey Monkey. When creating a survey, it’s settings, question, theme etc. can be found on a left sidebar, whilst when creating a new question, a question's title, type, pre-defined options, and other miscellaneous settings can be found on the sidebar instead. Although I was a little confused as to how to add options and set a title when creating my first survey, I think Survey Planet's approach to survey-creation is exceedingly good.</p>
+        <p>Perhaps the largest benefit to Survey Planet's design is that the survey-creator can see a preview of the survey they are creating and even pseudo-answer the questions they have created to see how the survey respondent will interact with the survey, which I thought was an amazing feature.</p>
+        
+        <h3>Ease of use</h3>
+        <p>One major disadvantage that Survey Planet has, is that in order to save a question that you have created, you must manually save the question but clicking a button in the top right. My issue with this requirement is that most other survey websites I have tested have an auto-save functionality. The interrupt between believing you have finished creating the question and the website asking you if you would like to save or discard the question you have made is quite tiresome.</p>
+        <img src="imgs/SurveyPlanet/SurveyCreation.png" style="max-width:50%;" align="right" alt="Image of creating a survey using Survey Planet">
+        
+        <h3>User account set-up / login</h3>
+        <p>Survey Planet's requirements for creating an account is quite basic, it requires a full name, email address, and password. Once the user has created an account, a verification email is sent to the specified email address, and the sites full functionality (sans paid features) becomes available. Logging in is also very simple, simply type in your email address and password and you will access Survey Planet.</p>
+        
+        <h3>Question types</h3>
+        <img src="imgs/SurveyPlanet/FormQuestionType.png" style="max-width:50%;" align="right" alt="Image of Survey Planet's form question type">
+        <p>Survey Planet's question type selection sits as a middle-ground between Google Forms and Survey Monkey's. Whilst having all the basic question-types that Forms has, like multiple choice questions, essays (long paragraphs), date/time, etc. Survey Planet has the option to convert multiple-choice questions into drop-down questions. Some question types that it shares with Survey Monkey include ratings, scales, and ranges.</p>
+        <p>The most interesting question-type that Survey Planet exclusively has, is the option to create a form. Whilst you could create an entire survey specifically to act as a form, although I wouldn't recommend this, the ability to have a form acts a very powerful tool. For example, despite the form responses being text with no ability to specify an input type, a form can act as a sub-survey.</p>
+        
+        <h3>Analysis tools</h3>
+        
+
+        <h3>Conclusion</h3>
+
+         
     </div>
 </div>
    
