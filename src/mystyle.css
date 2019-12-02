@@ -81,14 +81,9 @@ h3 {
     margin: 1% 1% 1% 1%;
 }
 
-.rows {
-    clear: both;
-}
-
-.landscape {
+.columnSection {
     float: left;
-    width: 98%;
-    margin: 1% 1% 1% 1%;
+    clear: both;
 }
 
 footer {
