@@ -32,12 +32,12 @@ $query = "SELECT * FROM $tableName ORDER BY username ASC";
 $result = mysqli_query($connection, $query);
 
 if ($result) {
-    // loop over the rows, outputting them
-    while ($row = mysqli_fetch_assoc($result)) {
-        fputcsv($file, $row);
-    }
-    // free result set
-    mysqli_free_result($result);
+	// loop over the rows, outputting them
+	while ($row = mysqli_fetch_assoc($result)) {
+		fputcsv($file, $row);
+	}
+	// free result set
+	mysqli_free_result($result);
 }
 // closes csv:
 fclose($file);

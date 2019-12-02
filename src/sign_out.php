@@ -5,21 +5,21 @@ require_once "header.php";
 
 // checks the session variable named 'loggedInSkeleton'
 // take note that of the '!' (NOT operator) that precedes the 'isset' function
-if (! isset($_SESSION['loggedInSkeleton'])) {
-    // user isn't logged in, display a message saying they must be:
-    echo "You must be logged in to view this page.<br>";
+if (!isset($_SESSION['loggedInSkeleton'])) {
+	// user isn't logged in, display a message saying they must be:
+	echo "You must be logged in to view this page.<br>";
 } // the user must be signed-in, proceed with ending the session
-  // and clearing session cookies and any others you may have added
+// and clearing session cookies and any others you may have added
 else {
-    // user just clicked to logout, so destroy the session data:
-    // first clear the session superglobal array:
-    $_SESSION = array();
-    // then the cookie that holds the session ID:
-    setcookie(session_name(), "", time() - 2592000, '/');
-    // then the session data on the server:
-    session_destroy();
+	// user just clicked to logout, so destroy the session data:
+	// first clear the session superglobal array:
+	$_SESSION = array();
+	// then the cookie that holds the session ID:
+	setcookie(session_name(), "", time() - 2592000, '/');
+	// then the session data on the server:
+	session_destroy();
 
-    echo "You have successfully logged out, please <a href='sign_in.php'>click here</a><br>";
+	echo "You have successfully logged out, please <a href='sign_in.php'>click here</a><br>";
 }
 
 // finish of the HTML for this page:

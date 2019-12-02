@@ -4,8 +4,8 @@ require_once "header.php";
 $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 // if the connection fails, we need to know, so allow this exit:
-if (! $connection) {
-    die("Connection failed: " . $mysqli_connect_error);
+if (!$connection) {
+	die("Connection failed: " . $mysqli_connect_error);
 }
 
 $surveyID = $_GET['surveyID'];
@@ -27,23 +27,23 @@ echo "</ul>";
 // display the survey results:
 if (isset($_GET['viewResultsInTable'])) {
 
-    // gets array of survey respondents
-    $arrayOfRespondents = array();
-    getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
+	// gets array of survey respondents
+	$arrayOfRespondents = array();
+	getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
-    if (count($arrayOfRespondents) != 0) {
-        // if the survey has respondents, display the survey results:
-        displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents);
-    } else {
-        // otherwise show message that survey has no respondents:
-        echo "No survey responses<br>";
-    }
+	if (count($arrayOfRespondents) != 0) {
+		// if the survey has respondents, display the survey results:
+		displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents);
+	} else {
+		// otherwise show message that survey has no respondents:
+		echo "No survey responses<br>";
+	}
 }
 
 // if the user has instead decided to delete a survey's question,
 // then display the list of questions to delete:
 if (isset($_GET['showListOfQuestionsToDelete'])) {
-    displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+	displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 }
 
 // finish off the HTML for this page:
@@ -52,308 +52,308 @@ require_once "footer.php";
 // displays list of questions to delete:
 function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
-    $numQuestions = count($arrayOfQuestionNames);
+	$numQuestions = count($arrayOfQuestionNames);
 
-    // if survey has no questions, show message
-    // saying so:
-    if ($numQuestions == 0) {
-        echo "</ul>";
-        echo "There are no questions to delete<br>";
-    } else {
-        // otherwise, display list of questions to delete:
-        echo "Pick a question to delete:<br>";
+	// if survey has no questions, show message
+	// saying so:
+	if ($numQuestions == 0) {
+		echo "</ul>";
+		echo "There are no questions to delete<br>";
+	} else {
+		// otherwise, display list of questions to delete:
+		echo "Pick a question to delete:<br>";
 
-        echo "<ul>";
+		echo "<ul>";
 
-        for ($i = 0; $i < $numQuestions; $i ++) {
-            echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
-        }
-        echo "</ul>";
+		for ($i = 0; $i < $numQuestions; $i++) {
+			echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true&deleteQuestion=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
+		}
+		echo "</ul>";
 
-        // shows confirmation of deletion prompt:
-        if (isset($_GET['deleteQuestion'])) {
+		// shows confirmation of deletion prompt:
+		if (isset($_GET['deleteQuestion'])) {
 
-            echo "<br> Are you sure?<br><br>";
-            echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
-            echo " ";
-            echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
+			echo "<br> Are you sure?<br><br>";
+			echo "<a href = {$_SERVER['REQUEST_URI']}&confirmDeletion=true> Yes</a>";
+			echo " ";
+			echo "<a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Cancel</a><br>";
 
-            // if confirmation is given, delete the question from the database:
-            if (isset($_GET['confirmDeletion'])) {
-                initDeleteQuestion($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
-            }
-        }
-    }
+			// if confirmation is given, delete the question from the database:
+			if (isset($_GET['confirmDeletion'])) {
+				initDeleteQuestion($connection, $surveyID, $numQuestions, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+			}
+		}
+	}
 }
 
 // required to delete a question from a database:
 function initDeleteQuestion($connection, $surveyID, $numQuestions, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
-    // deletes the question from the database:
-    deleteQuestion($connection);
-    // updates the number of questions the survey has in the database:
-    updateTableNumQuestions($connection, $surveyID, $numQuestions);
+	// deletes the question from the database:
+	deleteQuestion($connection);
+	// updates the number of questions the survey has in the database:
+	updateTableNumQuestions($connection, $surveyID, $numQuestions);
 
-    $arrayOfQuestionIDs = array();
-    getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+	$arrayOfQuestionIDs = array();
+	getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 
-    // updates each questions question number in question table:
-    updateAllQuestionNums($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs); // finish this function
+	// updates each questions question number in question table:
+	updateAllQuestionNums($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs); // finish this function
 }
 
 // updates each questions question number in question table:
 function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
 {
-    $j = 0;
+	$j = 0;
 
-    for ($i = 0; $i < count($arrayOfQuestionIDs); $i ++) {
-        $query = "UPDATE questions SET questionNo = '$j' WHERE surveyID = '$surveyID' AND questionID = '{$arrayOfQuestionIDs[$i]}'";
-        $result = mysqli_query($connection, $query);
+	for ($i = 0; $i < count($arrayOfQuestionIDs); $i++) {
+		$query = "UPDATE questions SET questionNo = '$j' WHERE surveyID = '$surveyID' AND questionID = '{$arrayOfQuestionIDs[$i]}'";
+		$result = mysqli_query($connection, $query);
 
-        if (! $result) {
-            echo mysqli_error($connection);
-        } else {
-            $j ++;
-        }
-    }
+		if (!$result) {
+			echo mysqli_error($connection);
+		} else {
+			$j++;
+		}
+	}
 }
 
 // updates the number of questions the survey has in the database:
 function updateTableNumQuestions($connection, $surveyID, $numQuestions)
 {
-    $numQuestions --;
+	$numQuestions--;
 
-    $query = "UPDATE surveys SET numQuestions = '$numQuestions' WHERE surveyID='$surveyID'";
-    $result = mysqli_query($connection, $query);
+	$query = "UPDATE surveys SET numQuestions = '$numQuestions' WHERE surveyID='$surveyID'";
+	$result = mysqli_query($connection, $query);
 
-    if ($result) {
-        echo "Question deleted successfully<br>";
-    } else {
-        echo mysqli_error($connection);
-    }
+	if ($result) {
+		echo "Question deleted successfully<br>";
+	} else {
+		echo mysqli_error($connection);
+	}
 }
 
 // delete the question from the table:
 function deleteQuestion($connection)
 {
-    $questionID = $_GET['deleteQuestion'];
+	$questionID = $_GET['deleteQuestion'];
 
-    $query = "DELETE FROM questions WHERE questionID = '$questionID'";
-    $result = mysqli_query($connection, $query);
+	$query = "DELETE FROM questions WHERE questionID = '$questionID'";
+	$result = mysqli_query($connection, $query);
 
-    if (! $result) {
-        echo mysqli_error($connection);
-    }
+	if (!$result) {
+		echo mysqli_error($connection);
+	}
 }
 
 // displays the survey results in a table:
 function displaySurveyResults($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents)
 {
-    $numResponses = count($arrayOfRespondents);
-    $tableName = "response_CSV_" . $surveyID;
-    $_SESSION['tableName'] = $tableName;
-    $_SESSION['questionNames'] = $arrayOfQuestionNames;
+	$numResponses = count($arrayOfRespondents);
+	$tableName = "response_CSV_" . $surveyID;
+	$_SESSION['tableName'] = $tableName;
+	$_SESSION['questionNames'] = $arrayOfQuestionNames;
 
-    echo "<h3>Results:</h3>";
+	echo "<h3>Results:</h3>";
 
-    echo "Number of results: " . $numResponses . "<br>";
+	echo "Number of results: " . $numResponses . "<br>";
 
-    echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
+	echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a>";
 
-    if (! empty($arrayOfQuestionNames)) {
-        // gets results:
-        getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
-        // displays table of results:
-        displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
-    } else {
-        // if no results found, display message saying so:
-        echo "<br><br>No Responses found<br>";
-    }
+	if (!empty($arrayOfQuestionNames)) {
+		// gets results:
+		getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+		// displays table of results:
+		displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
+	} else {
+		// if no results found, display message saying so:
+		echo "<br><br>No Responses found<br>";
+	}
 
-    // if admin decides to delete a users responses from a survey, delete their responses from the database:
-    if (isset($_GET['username'])) {
-        $query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
-        $result = mysqli_query($connection, $query);
+	// if admin decides to delete a users responses from a survey, delete their responses from the database:
+	if (isset($_GET['username'])) {
+		$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+		$result = mysqli_query($connection, $query);
 
-        // display success message if there are no errors:
-        if ($result) {
-            echo "<br>Successfully deleted response<br>";
-        } else {
-            echo mysqli_error($connection);
-        }
-    }
+		// display success message if there are no errors:
+		if ($result) {
+			echo "<br>Successfully deleted response<br>";
+		} else {
+			echo mysqli_error($connection);
+		}
+	}
 }
 
 // handles the required operation for creating a user-friendly
 // results table:
 function getTableOfResults($connection, $surveyID, $tableName, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
-    // if the user-friendly table for this survey exists, drop it:
-    dropTable($connection, $tableName);
-    // create the user-friendly table:
-    createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
-    // insert responses into the user-friendly table:
-    populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
+	// if the user-friendly table for this survey exists, drop it:
+	dropTable($connection, $tableName);
+	// create the user-friendly table:
+	createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
+	// insert responses into the user-friendly table:
+	populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
 }
 
 // gets array of survey respondents from the database:
 function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 {
-    $query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID= '$surveyID'";
-    $result = mysqli_query($connection, $query);
+	$query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID= '$surveyID'";
+	$result = mysqli_query($connection, $query);
 
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $arrayOfRespondents[] = $row['username'];
-        }
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
+	if ($result) {
+		while ($row = mysqli_fetch_assoc($result)) {
+			$arrayOfRespondents[] = $row['username'];
+		}
+	} else {
+		echo mysqli_error($connection) . "<br>";
+	}
 }
 
 // gets the survey's name based off the surveyID from the database:
 function getSurveyName($connection, $surveyID)
 {
-    $query = "SELECT title FROM surveys WHERE surveyID = '$surveyID'";
-    $result = mysqli_query($connection, $query);
+	$query = "SELECT title FROM surveys WHERE surveyID = '$surveyID'";
+	$result = mysqli_query($connection, $query);
 
-    if ($result) {
-        $row = mysqli_fetch_row($result);
-        return $row[0];
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
+	if ($result) {
+		$row = mysqli_fetch_row($result);
+		return $row[0];
+	} else {
+		echo mysqli_error($connection) . "<br>";
+	}
 }
 
 // fetches an array of survey questions from database:
 function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayOfQuestionIDs)
 {
-    $query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
-    $result = mysqli_query($connection, $query);
+	$query = "SELECT questionName, questionID FROM questions WHERE surveyID = '$surveyID' ORDER BY questionNo ASC";
+	$result = mysqli_query($connection, $query);
 
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $arrayOfQuestions[] = $row['questionName'];
-            $arrayOfQuestionIDs[] = $row['questionID'];
-        }
-    } else {
-        echo mysqli_error($connection) . "<br>";
-    }
+	if ($result) {
+		while ($row = mysqli_fetch_assoc($result)) {
+			$arrayOfQuestions[] = $row['questionName'];
+			$arrayOfQuestionIDs[] = $row['questionID'];
+		}
+	} else {
+		echo mysqli_error($connection) . "<br>";
+	}
 }
 
 // inserts the user-friendly table into the database:
 function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
 {
-    $query = "CREATE TABLE $tableName (Username VARCHAR(20), PRIMARY KEY(username))";
-    $result = mysqli_query($connection, $query);
+	$query = "CREATE TABLE $tableName (Username VARCHAR(20), PRIMARY KEY(username))";
+	$result = mysqli_query($connection, $query);
 
-    if ($result) {
-        for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
+	if ($result) {
+		for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
 
-            $questionName = $arrayOfQuestionNames[$i];
+			$questionName = $arrayOfQuestionNames[$i];
 
-            $query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
-            $result2 = mysqli_query($connection, $query);
+			$query = "ALTER IGNORE TABLE $tableName ADD `$questionName` VARCHAR(128)";
+			$result2 = mysqli_query($connection, $query);
 
-            if (! $result2) {
-                echo ("Error: " . mysqli_error($connection));
-            }
-        }
-    } else {
-        echo ("Error: " . mysqli_error($connection));
-    }
+			if (!$result2) {
+				echo("Error: " . mysqli_error($connection));
+			}
+		}
+	} else {
+		echo("Error: " . mysqli_error($connection));
+	}
 }
 
 // inserts the responses to the survey into the user-friendly table:
 function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses)
 {
-    $dataToInsert = array();
+	$dataToInsert = array();
 
-    for ($i = 0; $i < $numResponses; $i ++) {
-        $username = $arrayOfRespondents[$i];
-        $dataToInsert[] = $username;
+	for ($i = 0; $i < $numResponses; $i++) {
+		$username = $arrayOfRespondents[$i];
+		$dataToInsert[] = $username;
 
-        for ($j = 0; $j < count($arrayOfQuestionIDs); $j ++) {
+		for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
 
-            $query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
-            $result = mysqli_query($connection, $query);
+			$query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+			$result = mysqli_query($connection, $query);
 
-            if ($result) {
-                $row = mysqli_fetch_assoc($result);
-                $dataToInsert[] = $row['response'];
-            } else {
-                echo mysqli_error($connection) . "<br>";
-            }
-        }
-        insertResponseIntoTable($connection, $tableName, $dataToInsert);
-        $dataToInsert = array();
-    }
+			if ($result) {
+				$row = mysqli_fetch_assoc($result);
+				$dataToInsert[] = $row['response'];
+			} else {
+				echo mysqli_error($connection) . "<br>";
+			}
+		}
+		insertResponseIntoTable($connection, $tableName, $dataToInsert);
+		$dataToInsert = array();
+	}
 }
 
 // actually inserts the responses:
 function insertResponseIntoTable($connection, $tableName, $dataToInsert)
 {
-    $values = implode("','", $dataToInsert);
-    $values = "'" . $values . "'";
+	$values = implode("','", $dataToInsert);
+	$values = "'" . $values . "'";
 
-    $query = "INSERT INTO $tableName VALUES ($values)";
-    $result = mysqli_query($connection, $query);
+	$query = "INSERT INTO $tableName VALUES ($values)";
+	$result = mysqli_query($connection, $query);
 
-    if (! $result) {
-        echo mysqli_error($connection);
-    }
+	if (!$result) {
+		echo mysqli_error($connection);
+	}
 }
 
 // displays the user-friendly table of results:
 function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID)
 {
-    echo "<br>";
+	echo "<br>";
 
-    $query = "SELECT * FROM  $tableName ORDER BY username ASC";
-    $result = mysqli_query($connection, $query);
-    $numColumns = mysqli_num_fields($result);
+	$query = "SELECT * FROM  $tableName ORDER BY username ASC";
+	$result = mysqli_query($connection, $query);
+	$numColumns = mysqli_num_fields($result);
 
-    echo "<br><table>";
+	echo "<br><table>";
 
-    displayHeaders($connection, $tableName, $arrayOfQuestionNames);
-    displayRows($result, $surveyID);
+	displayHeaders($connection, $tableName, $arrayOfQuestionNames);
+	displayRows($result, $surveyID);
 
-    echo "</table>";
+	echo "</table>";
 }
 
 // displays the table headers:
 function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
 {
-    echo "<tr>";
-    echo "<th>Username</th>";
-    for ($i = 0; $i < count($arrayOfQuestionNames); $i ++) {
-        echo "<th>{$arrayOfQuestionNames[$i]}</th>";
-    }
+	echo "<tr>";
+	echo "<th>Username</th>";
+	for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
+		echo "<th>{$arrayOfQuestionNames[$i]}</th>";
+	}
 
-    if ($_SESSION['username'] == "admin") {
-        echo "<th>Delete response</th>";
-    }
+	if ($_SESSION['username'] == "admin") {
+		echo "<th>Delete response</th>";
+	}
 
-    echo "</tr>";
+	echo "</tr>";
 }
 
 // display the table rows:
 function displayRows($result, $surveyID)
 {
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<tr>";
+	while ($row = mysqli_fetch_assoc($result)) {
+		echo "<tr>";
 
-        // iterate through associative array:
-        foreach ($row as $i => $value) {
-            echo "<td>$value</td>";
-        }
+		// iterate through associative array:
+		foreach ($row as $i => $value) {
+			echo "<td>$value</td>";
+		}
 
-        if ($_SESSION['username'] == "admin") {
-            echo "<td><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true&username={$row['Username']}>Delete</a></td>";
-        }
+		if ($_SESSION['username'] == "admin") {
+			echo "<td><a href = view_survey_results.php?surveyID=$surveyID&viewResultsInTable=true&username={$row['Username']}>Delete</a></td>";
+		}
 
-        echo "</tr>";
-    }
+		echo "</tr>";
+	}
 }
 
 ?>

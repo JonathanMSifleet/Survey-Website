@@ -26,9 +26,9 @@ _END;
 
 // checks the session variable named 'loggedInSkeleton'
 if (isset($_SESSION['loggedInSkeleton'])) {
-    // THIS PERSON IS LOGGED IN
-    // show the logged in menu options:
-    echo <<<_END
+	// THIS PERSON IS LOGGED IN
+	// show the logged in menu options:
+	echo <<<_END
             <li><a href='about.php'>About</a></li>
             <li><a href='surveys_manage.php'>My Surveys</a></li>
             <li><a href='view_responses.php'>My responses</a></li>
@@ -37,15 +37,15 @@ if (isset($_SESSION['loggedInSkeleton'])) {
             <li><a href='sign_out.php'>Sign Out ({$_SESSION['username']})</a></li>
 _END;
 
-    // add an extra menu option if this was the admin:
-    // this allows us to display the admin tools to them only
-    if ($_SESSION['username'] == "admin") {
-        echo "<li><a href='admin.php'>Admin Tools</a></li>";
-    }
+	// add an extra menu option if this was the admin:
+	// this allows us to display the admin tools to them only
+	if ($_SESSION['username'] == "admin") {
+		echo "<li><a href='admin.php'>Admin Tools</a></li>";
+	}
 } else {
-    // THIS PERSON IS NOT LOGGED IN
-    // show the logged out menu options:
-    echo <<<_END
+	// THIS PERSON IS NOT LOGGED IN
+	// show the logged out menu options:
+	echo <<<_END
     <li><a href='about.php'>About</a></li>
     <li><a href='competitors.php'>Design and Analysis</a></li>
     <li><a href='sign_up.php'>Sign Up</a></li>
