@@ -85,28 +85,9 @@ echo <<<_END
         <p>There is a fantastic selection of templates with pre-defined questions which can allow for a survey to made extremely quickly and an excellent set of methods for analysing survey results. Ultimately though, Survey Monkey's target audience is much different from what I envision to be mine.</p>
     </div>
     
-    <div class="column">
-        <h2>Conclusion</h2>
-        <h3>Layout</h3>
-
-        <h3>Ease of use</h3>
-
-        <h3>User account set-up / login</h3>
-
-        <h3>Question types</h3>
-
-        <h3>Answering a survey</h3>
-
-        <h3>Analysis tools</h3>
-
-        <h3>Things I'm leaving out</h3>
-
-    </div>
-    
 </div>
 
-<div class="columnSection">
-    <div class="column">
+    <div class="row">
         <h2>Survey Planet</h2>
 
         <h3>Layout</h3>
@@ -133,7 +114,6 @@ echo <<<_END
 		<p>Fundamentally, Survey Planet acts as an in-between of the complexity of Survey Monkey and the simplicity of Google Forms. Although the question creation has a few quirks, its inclusion of the form question type is, in my opinion, a fantastic feature, and its analysis tools are on par with Forms' whilst being free. Should I need to create any surveys in the future, I certainly will use Survey Planet.</p>
          
     </div>
-</div>
    
 _END;
 
