@@ -2,41 +2,41 @@
 require_once "header.php";
 require_once "credentials.php";
 
-// connect to the host:
-$connection = mysqli_connect($dbhost, $dbuser, $dbpass);
+if (isset($connection) == false || $_GET['username'] != "admin") {
+	echo "The database must not exist, or you must be the admin to re-initialise the database!";
+} else {
+	// connect to the host:
+	$connection = mysqli_connect($dbhost, $dbuser, $dbpass);
 
-// add code for if DB doesn't exist, run the code below:
-// if it does exist and admin is user run the code below:
-// otherwise display error that user must be admin:
+	// begin timer:
+	$time_pre = microtime(true);
 
-// begin timer:
-$time_pre = microtime(true);
+	// if database exists, drop it:
+	dropDatabase($connection, $dbname);
 
-// if database exists, drop it:
-dropDatabase($connection, $dbname);
+	// create database and tables:
+	createDatabase($connection, $dbname);
+	createUserTable($connection);
+	createSurveyTable($connection);
+	createQuestionTable($connection);
+	createQuestionOptionsTable($connection);
+	createResponseTable($connection);
 
-// create database and tables:
-createDatabase($connection, $dbname);
-createUserTable($connection);
-createSurveyTable($connection);
-createQuestionTable($connection);
-createQuestionOptionsTable($connection);
-createResponseTable($connection);
+	// insert default users into database;
+	insertDefaultUsers($connection);
+	// insert default survey into database:
+	createDefaultSurvey($connection);
 
-// insert default users into database;
-insertDefaultUsers($connection);
-// insert default survey into database:
-createDefaultSurvey($connection);
+	// stop timer:
+	$time_post = microtime(true);
+	// calculate difference between stop and start time:
+	$timeTaken = calculateTimeTaken($time_pre, $time_post);
+	// display time taken to initiate database:
+	echo "<br>Time taken: " . $timeTaken . " seconds<br>";
 
-// stop timer:
-$time_post = microtime(true);
-// calculate difference between stop and start time:
-$timeTaken = calculateTimeTaken($time_pre, $time_post);
-// display time taken to initiate database:
-echo "<br>Time taken: " . $timeTaken . " seconds<br>";
-
-// we're finished, close the connection:
-mysqli_close($connection);
+	// we're finished, close the connection:
+	mysqli_close($connection);
+}
 
 // finish off the HTML for this page:
 require_once "footer.php";
@@ -197,7 +197,6 @@ function insertDefaultUsers($connection)
 {
 	// put some data in our table:
 	// create an array variable for each field in the DB that we want to populate
-	// this whole section is edditted:
 	$usernames[] = 'admin';
 	$emails[] = 'jonathanmsifleet@gmail.com';
 	$firstnames[] = '';
