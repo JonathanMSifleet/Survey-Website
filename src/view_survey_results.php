@@ -10,69 +10,85 @@ if (!$connection) {
 
 $surveyID = $_GET['surveyID'];
 
-$arrayOfQuestionNames = array();
-$arrayOfQuestionIDs = array();
-getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+$query = "SELECT username FROM surveys WHERE surveyID ='$surveyID'";
+$result = mysqli_query($connection, $query);
 
-echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
+// if the user is not the survey creator or the user is not admin,
+// do not show the survey results:
+if ($result) {
+	$row = mysqli_fetch_row($result);
 
-echo "<br>How would you like to do?<br>";
+	if ($row[0] == $_SESSION['username'] || $_SESSION['username'] == "admin") {
+		$arrayOfQuestionNames = array();
+		$arrayOfQuestionIDs = array();
+		getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 
-echo "<ul>";
-echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResults=true>View results</a></li>";
-echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
-echo "</ul>";
+		echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 
-// if user has decided to view survey results
-// display the survey results:
-if (isset($_GET['viewResults'])) {
+		echo "<br>What would you like to do?<br>";
 
-	// gets array of survey respondents
-	$arrayOfRespondents = array();
-	getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
+		echo "<ul>";
+		echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResults=true>View results</a></li>";
+		echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
+		echo "</ul>";
 
-	if (count($arrayOfRespondents) != 0) {
+		// if user has decided to view survey results
+		// display the survey results:
+		if (isset($_GET['viewResults'])) {
 
-		$numResponses = count($arrayOfRespondents);
-		$tableName = "response_CSV_" . $surveyID;
-		$_SESSION['tableName'] = $tableName;
-		$_SESSION['questionNames'] = $arrayOfQuestionNames;
+			// gets array of survey respondents
+			$arrayOfRespondents = array();
+			getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
-		// if the survey has respondents, get the survey results:
-		getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses);
+			if (count($arrayOfRespondents) != 0) {
 
-		echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a><br>";
-		echo "<a href = view_survey_results.php?surveyID=$surveyID&viewResults=true&viewTable=true>View results in table</a><br>";
-		echo "<a href = view_graphs?surveyID=$surveyID&tableName=$tableName>View graphs</a>";
+				$numResponses = count($arrayOfRespondents);
+				$tableName = "response_CSV_" . $surveyID;
+				$_SESSION['tableName'] = $tableName;
+				$_SESSION['questionNames'] = $arrayOfQuestionNames;
 
-		if (isset($_GET['viewTable'])) {
-			// displays table of results:
-			displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
-		}
+				// if the survey has respondents, get the survey results:
+				getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses);
 
-		// if admin decides to delete a users responses from a survey, delete their responses from the database:
-		if (isset($_GET['username'])) {
-			$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
-			$result = mysqli_query($connection, $query);
+				echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a><br>";
+				echo "<a href = view_survey_results.php?surveyID=$surveyID&viewResults=true&viewTable=true>View results in table</a><br>";
+				echo "<a href = view_survey_results.php?surveyID=$surveyID&tableName=$tableName&viewResults=true&viewGraphs=true>View graphs</a>";
 
-			// display success message if there are no errors:
-			if ($result) {
-				echo "<br>Successfully deleted response<br>";
+				if (isset($_GET['viewTable'])) {
+					// displays table of results:
+					displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
+				}
+
+				// if admin decides to delete a users responses from a survey, delete their responses from the database:
+				if (isset($_GET['username'])) {
+					$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+					$result = mysqli_query($connection, $query);
+
+					// display success message if there are no errors:
+					if ($result) {
+						echo "<br>Successfully deleted response<br>";
+					} else {
+						echo mysqli_error($connection);
+					}
+				}
+
 			} else {
-				echo mysqli_error($connection);
+				// otherwise show message that survey has no respondents:
+				echo "No survey responses<br>";
 			}
 		}
 
+		// if the user has instead decided to delete a survey's question,
+		// then display the list of questions to delete:
+		if (isset($_GET['showListOfQuestionsToDelete'])) {
+			displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+		}
 	} else {
-		// otherwise show message that survey has no respondents:
-		echo "No survey responses<br>";
+		echo "You must be the survey's creator to view the results!";
+		echo "<br><br><a href = about.php>Click here to return to the main page</a>";
 	}
-}
-
-// if the user has instead decided to delete a survey's question,
-// then display the list of questions to delete:
-if (isset($_GET['showListOfQuestionsToDelete'])) {
-	displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+} else {
+	echo mysqli_error($connection);
 }
 
 // finish off the HTML for this page:

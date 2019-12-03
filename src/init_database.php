@@ -2,7 +2,7 @@
 require_once "header.php";
 require_once "credentials.php";
 
-if (isset($connection) == false || $_GET['username'] != "admin") {
+if (isset($connection) == false || $_SESSION['username'] != "admin") {
 	echo "The database must not exist, or you must be the admin to re-initialise the database!";
 } else {
 	// connect to the host:
