@@ -1,7 +1,6 @@
 <?php
 require_once "header.php";
 
-
 if (!isset($_SESSION['loggedInSkeleton'])) {
 	// user isn't logged in, display a message saying they must be:
 	echo "You must be logged in to view this page.<br>";
@@ -10,7 +9,7 @@ else {
 
 	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-// if the connection fails, we need to know, so allow this exit:
+	// if the connection fails, we need to know, so allow this exit:
 	if (!$connection) {
 		die("Connection failed: " . $mysqli_connect_error);
 	}
@@ -20,8 +19,8 @@ else {
 	$query = "SELECT username FROM surveys WHERE surveyID ='$surveyID'";
 	$result = mysqli_query($connection, $query);
 
-// if the user is not the survey creator or the user is not admin,
-// do not show the survey results:
+	// if the user is not the survey creator or the user is not admin,
+	// do not show the survey results:
 	if ($result) {
 		$row = mysqli_fetch_row($result);
 
@@ -56,6 +55,7 @@ else {
 
 				if (isset($_GET['viewGraphs'])) {
 
+					// display list of questions:
 					echo "<br>Please select a question to view its graph:";
 					echo "<ul>";
 					for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
@@ -63,19 +63,29 @@ else {
 					}
 					echo "</ul>";
 
+					// gets question name from database then draws graph:
 					if (isset($_GET['graphToView'])) {
 
 						$questionID = $_GET['graphToView'];
 
-						$query = "SELECT questionName FROM questions WHERE questionID = '$questionID'";
+						$query = "SELECT questionName, type FROM questions WHERE questionID = '$questionID'";
 						$result = mysqli_query($connection, $query);
 
 						if ($result) {
 							$row = mysqli_fetch_row($result);
 							$questionName = $row[0];
+							$type = $row[1];
 
-							// displays graphs:
-							drawGraph($connection, $tableName, $questionID, $questionName);
+							switch ($type) {
+								case "longAnswer":
+								case "shortAnswer":
+									echo "The question is a text-only question, a graph cannot be drawn<br>";
+									echo "Please refer to the table below:<br>";
+									break;
+								default:
+									// displays graphs:
+									drawGraph($connection, $questionID, $questionName);
+							}
 						} else {
 							echo mysqli_error($connection);
 						}
@@ -103,7 +113,6 @@ else {
 
 				// displays table of results:
 				displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
-
 			} else {
 				// otherwise show message that survey has no respondents:
 				echo "No survey responses<br>";
@@ -121,9 +130,8 @@ else {
 require_once "footer.php";
 
 // draws chart based upon question results:
-function drawGraph($connection, $tableName, $questionID, $questionName)
+function drawGraph($connection, $questionID, $questionName)
 {
-
 	$query = "SELECT response, COUNT(response) AS countResponse FROM responses WHERE questionID = '$questionID' GROUP BY response";
 	$result = mysqli_query($connection, $query);
 
@@ -132,11 +140,8 @@ function drawGraph($connection, $tableName, $questionID, $questionName)
 		while ($row = mysqli_fetch_assoc($result)) {
 			$JSONResults = $JSONResults . "['" . $row['response'] . " ',  " . $row['countResponse'] . "],";
 		}
-	} else {
-		echo mysqli_error($connection);
-	}
 
-	echo <<<_END
+		echo <<<_END
 
     <script type="text/javascript">
 
@@ -159,11 +164,10 @@ function drawGraph($connection, $tableName, $questionID, $questionName)
           $JSONResults
         ]);
 		
-        //var surveyTitle = json_encode($questionName);
         // Set chart options
         var options = {'title':'$questionName',
-                       'width':400,
-                       'height':300};
+                       'width':500,
+                       'height':400};
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
@@ -174,12 +178,14 @@ function drawGraph($connection, $tableName, $questionID, $questionName)
     <div id="chart_div"></div>
 
 _END;
+	} else {
+		echo mysqli_error($connection);
+	}
 }
 
 // displays the survey results in a table:
 function getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses)
 {
-
 	echo "<h3>Results:</h3>";
 	echo "Number of results: " . $numResponses . "<br>";
 
