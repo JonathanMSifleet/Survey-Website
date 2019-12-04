@@ -25,57 +25,55 @@ if ($result) {
 
 		echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 
-		echo "<br>What would you like to do?<br>";
+		// gets array of survey respondents
+		$arrayOfRespondents = array();
+		getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
-		echo "<ul>";
-		echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewResults=true>View results</a></li>";
-		echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
-		echo "</ul>";
+		if (count($arrayOfRespondents) != 0) {
 
-		// if user has decided to view survey results
-		// display the survey results:
-		if (isset($_GET['viewResults'])) {
+			$numResponses = count($arrayOfRespondents);
+			$tableName = "response_CSV_" . $surveyID;
+			$_SESSION['tableName'] = $tableName;
+			$_SESSION['questionNames'] = $arrayOfQuestionNames;
 
-			// gets array of survey respondents
-			$arrayOfRespondents = array();
-			getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
+			// if the survey has respondents, get the survey results:
+			getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses);
 
-			if (count($arrayOfRespondents) != 0) {
+			echo "<br>What would you like to do?<br>";
 
-				$numResponses = count($arrayOfRespondents);
-				$tableName = "response_CSV_" . $surveyID;
-				$_SESSION['tableName'] = $tableName;
-				$_SESSION['questionNames'] = $arrayOfQuestionNames;
+			echo "<ul>";
+			echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewTable=true>View results in table</a></li>";
+			echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewGraphs=true>View graphs</a></li>";
+			echo "<li><a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a></li>";
+			echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
+			echo "</ul>";
 
-				// if the survey has respondents, get the survey results:
-				getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses);
-
-				echo "<a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a><br>";
-				echo "<a href = view_survey_results.php?surveyID=$surveyID&viewResults=true&viewTable=true>View results in table</a><br>";
-				echo "<a href = view_survey_results.php?surveyID=$surveyID&tableName=$tableName&viewResults=true&viewGraphs=true>View graphs</a>";
-
-				if (isset($_GET['viewTable'])) {
-					// displays table of results:
-					displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
-				}
-
-				// if admin decides to delete a users responses from a survey, delete their responses from the database:
-				if (isset($_GET['username'])) {
-					$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
-					$result = mysqli_query($connection, $query);
-
-					// display success message if there are no errors:
-					if ($result) {
-						echo "<br>Successfully deleted response<br>";
-					} else {
-						echo mysqli_error($connection);
-					}
-				}
-
-			} else {
-				// otherwise show message that survey has no respondents:
-				echo "No survey responses<br>";
+			if (isset($_GET['viewTable'])) {
+				// displays table of results:
+				displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
 			}
+
+			if (isset($_GET['viewGraphs'])) {
+				// displays graphs:
+				displayGraphs($connection, $tableName, $arrayOfQuestionNames, $surveyID);
+			}
+
+			// if admin decides to delete a users responses from a survey, delete their responses from the database:
+			if (isset($_GET['username'])) {
+				$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+				$result = mysqli_query($connection, $query);
+
+				// display success message if there are no errors:
+				if ($result) {
+					echo "<br>Successfully deleted response<br>";
+				} else {
+					echo mysqli_error($connection);
+				}
+			}
+
+		} else {
+			// otherwise show message that survey has no respondents:
+			echo "No survey responses<br>";
 		}
 
 		// if the user has instead decided to delete a survey's question,
@@ -94,12 +92,92 @@ if ($result) {
 // finish off the HTML for this page:
 require_once "footer.php";
 
+function displayGraphs($connection, $tableName, $arrayOfQuestionNames, $surveyID)
+{
+	// get results
+	$query = "SELECT response FROM responses INNER JOIN questions USING (questionID) WHERE surveyID = '$surveyID' ORDER BY questionID ASC";
+	$result = mysqli_query($connection, $query);
+
+	if ($result) {
+		while ($row = mysqli_fetch_assoc($result)) {
+			// iterate through associative array:
+			foreach ($row as $i => $value) {
+				//echo $value . ", ";
+			}
+		}
+
+		drawGraph($connection, $tableName);
+
+	} else {
+		echo mysqli_error($connection);
+	}
+
+}
+
+function drawGraph($connection, $tableName)
+{
+
+	$query = "SELECT `How satisfied are you with the website?`, COUNT(`How satisfied are you with the website?`) AS countResponse FROM $tableName GROUP BY `How satisfied are you with the website?`";
+	$result = mysqli_query($connection, $query);
+
+	if ($result) {
+
+		$tempString = "";
+
+		while ($row = mysqli_fetch_assoc($result)) {
+			$tempString = $tempString . "['" . $row['How satisfied are you with the website?'] . " ',  ". $row['countResponse'] ."],";
+		}
+
+		var_dump($tempString);
+	} else {
+		echo mysqli_error($connection);
+	}
+
+	echo <<<_END
+
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+		data.addColumn('string', '[key]'); // x axis
+		data.addColumn('number', '[key]'); // x axis
+        data.addRows([
+          $tempString
+        ]);
+
+        // Set chart options
+        var options = {'title':'How satisfied are you with the website?',
+                       'width':400,
+                       'height':300};
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+	</script>
+	
+	<!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+
+_END;
+}
+
 // displays the survey results in a table:
 function getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses)
 {
 
 	echo "<h3>Results:</h3>";
-	echo "Number of results: " . $numResponses . "<br><br>";
+	echo "Number of results: " . $numResponses . "<br>";
 
 	if (!empty($arrayOfQuestionNames)) {
 		// gets results:

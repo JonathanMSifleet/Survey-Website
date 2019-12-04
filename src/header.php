@@ -17,7 +17,9 @@ echo <<<_END
     <head>
         <title>Jonathan's Survey Website</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		<link rel="stylesheet" href="mystyle.css">
+        <link rel="stylesheet" href="mystyle.css">
+        <!--Load the AJAX API:-->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
     <h1>2CWK50: A Survey Website</h1>
     <nav>
