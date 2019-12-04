@@ -119,29 +119,29 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
 
 	// display form:
 	echo <<<_END
-    <form action="" method="post">
-      Question $questionNo: <br><br>
-      Title: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
-      <br>
-      Type of question:
-      <select name="type">
-        <option value ="checkboxes">Checkboxes</option>
-        <option value ="date">Date</option>
-        <option value ="dropdown">Dropdown</option>
-        <option value ="longAnswer">Long answer</option>
-        <option value ="multOption">Multiple options</option>
-        <option value ="number">Number</option>
-        <option value ="shortAnswer">Short answer</option>      
-        <option value ="time">Time</option>
-      </select>  
-      <br>
-      Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown, checkboxes or multiple choices
-      <br>
-      Required: <input type="checkbox" name="required" value="1">
-      <br><br>
-      <input type="submit" value="Submit">
-    </form>
-_END;
+        <form action="" method="post">
+          Question $questionNo: <br><br>
+          Title: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
+          <br>
+          Type of question:
+          <select name="type">
+            <option value ="checkboxes">Checkboxes</option>
+            <option value ="date">Date</option>
+            <option value ="dropdown">Dropdown</option>
+            <option value ="longAnswer">Long answer</option>
+            <option value ="multOption">Multiple options</option>
+            <option value ="number">Number</option>
+            <option value ="shortAnswer">Short answer</option>      
+            <option value ="time">Time</option>
+          </select>  
+          <br>
+          Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown, checkboxes or multiple choices
+          <br>
+          Required: <input type="checkbox" name="required" value="1">
+          <br><br>
+          <input type="submit" value="Submit">
+        </form>
+    _END;
 }
 
 // gets the number of questions a survey has from the database:

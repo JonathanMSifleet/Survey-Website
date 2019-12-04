@@ -79,11 +79,11 @@ function getSurveyData($connection, $surveyID)
 
 	// displays useful information regarding survey:
 	echo <<<_END
-        <h2>$title</h2><br>
-        <h3>Topic: $topic</h3>
-        Instructions:<br>
-        $instructions
-_END;
+            <h2>$title</h2><br>
+            <h3>Topic: $topic</h3>
+            Instructions:<br>
+            $instructions
+    _END;
 
 	// displays survey:
 	displaySurvey($connection, $surveyID, $numQuestions);

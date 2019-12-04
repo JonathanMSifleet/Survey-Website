@@ -91,19 +91,19 @@ function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $
 
 	// max number of questions length to be compatible with MYSQL smallint max value
 	echo <<<_END
-    <form action="create_survey.php" method="post">
-      Input survey details:<br>
-      Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
-      <br>
-      Instructions: <input type="text" name="instructions" minlength="2" maxlength="500" value="$instructions" required> $arrayOfSurveyErrors[1]
-      <br>
-      Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$numQuestions" required> $arrayOfSurveyErrors[2]
-      <br>
-      Survey Topic: <input type="text" name="topic" maxlength="32" value="$topic"> $arrayOfSurveyErrors[4]
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-_END;
+        <form action="create_survey.php" method="post">
+          Input survey details:<br>
+          Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
+          <br>
+          Instructions: <input type="text" name="instructions" minlength="2" maxlength="500" value="$instructions" required> $arrayOfSurveyErrors[1]
+          <br>
+          Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$numQuestions" required> $arrayOfSurveyErrors[2]
+          <br>
+          Survey Topic: <input type="text" name="topic" maxlength="32" value="$topic"> $arrayOfSurveyErrors[4]
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+    _END;
 }
 
 // creates an array of invalid survey data:

@@ -527,10 +527,10 @@ function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLengt
 	}
 
 	echo <<<_END
-    <br><br>
-    <input type="submit" value="Submit">
-    </form>
-_END;
+        <br><br>
+        <input type="submit" value="Submit">
+        </form>
+    _END;
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
@@ -595,25 +595,25 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
 
 	// form to create account:
 	echo <<<_END
-    <form action="$currentURL" method="post">
-      Please fill in the following fields:<br>
-      Username: <input type="text" name="username" minlength="3" maxlength="20" value="$username" required> $arrayOfAccountErrors[0]
-      <br>
-      Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
-      <br>
-      Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfAccountErrors[2]
-      <br>
-      First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfAccountErrors[3]
-      <br>
-      Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfAccountErrors[4]
-      <br>
-      Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
-      <br>
-      Date of birth: <input type="date" name="dob" min="$minDate" max="$maxDate" value="$dob" required> $arrayOfAccountErrors[6]
-      <br>
-      <input type="submit" value="Submit">
-    </form>
-_END;
+        <form action="$currentURL" method="post">
+          Please fill in the following fields:<br>
+          Username: <input type="text" name="username" minlength="3" maxlength="20" value="$username" required> $arrayOfAccountErrors[0]
+          <br>
+          Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
+          <br>
+          Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfAccountErrors[2]
+          <br>
+          First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfAccountErrors[3]
+          <br>
+          Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfAccountErrors[4]
+          <br>
+          Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
+          <br>
+          Date of birth: <input type="date" name="dob" min="$minDate" max="$maxDate" value="$dob" required> $arrayOfAccountErrors[6]
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+    _END;
 }
 
 // inserts new account into database:
