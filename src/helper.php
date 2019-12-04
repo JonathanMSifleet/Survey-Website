@@ -530,7 +530,7 @@ function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLengt
         <br><br>
         <input type="submit" value="Submit">
         </form>
-    _END;
+_END;
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
@@ -613,7 +613,7 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
           <br>
           <input type="submit" value="Submit">
         </form>
-    _END;
+_END;
 }
 
 // inserts new account into database:

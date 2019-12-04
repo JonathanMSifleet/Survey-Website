@@ -141,7 +141,7 @@ function displayCreateQuestionForm($questionName, $type, $numOptions, $required,
           <br><br>
           <input type="submit" value="Submit">
         </form>
-    _END;
+_END;
 }
 
 // gets the number of questions a survey has from the database:

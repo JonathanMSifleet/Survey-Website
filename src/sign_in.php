@@ -100,7 +100,7 @@ if ($show_signin_form) {
           <br>
           <input type="submit" value="Submit">
         </form>
-    _END;
+_END;
 }
 
 // finish off the HTML for this page:

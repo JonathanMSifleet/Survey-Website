@@ -37,7 +37,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
                 <li><a href='competitors.php'>Design and Analysis</a></li>
                 <li><a href='account.php'>Account</a></li>
                 <li><a href='sign_out.php'>Sign Out ({$_SESSION['username']})</a></li>
-    _END;
+_END;
 
 	// add an extra menu option if this was the admin:
 	// this allows us to display the admin tools to them only
@@ -52,7 +52,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
         <li><a href='competitors.php'>Design and Analysis</a></li>
         <li><a href='sign_up.php'>Sign Up</a></li>
         <li><a href='sign_in.php'>Sign In</a></li>
-    _END;
+_END;
 }
 echo <<<_END
 </ul>

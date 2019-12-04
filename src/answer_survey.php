@@ -83,7 +83,7 @@ function getSurveyData($connection, $surveyID)
             <h3>Topic: $topic</h3>
             Instructions:<br>
             $instructions
-    _END;
+_END;
 
 	// displays survey:
 	displaySurvey($connection, $surveyID, $numQuestions);
