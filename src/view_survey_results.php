@@ -1,134 +1,137 @@
 <?php
 require_once "header.php";
 
-$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
+if (!isset($_SESSION['loggedInSkeleton'])) {
+	// user isn't logged in, display a message saying they must be:
+	echo "You must be logged in to view this page.<br>";
+} // the user must be signed-in, show them suitable page content
+else {
+
+	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
 // if the connection fails, we need to know, so allow this exit:
-if (!$connection) {
-	die("Connection failed: " . $mysqli_connect_error);
-}
+	if (!$connection) {
+		die("Connection failed: " . $mysqli_connect_error);
+	}
 
-$surveyID = $_GET['surveyID'];
+	$surveyID = $_GET['surveyID'];
 
-$query = "SELECT username FROM surveys WHERE surveyID ='$surveyID'";
-$result = mysqli_query($connection, $query);
+	$query = "SELECT username FROM surveys WHERE surveyID ='$surveyID'";
+	$result = mysqli_query($connection, $query);
 
 // if the user is not the survey creator or the user is not admin,
 // do not show the survey results:
-if ($result) {
-	$row = mysqli_fetch_row($result);
+	if ($result) {
+		$row = mysqli_fetch_row($result);
 
-	if ($row[0] == $_SESSION['username'] || $_SESSION['username'] == "admin") {
-		$arrayOfQuestionNames = array();
-		$arrayOfQuestionIDs = array();
-		getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+		if ($row[0] == $_SESSION['username'] || $_SESSION['username'] == "admin") {
+			$arrayOfQuestionNames = array();
+			$arrayOfQuestionIDs = array();
+			getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 
-		echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
+			echo "<h3>" . getSurveyName($connection, $surveyID) . "</h3>";
 
-		// gets array of survey respondents
-		$arrayOfRespondents = array();
-		getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
+			// gets array of survey respondents
+			$arrayOfRespondents = array();
+			getSurveyRespondents($connection, $surveyID, $arrayOfRespondents);
 
-		if (count($arrayOfRespondents) != 0) {
+			if (count($arrayOfRespondents) != 0) {
 
-			$numResponses = count($arrayOfRespondents);
-			$tableName = "response_CSV_" . $surveyID;
-			$_SESSION['tableName'] = $tableName;
-			$_SESSION['questionNames'] = $arrayOfQuestionNames;
+				$numResponses = count($arrayOfRespondents);
+				$tableName = "response_CSV_" . $surveyID;
+				$_SESSION['tableName'] = $tableName;
+				$_SESSION['questionNames'] = $arrayOfQuestionNames;
 
-			// if the survey has respondents, get the survey results:
-			getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses);
+				// if the survey has respondents, get the survey results:
+				getResultsTable($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs, $arrayOfRespondents, $tableName, $numResponses);
 
-			echo "<br>What would you like to do?<br>";
+				echo "<br>What would you like to do?<br>";
 
-			echo "<ul>";
-			echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewTable=true>View results in table</a></li>";
-			echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewGraphs=true>View graphs</a></li>";
-			echo "<li><a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a></li>";
-			echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
-			echo "</ul>";
+				echo "<ul>";
+				echo "<li><a href = view_survey_results.php?surveyID=$surveyID&viewGraphs=true>View graphs</a></li>";
+				echo "<li><a href = exportResultsToCSV.php?surveyID=$surveyID>Export results to CSV</a></li>";
+				echo "<li><a href = view_survey_results.php?surveyID=$surveyID&showListOfQuestionsToDelete=true>Delete a question</a></li>";
+				echo "</ul>";
 
-			if (isset($_GET['viewTable'])) {
+				if (isset($_GET['viewGraphs'])) {
+
+					echo "<br>Please select a question to view its graph:";
+					echo "<ul>";
+					for ($i = 0; $i < count($arrayOfQuestionNames); $i++) {
+						echo "<li><a href= view_survey_results.php?surveyID=$surveyID&viewGraphs=true&graphToView=$arrayOfQuestionIDs[$i]>$arrayOfQuestionNames[$i]</a></li>";
+					}
+					echo "</ul>";
+
+					if (isset($_GET['graphToView'])) {
+
+						$questionID = $_GET['graphToView'];
+
+						$query = "SELECT questionName FROM questions WHERE questionID = '$questionID'";
+						$result = mysqli_query($connection, $query);
+
+						if ($result) {
+							$row = mysqli_fetch_row($result);
+							$questionName = $row[0];
+
+							// displays graphs:
+							drawGraph($connection, $tableName, $questionID, $questionName);
+						} else {
+							echo mysqli_error($connection);
+						}
+					}
+				}
+
+				// if the user has instead decided to delete a survey's question,
+				// then display the list of questions to delete:
+				if (isset($_GET['showListOfQuestionsToDelete'])) {
+					displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+				}
+
+				// if admin decides to delete a users responses from a survey, delete their responses from the database:
+				if (isset($_GET['username'])) {
+					$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+					$result = mysqli_query($connection, $query);
+
+					// display success message if there are no errors:
+					if ($result) {
+						echo "<br>Successfully deleted response<br>";
+					} else {
+						echo mysqli_error($connection);
+					}
+				}
+
 				// displays table of results:
 				displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
+
+			} else {
+				// otherwise show message that survey has no respondents:
+				echo "No survey responses<br>";
 			}
-
-			if (isset($_GET['viewGraphs'])) {
-				// displays graphs:
-				displayGraphs($connection, $tableName, $arrayOfQuestionNames, $surveyID);
-			}
-
-			// if admin decides to delete a users responses from a survey, delete their responses from the database:
-			if (isset($_GET['username'])) {
-				$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
-				$result = mysqli_query($connection, $query);
-
-				// display success message if there are no errors:
-				if ($result) {
-					echo "<br>Successfully deleted response<br>";
-				} else {
-					echo mysqli_error($connection);
-				}
-			}
-
 		} else {
-			// otherwise show message that survey has no respondents:
-			echo "No survey responses<br>";
-		}
-
-		// if the user has instead decided to delete a survey's question,
-		// then display the list of questions to delete:
-		if (isset($_GET['showListOfQuestionsToDelete'])) {
-			displayQuestionsToDelete($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
+			echo "You must be the survey's creator to view the results!";
+			echo "<br><br><a href = about.php>Click here to return to the main page</a>";
 		}
 	} else {
-		echo "You must be the survey's creator to view the results!";
-		echo "<br><br><a href = about.php>Click here to return to the main page</a>";
+		echo mysqli_error($connection);
 	}
-} else {
-	echo mysqli_error($connection);
 }
 
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function displayGraphs($connection, $tableName, $arrayOfQuestionNames, $surveyID)
+// draws chart based upon question results:
+function drawGraph($connection, $tableName, $questionID, $questionName)
 {
-	// get results
-	$query = "SELECT response FROM responses INNER JOIN questions USING (questionID) WHERE surveyID = '$surveyID' ORDER BY questionID ASC";
+
+	$query = "SELECT response, COUNT(response) AS countResponse FROM responses WHERE questionID = '$questionID' GROUP BY response";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
+		$JSONResults = "";
 		while ($row = mysqli_fetch_assoc($result)) {
-			// iterate through associative array:
-			foreach ($row as $i => $value) {
-				//echo $value . ", ";
-			}
+			$JSONResults = $JSONResults . "['" . $row['response'] . " ',  " . $row['countResponse'] . "],";
 		}
-
-		drawGraph($connection, $tableName);
-
-	} else {
-		echo mysqli_error($connection);
-	}
-
-}
-
-function drawGraph($connection, $tableName)
-{
-
-	$query = "SELECT `How satisfied are you with the website?`, COUNT(`How satisfied are you with the website?`) AS countResponse FROM $tableName GROUP BY `How satisfied are you with the website?`";
-	$result = mysqli_query($connection, $query);
-
-	if ($result) {
-
-		$tempString = "";
-
-		while ($row = mysqli_fetch_assoc($result)) {
-			$tempString = $tempString . "['" . $row['How satisfied are you with the website?'] . " ',  ". $row['countResponse'] ."],";
-		}
-
-		var_dump($tempString);
 	} else {
 		echo mysqli_error($connection);
 	}
@@ -147,17 +150,18 @@ function drawGraph($connection, $tableName)
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawChart() {
-
+		
         // Create the data table.
         var data = new google.visualization.DataTable();
 		data.addColumn('string', '[key]'); // x axis
 		data.addColumn('number', '[key]'); // x axis
         data.addRows([
-          $tempString
+          $JSONResults
         ]);
-
+		
+        //var surveyTitle = json_encode($questionName);
         // Set chart options
-        var options = {'title':'How satisfied are you with the website?',
+        var options = {'title':'$questionName',
                        'width':400,
                        'height':300};
         // Instantiate and draw our chart, passing in some options.
@@ -197,7 +201,7 @@ function displayQuestionsToDelete($connection, $surveyID, &$arrayOfQuestionNames
 		echo "There are no questions to delete<br>";
 	} else {
 		// otherwise, display list of questions to delete:
-		echo "Pick a question to delete:<br>";
+		echo "<br>Pick a question to delete:<br>";
 
 		echo "<ul>";
 
@@ -405,8 +409,6 @@ function insertResponseIntoTable($connection, $tableName, $dataToInsert)
 // displays the user-friendly table of results:
 function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID)
 {
-	echo "<br>";
-
 	$query = "SELECT * FROM  $tableName ORDER BY username ASC";
 	$result = mysqli_query($connection, $query);
 	$numColumns = mysqli_num_fields($result);
