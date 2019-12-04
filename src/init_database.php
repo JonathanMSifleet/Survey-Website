@@ -12,9 +12,17 @@ if (isset($_SESSION['username'])) {
     $userIsAdmin = false;
 }
 
-if (!$connection || $userIsAdmin == false) {
-    echo "The database must not exist, or you must be the admin to re-initialise the database!";
+$query = "SELECT * FROM users";
+$result = mysqli_query($connection, $query);
+
+if($result) {
+	$dbExists = true;
 } else {
+	echo mysqli_error($connection);
+	$dbExists = false;
+}
+
+if ($dbExists == false|| ($dbExists == true && $userIsAdmin == true)) {
     // connect to the host:
     $connection = mysqli_connect($dbhost, $dbuser, $dbpass);
 
@@ -51,6 +59,8 @@ if (!$connection || $userIsAdmin == false) {
 
     // we're finished, close the connection:
     mysqli_close($connection);
+} else {
+echo "The database must not exist, or you must be the admin to re-initialise the database!";
 }
 
 // finish off the HTML for this page:
