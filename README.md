@@ -16,13 +16,15 @@ https://www.apachefriends.org/download.html
 
 6) From here you can sign up, create surveys, answer the default survey view results etc.
 
+OTHER:
+- create_data.php has been renamed to init_database.php
+- dummy accounts are created in the init_database.php script
+- admin account has username: "admin", password: "secret"
+
 TO DO:
+- Add checkbox with multiple responses to graphs
 - Improve use of superglobals (make site more secure)
-- Add graphs
-- Improve default date question
-- Finish and add competitors write-up
+- Response summaries
 
 EXTRA:
 I have included my requirements as a .docx
-
-I have not yet finished my analysis of other websites and as such it is not found in the competitors.php. The unfinished version can be found in: Competitors.docx.

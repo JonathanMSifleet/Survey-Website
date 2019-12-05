@@ -18,7 +18,7 @@ $result = mysqli_query($connection, $query);
 if ($result) {
 	$dbExists = true;
 } else {
-	echo mysqli_error($connection);
+	echo mysqli_error($connection)."<br>";
 	$dbExists = false;
 }
 
