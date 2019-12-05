@@ -619,9 +619,15 @@ _END;
 // inserts new account into database:
 function createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors)
 {
+
+	$randomPasswordGenerated = false;
+	$plaintextPassword = "";
+
 	// if password length = 0, generate a random password
 	if (checkIfLengthZero($password)) {
+		$randomPasswordGenerated = true;
 		$password = generateAlphanumericString();
+		$plaintextPassword = $password;
 	}
 
 	// creates an array of account errors
@@ -643,6 +649,9 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 		if ($result) {
 			// show a successful signup message:
 			echo "Account creation was successful<br><br>";
+			echo "Your password is: " . $plaintextPassword. "<br><br>";
+
+
 			echo "<a href = sign_in.php>Click here to sign in</a><br>";
 		} else {
 			displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
