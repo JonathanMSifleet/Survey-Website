@@ -113,6 +113,7 @@ else {
 
 				// displays table of results:
 				displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
+				dropTable($connection, $tableName);
 			} else {
 				// otherwise show message that survey has no respondents:
 				echo "No survey responses<br>";
