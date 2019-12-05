@@ -13,7 +13,7 @@ echo <<<_END
 <li>View survey results
 <ul>
 <li>Export results to csv</li>
-<li>Create graphs for </li>
+<li>Create graphs for results</li>
 </ul>
 </li>
 </li>
