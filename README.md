@@ -3,7 +3,7 @@ Jonathan Sifleet
 18014017
 
 SETUP:
-1) Must be running XAMPP version 7.2 or later (PHP 7.2 or later). If using an older version the survey may/will produce errors.
+1) Must be running XAMPP version 7.2.5 or later (PHP 7.2.5 or later). If using an older version the survey may/will produce errors.
 https://www.apachefriends.org/download.html
 
 2) Copy files in the subdirectory "php files" to xampp/htdocs, e.g. C:\xampp\htdocs
