@@ -77,14 +77,16 @@ else {
 							$type = $row[1];
 
 							switch ($type) {
-								case "longAnswer":
-								case "shortAnswer":
-									echo "The question is a text-only question, a graph cannot be drawn<br>";
-									echo "Please refer to the table below:<br>";
-									break;
-								default:
+								case "checkboxes":
+								case "dropdown":
+								case "multOption":
 									// displays graphs:
 									drawGraph($connection, $questionID, $questionName);
+									break;
+								default:
+
+									echo "The question must have pre-defined options, otherwise a graph cannot be drawn<br>";
+									echo "Please refer to the table below:<br>";
 							}
 						} else {
 							echo mysqli_error($connection);
@@ -100,7 +102,7 @@ else {
 
 				// if admin decides to delete a users responses from a survey, delete their responses from the database:
 				if (isset($_GET['username'])) {
-					$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+					$query = "DELETE r.* FROM responses r INNER JOIN questions q USING (questionID) WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
 					$result = mysqli_query($connection, $query);
 
 					// display success message if there are no errors:
@@ -133,12 +135,14 @@ require_once "footer.php";
 // draws chart based upon question results:
 function drawGraph($connection, $questionID, $questionName)
 {
-	$query = "SELECT response, COUNT(response) AS countResponse FROM responses WHERE questionID = '$questionID' GROUP BY response";
+	$query = "SELECT response, COUNT(response) AS countResponse, type FROM responses INNER JOIN questions USING (questionID) WHERE questionID = '$questionID' GROUP BY response";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
+
 		$JSONResults = "";
 		while ($row = mysqli_fetch_assoc($result)) {
+			echo $row['type'];
 			$JSONResults = $JSONResults . "['" . $row['response'] . " ',  " . $row['countResponse'] . "],";
 		}
 
@@ -308,7 +312,7 @@ function createResultsTable($connection, $surveyID, $tableName, $arrayOfQuestion
 // gets array of survey respondents from the database:
 function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 {
-	$query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID= '$surveyID'";
+	$query = "SELECT DISTINCT username FROM responses INNER JOIN questions USING(questionID) WHERE surveyID= '$surveyID'";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {

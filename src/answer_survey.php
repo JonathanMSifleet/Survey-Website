@@ -56,7 +56,7 @@ require_once "footer.php";
 function dropUserResponse($connection, $surveyID, $username)
 {
 	// delete all of the users responses to the survey from the responses table
-	$query = "DELETE r.* FROM responses r INNER JOIN questions q ON r.questionID = q.questionID WHERE username = '$username' AND surveyID = '$surveyID'";
+	$query = "DELETE r.* FROM responses r INNER JOIN questions q USING (questionID) WHERE username = '$username' AND surveyID = '$surveyID'";
 	$result = mysqli_query($connection, $query);
 
 	if (!$result) {
@@ -93,7 +93,7 @@ _END;
 function hasUserRespondedToSurvey($connection, $surveyID, $username)
 {
 	// if the user has responded to the survey, return the value true, as they have answered the survey already
-	$query = "SELECT DISTINCT username FROM responses INNER JOIN questions ON responses.questionID = questions.questionID WHERE surveyID = '$surveyID' AND username = '$username'";
+	$query = "SELECT DISTINCT username FROM responses INNER JOIN questions USING(questionID) WHERE surveyID = '$surveyID' AND username = '$username'";
 	$result = mysqli_query($connection, $query);
 	if ($result) {
 		if (mysqli_num_rows($result) != 0) {
