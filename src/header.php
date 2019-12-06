@@ -33,6 +33,7 @@ if (isset($_SESSION['loggedInSkeleton'])) {
 	echo <<<_END
                 <li><a href='about.php'>About</a></li>
                 <li><a href='surveys_manage.php'>My Surveys</a></li>
+                <li><a href='view_responses.php'>My responses</a></li>
                 <li><a href='competitors.php'>Design and Analysis</a></li>
                 <li><a href='account.php'>Account</a></li>
                 <li><a href='sign_out.php'>Sign Out ({$_SESSION['username']})</a></li>
