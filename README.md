@@ -8,13 +8,15 @@ https://www.apachefriends.org/download.html
 
 2) Copy files in the subdirectory "php files" to xampp/htdocs, e.g. C:\xampp\htdocs
 
-3) Open xampp and start Apache and MySQL service. If not using default port(80) append the port you are using to the URL in the next step
+3) Copy the folder imgs to xampp/htdocs, e.g. C:\xampp\htdocs. In the folder that this readme is found, there is an image with the name "File hierarchy.png", this demonstrates how the PHP files and imgs folder should appear in your file explorer.
 
-4) Go to 'http://localhost/' you will be automatically redirected to the about.php page
+4) Open xampp and start Apache and MySQL service. If not using default port(80) append the port you are using to the URL in the next step
 
-5) If the database does not already exist you will be prompted to create it.
+5) Go to 'http://localhost/' you will be automatically redirected to the about.php page
 
-6) From here you can sign up, create surveys, answer the default survey view results etc.
+6) If the database does not already exist you will be prompted to create it.
+
+7) From here you can sign up, create surveys, answer the default survey view results etc.
 
 OTHER:
 - create_data.php has been renamed to init_database.php
