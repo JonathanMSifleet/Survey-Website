@@ -135,14 +135,16 @@ require_once "footer.php";
 // draws chart based upon question results:
 function drawGraph($connection, $questionID, $questionName)
 {
-	$query = "SELECT response, COUNT(response) AS countResponse, type FROM responses INNER JOIN questions USING (questionID) WHERE questionID = '$questionID' GROUP BY response";
+	$query = "SELECT s.title, s.username, s.surveyID FROM surveys s WHERE (SELECT DISTINCT r.username FROM responses r INNER JOIN questions USING(questionID) INNER JOIN surveys USING (surveyID) WHERE r.username = '{$_SESSION['username']}') = '{$_SESSION['username']}'";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
 
 		$JSONResults = "";
 		while ($row = mysqli_fetch_assoc($result)) {
-			echo $row['type'];
+			if($row['type'] == "checkboxes") {
+			
+			}
 			$JSONResults = $JSONResults . "['" . $row['response'] . " ',  " . $row['countResponse'] . "],";
 		}
 
