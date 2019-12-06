@@ -1,4 +1,3 @@
-@@ -1,49 +0,0 @@
 <?php
 
 // execute the header script:
@@ -30,7 +29,9 @@ require_once "footer.php";
 // displays table of responses:
 function displayResponseTable($connection)
 {
-	$query = "SELECT title, username, surveyID FROM surveys WHERE username = '{$_SESSION['username']}'";
+
+	// gets a list of all surveys the user has responded to:
+	$query = "SELECT DISTINCT s.title, s.username, s.surveyID FROM surveys s INNER JOIN questions q USING(surveyID) INNER JOIN responses r USING(questionID) WHERE r.username = '{$_SESSION['username']}' ORDER BY s.title ASC";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
