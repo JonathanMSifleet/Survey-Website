@@ -99,12 +99,12 @@ function displaySurvey($connection, $surveyID, $numQuestions)
 {
 	$surveyResponse = "";
 
-	$temp = Array();
-	getQuestionData($connection, $surveyID, $temp);
-	$questionName = $temp[0];
-	$questionID = $temp[1];
-	$questionType = $temp[2];
-	$answerRequired = $temp[3];
+	$questionData = Array();
+	getQuestionData($connection, $surveyID, $questionData);
+	$questionName = $questionData[0];
+	$questionID = $questionData[1];
+	$questionType = $questionData[2];
+	$answerRequired = $questionData[3];
 	$responseErrors = "";
 
 	if (!empty($_POST['checkboxResponse'])) {
@@ -251,7 +251,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
 }
 
 // fetches question data from database
-function getQuestionData($connection, $surveyID, &$temp)
+function getQuestionData($connection, $surveyID, &$questionData)
 {
 	$questionToAnswer = $_GET['questionsAnswered'];
 
@@ -260,11 +260,11 @@ function getQuestionData($connection, $surveyID, &$temp)
 
 	if ($result) {
 
-		while ($row = mysqli_fetch_assoc($result)) {
-			$temp[0] = $row['questionName'];
-			$temp[1] = $row['questionID'];
-			$temp[2] = $row['type'];
-			$temp[3] = $row['required'];
+		while ($row = mysqli_fetch_row($result)) {
+			$questionData[0] = $row[0];
+			$questionData[1] = $row[1];
+			$questionData[2] = $row[2];
+			$questionData[3] = $row[3];
 		}
 	} else {
 		echo mysqli_error($connection) . "<br>";
@@ -292,8 +292,8 @@ function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
 
 	if ($result) {
 
-		while ($row = mysqli_fetch_assoc($result)) {
-			$predefinedOptions[] = $row['optionName'];
+		while ($row = mysqli_fetch_row($result)) {
+			$predefinedOptions[] = $row[0];
 		}
 	} else {
 		echo mysqli_error($connection) . "<br>";
@@ -308,11 +308,11 @@ function getSurveyInformation($connection, $surveyID, &$surveyInformation)
 
 	if ($result) {
 
-		while ($row = mysqli_fetch_assoc($result)) {
-			$surveyInformation[0] = $row['title'];
-			$surveyInformation[1] = $row['topic'];
-			$surveyInformation[2] = $row['instructions'];
-			$surveyInformation[3] = $row['numQuestions'];
+		while ($row = mysqli_fetch_row($result)) {
+			$surveyInformation[0] = $row[0];
+			$surveyInformation[1] = $row[1];
+			$surveyInformation[2] = $row[2];
+			$surveyInformation[3] = $row[3];
 		}
 	} else {
 		echo mysqli_error($connection) . "<br>";

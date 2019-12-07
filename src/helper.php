@@ -704,7 +704,7 @@ function dropTable($connection, $tableName)
 }
 
 // prints list of user surveys
-function printSurveys($connection, $result, $userIsAdmin, $username)
+function printSurveys($result, $userIsAdmin)
 {
 	// if user is admin print all surveys from database:
 	echo "<table>";

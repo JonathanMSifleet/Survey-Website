@@ -24,7 +24,7 @@ OTHER:
 - admin account has username: "admin", password: "secret"
 
 TO DO:
-- Add checkbox with multiple responses to graphs
+- Fix checkboxes not being converted into string
 - Improve use of superglobals (make site more secure)
 - Response summaries
 

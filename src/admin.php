@@ -97,9 +97,9 @@ function displayListOfUsers($connection)
 	echo "<table>";
 	echo "<tr><th>username</th></tr>";
 
-	while ($row = mysqli_fetch_assoc($result)) {
+	while ($row = mysqli_fetch_row($result)) {
 		// if row hyperlink is clicked, set superglobal with user's name
-		echo "<tr><td><a href =?username={$row['username']}>{$row['username']}</a></td></tr>"; // turns row result into hyperlink
+		echo "<tr><td><a href =?username={$row[0]}>{$row[0]}</a></td></tr>"; // turns row result into hyperlink
 	}
 	echo "</table>";
 }

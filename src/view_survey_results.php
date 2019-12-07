@@ -107,7 +107,7 @@ else {
 
 				// displays table of results:
 				displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
-				dropTable($connection, $tableName);
+				//dropTable($connection, $tableName);
 			} else {
 				// otherwise show message that survey has no respondents:
 				echo "No survey responses<br>";
@@ -127,7 +127,7 @@ require_once "footer.php";
 // draws chart based upon question results:
 function drawGraph($connection, $questionID, $questionName)
 {
-	$query = "SELECT response, COUNT(response) AS countResponse, type FROM responses INNER JOIN questions USING (questionID) WHERE questionID = '$questionID' GROUP BY response ORDER BY username ASC";
+	$query = "SELECT response, COUNT(response) AS countResponse, type FROM responses INNER JOIN questions USING (questionID) WHERE questionID = '$questionID' GROUP BY response ORDER BY response ASC";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
@@ -318,8 +318,8 @@ function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
-		while ($row = mysqli_fetch_assoc($result)) {
-			$arrayOfRespondents[] = $row['username'];
+		while ($row = mysqli_fetch_row($result)) {
+			$arrayOfRespondents[] = $row[0];
 		}
 	} else {
 		echo mysqli_error($connection) . "<br>";
@@ -347,9 +347,9 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
-		while ($row = mysqli_fetch_assoc($result)) {
-			$arrayOfQuestions[] = $row['questionName'];
-			$arrayOfQuestionIDs[] = $row['questionID'];
+		while ($row = mysqli_fetch_row($result)) {
+			$arrayOfQuestions[] = $row[0];
+			$arrayOfQuestionIDs[] = $row[1];
 		}
 	} else {
 		echo mysqli_error($connection) . "<br>";
@@ -390,12 +390,12 @@ function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRes
 
 		for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
 
-			$query = "SELECT response FROM responses WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+			$query = "SELECT response FROM responses INNER JOIN questions USING(questionID) WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
 			$result = mysqli_query($connection, $query);
 
 			if ($result) {
-				$row = mysqli_fetch_assoc($result);
-				$dataToInsert[] = $row['response'];
+				$row = mysqli_fetch_row($result);
+				$dataToInsert[] = $row[0];
 			} else {
 				echo mysqli_error($connection) . "<br>";
 			}
