@@ -390,12 +390,18 @@ function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRes
 
 		for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
 
-			$query = "SELECT response FROM responses INNER JOIN questions USING(questionID) WHERE questionID = '{$arrayOfQuestionIDs[$j]}' AND username = '$username'";
+			// concats responses
+			$query = "SELECT r.response, type, GROUP_CONCAT(r.response ORDER BY r.response ASC) AS 'concat_response' FROM responses r INNER JOIN questions q USING(questionID) WHERE q.questionID = '{$arrayOfQuestionIDs[$j]}' AND r.username = '$username'";
 			$result = mysqli_query($connection, $query);
 
 			if ($result) {
-				$row = mysqli_fetch_row($result);
-				$dataToInsert[] = $row[0];
+				$row = mysqli_fetch_assoc($result);
+				// if question is a checkbox insert concatenated response into table:
+				if ($row['type'] == 'checkboxes') {
+					$dataToInsert[] = $row['concat_response'];
+				} else {
+					$dataToInsert[] = $row['response'];
+				}
 			} else {
 				echo mysqli_error($connection) . "<br>";
 			}
