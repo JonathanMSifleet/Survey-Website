@@ -102,15 +102,8 @@ else {
 
 				// if admin decides to delete a users responses from a survey, delete their responses from the database:
 				if (isset($_GET['username'])) {
-					$query = "DELETE r.* FROM responses r INNER JOIN questions q USING (questionID) WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
-					$result = mysqli_query($connection, $query);
-
-					// display success message if there are no errors:
-					if ($result) {
-						echo "<br>Successfully deleted response<br>";
 					} else {
-						echo mysqli_error($connection);
-					}
+					deleteUserResponse($connection, $surveyID);
 				}
 
 				// displays table of results:
@@ -135,17 +128,25 @@ require_once "footer.php";
 // draws chart based upon question results:
 function drawGraph($connection, $questionID, $questionName)
 {
-	$query = "SELECT s.title, s.username, s.surveyID FROM surveys s WHERE (SELECT DISTINCT r.username FROM responses r INNER JOIN questions USING(questionID) INNER JOIN surveys USING (surveyID) WHERE r.username = '{$_SESSION['username']}') = '{$_SESSION['username']}'";
+	$query = "SELECT response, COUNT(response) AS countResponse, type FROM responses INNER JOIN questions USING (questionID) WHERE questionID = '$questionID' GROUP BY response ORDER BY username ASC";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
 
-		$JSONResults = "";
+		$graphResults = "";
+
 		while ($row = mysqli_fetch_assoc($result)) {
-			if($row['type'] == "checkboxes") {
-			
+			if ($row['type'] == "checkboxes") {
+
+				$arrayOfCheckboxes = explode(",", $row['response']);
+
+				for ($i = 0; $i < count($arrayOfCheckboxes); $i++) {
+					$graphResults = $graphResults . "['" . $arrayOfCheckboxes[$i] . "'," . $row['countResponse'] . "],";
+				}
+
+			} else {
+				$graphResults = $graphResults . "['" . $row['response'] . "'," . $row['countResponse'] . "],";
 			}
-			$JSONResults = $JSONResults . "['" . $row['response'] . " ',  " . $row['countResponse'] . "],";
 		}
 
 		echo <<<_END
@@ -168,7 +169,7 @@ function drawGraph($connection, $questionID, $questionName)
 		data.addColumn('string', '[key]'); // x axis
 		data.addColumn('number', '[key]'); // x axis
         data.addRows([
-          $JSONResults
+          $graphResults
         ]);
 		
         // Set chart options
