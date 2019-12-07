@@ -35,7 +35,7 @@ else {
 				// if they want to update their response, delete all their old data
 				// then begin to show survey:
 				if (isset($_GET['displaySurvey'])) {
-					dropUserResponse($connection, $surveyID);
+					deleteUserResponse($connection, $surveyID);
 					getSurveyData($connection, $surveyID);
 				}
 			} else {
@@ -142,10 +142,22 @@ function insertResponse($connection, $surveyID, $questionID, $questionName, $que
 	if ($responseErrors == "") {
 
 		$currentUser = $_SESSION['username'];
-		$responseID = md5($surveyID . $questionID . $currentUser . $surveyResponse);
 
-		$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
-		$result = mysqli_query($connection, $query);
+		if ($questionType == "checkboxes") {
+			$arrayOfCheckboxAnswers = explode(",", $surveyResponse);
+
+			for ($i = 0; $i < count($arrayOfCheckboxAnswers); $i++) {
+				$responseID = md5($surveyID . $questionID . $currentUser . $arrayOfCheckboxAnswers[$i]);
+
+				$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '{$arrayOfCheckboxAnswers[$i]}')";
+				$result = mysqli_query($connection, $query);
+			}
+		} else {
+			$responseID = md5($surveyID . $questionID . $currentUser . $surveyResponse);
+
+			$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
+			$result = mysqli_query($connection, $query);
+		}
 
 		if ($result) {
 			echo "<br><br>Response was successful<br>";

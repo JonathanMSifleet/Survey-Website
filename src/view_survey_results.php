@@ -102,7 +102,6 @@ else {
 
 				// if admin decides to delete a users responses from a survey, delete their responses from the database:
 				if (isset($_GET['username'])) {
-					} else {
 					deleteUserResponse($connection, $surveyID);
 				}
 

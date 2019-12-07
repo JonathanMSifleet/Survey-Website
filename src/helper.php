@@ -726,7 +726,13 @@ function printSurveys($connection, $result, $userIsAdmin, $username)
 // deletes user responses from database
 function deleteUserResponse($connection, $surveyID)
 {
-	$query = "DELETE r.* FROM responses r INNER JOIN questions q USING (questionID) WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+	if(isset($_GET['username'])) {
+		$username = $_GET['username'];
+	} else {
+		$username = $_SESSION['username'];
+	}
+
+	$query = "DELETE r.* FROM responses r INNER JOIN questions q USING (questionID) WHERE q.surveyID = '$surveyID' AND r.username = '$username'";
 	$result = mysqli_query($connection, $query);
 
 	// display success message if there are no errors:
