@@ -236,7 +236,6 @@ function createArrayOfAccountErrors($username, $email, $password, $firstname, $s
 // checks to make sure input is a number, and then validates the size of the integer
 function validateNumberOfQuestion($input, $minNo, $maxNo)
 {
-	$errors = "";
 	$errors = checkOnlyNumeric($input);
 	$errors = $errors . validateIntSize($input, $minNo, $maxNo);
 	return $errors;
@@ -345,42 +344,9 @@ function determineFieldType($superGlobalName, &$minLength, &$maxLength)
 	}
 }
 
-// determines min and max values for the fields
-function determineMinMaxVals($field, &$minLength, &$maxLength, $todaysDate)
-{
-	switch ($field) {
-		case $field == "email":
-			$minLength = 3;
-			$maxLength = 64;
-			return "email";
-		case $field == "password":
-			$maxLength = 32;
-			return "password";
-		case $field == "firstname":
-			$minLength = 2;
-			$maxLength = 16;
-			return "text";
-		case $field == "surname":
-			$minLength = 3;
-			$maxLength = 24;
-			return "text";
-		case $field == "number":
-			$minLength = 11;
-			$maxLength = 11;
-			return "text";
-		case $field == "dob":
-			$minLength = calcEarliestDate($todaysDate);
-			$maxLength = calcLatestDate($todaysDate);
-			return "date";
-		default:
-			return "";
-	}
-}
-
 // calculates the earliest date that a user can be born
 function calcEarliestDate($todaysDate)
 {
-	$minDate = $todaysDate;
 	$minDate = substr($todaysDate, 0, 4);
 	$minDate = (int)$minDate;
 	$minYear = $minDate - 120;
@@ -392,7 +358,6 @@ function calcEarliestDate($todaysDate)
 // calculates the latest date that a user can be born
 function calcLatestDate($todaysDate)
 {
-	$maxDate = $todaysDate;
 	$maxDate = substr($todaysDate, 0, 4);
 	$maxDate = (int)$maxDate;
 	$maxYear = $maxDate - 13;
@@ -501,12 +466,12 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
 			echo "Updating field failed: " . $input_val;
 		}
 	} else {
-		showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLength);
+		showUserDataFieldForm($fieldToChange, $fieldType);
 	}
 }
 
 // displays the input form for user to update their account details
-function showUserDataFieldForm($fieldToChange, $fieldType, $minLength, $maxLength)
+function showUserDataFieldForm($fieldToChange, $fieldType)
 {
 	$currentURL = $_SERVER['REQUEST_URI'];
 	$fieldToDisplay = ucfirst($fieldToChange);
@@ -704,7 +669,7 @@ function dropTable($connection, $tableName)
 }
 
 // prints list of user surveys
-function printSurveys($result, $userIsAdmin)
+function printSurveys($connection, $result, $userIsAdmin)
 {
 	// if user is admin print all surveys from database:
 	echo "<table>";
