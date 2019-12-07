@@ -35,7 +35,7 @@ else {
 				// if they want to update their response, delete all their old data
 				// then begin to show survey:
 				if (isset($_GET['displaySurvey'])) {
-					dropUserResponse($connection, $surveyID, $username);
+					dropUserResponse($connection, $surveyID);
 					getSurveyData($connection, $surveyID);
 				}
 			} else {
@@ -51,18 +51,6 @@ else {
 
 // finish of the HTML for this page:
 require_once "footer.php";
-
-// deletes user responses from database
-function dropUserResponse($connection, $surveyID, $username)
-{
-	// delete all of the users responses to the survey from the responses table
-	$query = "DELETE r.* FROM responses r INNER JOIN questions q USING (questionID) WHERE username = '$username' AND surveyID = '$surveyID'";
-	$result = mysqli_query($connection, $query);
-
-	if (!$result) {
-		echo mysqli_error($connection);
-	}
-}
 
 // fetches survey data from database
 function getSurveyData($connection, $surveyID)
@@ -122,7 +110,7 @@ function displaySurvey($connection, $surveyID, $numQuestions)
 	if (!empty($_POST['checkboxResponse'])) {
 
 		// append list of responses if question is checkbox question:
-		$surveyResponse = implode(', ', $_POST['checkboxResponse']);
+		$surveyResponse = implode(',', $_POST['checkboxResponse']);
 		$surveyResponse = sanitise($surveyResponse, $connection);
 
 		// insert response into table:

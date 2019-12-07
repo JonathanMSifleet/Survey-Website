@@ -649,7 +649,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 		if ($result) {
 			// show a successful signup message:
 			echo "Account creation was successful<br><br>";
-			echo "Your password is: " . $plaintextPassword. "<br><br>";
+			echo "Your password is: " . $plaintextPassword . "<br><br>";
 
 
 			echo "<a href = sign_in.php>Click here to sign in</a><br>";
@@ -721,6 +721,20 @@ function printSurveys($connection, $result, $userIsAdmin, $username)
 		}
 	}
 	echo "</table>";
+}
+
+// deletes user responses from database
+function deleteUserResponse($connection, $surveyID)
+{
+	$query = "DELETE r.* FROM responses r INNER JOIN questions q USING (questionID) WHERE q.surveyID = '$surveyID' AND r.username = '{$_GET['username']}'";
+	$result = mysqli_query($connection, $query);
+
+	// display success message if there are no errors:
+	if ($result) {
+		echo "<br>Successfully deleted response<br>";
+	} else {
+		echo mysqli_error($connection);
+	}
 }
 
 // prints variable value, used for debugging
