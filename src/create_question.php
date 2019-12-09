@@ -89,14 +89,17 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
 			$query = "UPDATE questions SET questionNo = '$numQuestionsInserted' WHERE questionID = '$questionID'";
 			$result = mysqli_query($connection, $query);
 
-			// shows prompt to create question options if it can have pre-defined options:
-			if ($type == "multOption" || $type == "dropdown" || $type == "checkboxes") {
-				echo "<br>Now to create some options: <br>";
+			if($result) {
 				$numQuestionsInserted++;
-				echo "<a href = create_option.php?questionID=$questionID&surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted&numQuestions=$numQuestions> Click here to create options </a><br>";
-			} else {
-				// if it doesn't have pre-defined options show the create question prompt:
-				displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
+
+				// shows prompt to create question options if it can have pre-defined options:
+				if ($type == "multOption" || $type == "dropdown" || $type == "checkboxes") {
+					echo "<br>Now to create some options: <br>";
+					echo "<a href = create_option.php?questionID=$questionID&surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted&numQuestions=$numQuestions> Click here to create options </a><br>";
+				} else {
+					// if it doesn't have pre-defined options show the create question prompt:
+					displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
+				}
 			}
 		} else {
 			// else display an error:

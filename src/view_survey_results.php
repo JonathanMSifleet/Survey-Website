@@ -390,8 +390,8 @@ function populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRes
 
 		for ($j = 0; $j < count($arrayOfQuestionIDs); $j++) {
 
-			// concats responses
-			$query = "SELECT r.response, type, GROUP_CONCAT(r.response ORDER BY r.response ASC) AS 'concat_response' FROM responses r INNER JOIN questions q USING(questionID) WHERE q.questionID = '{$arrayOfQuestionIDs[$j]}' AND r.username = '$username'";
+			// concatenates responses
+			$query = "SELECT r.response, type, GROUP_CONCAT(r.response ORDER BY r.response ASC SEPARATOR ', ') AS 'concat_response' FROM responses r INNER JOIN questions q USING(questionID) WHERE q.questionID = '{$arrayOfQuestionIDs[$j]}' AND r.username = '$username'";
 			$result = mysqli_query($connection, $query);
 
 			if ($result) {
