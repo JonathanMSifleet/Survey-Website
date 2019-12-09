@@ -11,7 +11,7 @@ else {
 
 	// if the connection fails, we need to know, so allow this exit:
 	if (!$connection) {
-		die("Connection failed: " . $mysqli_connect_error);
+		die("Connection failed: " . mysqli_connect_error());
 	}
 
 	$surveyID = $_GET['surveyID'];
@@ -164,7 +164,7 @@ function drawGraph($connection, $questionID, $questionName)
       function drawChart() {
 		
         // Create the data table.
-        var data = new google.visualization.DataTable();
+        let data = new google.visualization.DataTable();
 		data.addColumn('string', '[key]'); // x axis
 		data.addColumn('number', '[key]'); // x axis
         data.addRows([
@@ -172,11 +172,11 @@ function drawGraph($connection, $questionID, $questionName)
         ]);
 		
         // Set chart options
-        var options = {'title':'$questionName',
+        let options = {'title':'$questionName',
                        'width':500,
                        'height':400};
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        let chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
 	</script>
@@ -251,11 +251,11 @@ function initDeleteQuestion($connection, $surveyID, $numQuestions, &$arrayOfQues
 	getSurveyQuestions($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs);
 
 	// updates each questions question number in question table:
-	updateAllQuestionNums($connection, $surveyID, $arrayOfQuestionNames, $arrayOfQuestionIDs); // finish this function
+	updateAllQuestionNums($connection, $surveyID, $arrayOfQuestionIDs); // finish this function
 }
 
 // updates each questions question number in question table:
-function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionNames, &$arrayOfQuestionIDs)
+function updateAllQuestionNums($connection, $surveyID, &$arrayOfQuestionIDs)
 {
 	$j = 0;
 
@@ -357,7 +357,7 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
 }
 
 // inserts the user-friendly table into the database:
-function createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName)
+function createTable($connection, $arrayOfQuestionNames, $tableName)
 {
 	$query = "CREATE TABLE $tableName (Username VARCHAR(20), PRIMARY KEY(username))";
 	$result = mysqli_query($connection, $query);
@@ -430,18 +430,17 @@ function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $
 {
 	$query = "SELECT * FROM  $tableName ORDER BY username ASC";
 	$result = mysqli_query($connection, $query);
-	$numColumns = mysqli_num_fields($result);
 
 	echo "<br><table>";
 
-	displayHeaders($connection, $tableName, $arrayOfQuestionNames);
+	displayHeaders( $arrayOfQuestionNames);
 	displayRows($result, $surveyID);
 
 	echo "</table>";
 }
 
 // displays the table headers:
-function displayHeaders($connection, $tableName, $arrayOfQuestionNames)
+function displayHeaders( $arrayOfQuestionNames)
 {
 	echo "<tr>";
 	echo "<th>Username</th>";

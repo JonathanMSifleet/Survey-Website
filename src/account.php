@@ -14,7 +14,7 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 	$origin = "account.php";
 	$username = $_SESSION["username"];
 
-	printUserData($connection, $origin, $username);
+	printUserData($connection, $username);
 	printOptionsToEdit($origin, $username);
 
 	$currentURL = $_SERVER['REQUEST_URI'];

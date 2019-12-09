@@ -18,7 +18,7 @@ else {
 
 	// if the connection fails, we need to know, so allow this exit:
 	if (!$connection) {
-		die("Connection failed: " . $mysqli_connect_error);
+		die("Connection failed: " . mysqli_connect_error());
 	}
 
 	echo "<a href = init_database.php> Reinitialise database </a>";
@@ -40,7 +40,7 @@ else {
 				$origin = "admin.php";
 				$username = $_GET['username'];
 
-				printUserData($connection, $origin, $username);
+				printUserData($connection, $username);
 
 				$currentURL = $_SERVER['REQUEST_URI'];
 

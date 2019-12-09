@@ -50,7 +50,6 @@ function getOptions($connection, $numOptions, $questionID)
 function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOptionErrors)
 {
 	// gets list of errors if user data is invalid
-	$errors = array();
 	createArrayOfOptionErrors($arrayOfOptions, $arrayOfOptionErrors);
 	$errors = implode('', $arrayOfOptionErrors);
 
@@ -63,21 +62,21 @@ function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOption
 		for ($i = 0; $i < count($arrayOfOptions); $i++) {
 			$query = "INSERT INTO question_options (questionID, optionName, optionNo) VALUES ('$questionID', '$arrayOfOptions[$i]', '$i')";
 			$result = mysqli_query($connection, $query);
-		}
 
-		if ($result) {
-			echo "Options inserted successfully <br>";
+			if ($result) {
+				echo "Options inserted successfully <br>";
 
-			$surveyID = $_GET['surveyID'];
-			$numQuestionsInserted = $_GET['numQuestionsInserted'];
-			$numQuestions = $_GET['numQuestions'];
+				$surveyID = $_GET['surveyID'];
+				$numQuestionsInserted = $_GET['numQuestionsInserted'];
+				$numQuestions = $_GET['numQuestions'];
 
-			// if options inserted successfully, show the next question
-			displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
-		} else {
-			// else display an error
-			displayOptionForm($numOptions, $arrayOfOptionErrors);
-			echo "Error: " . mysqli_error($connection) . "<br>";
+				// if options inserted successfully, show the next question
+				displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions);
+			} else {
+				// else display an error
+				displayOptionForm($numOptions, $arrayOfOptionErrors);
+				echo "Error: " . mysqli_error($connection) . "<br>";
+			}
 		}
 	} else {
 		// show invalid options message

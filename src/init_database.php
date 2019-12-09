@@ -28,7 +28,7 @@ if ($dbExists == false || ($dbExists == true && $userIsAdmin == true)) {
 
 	// exit the script with a useful message if there was an error:
 	if (!$connection) {
-		die("Connection failed: " . $mysqli_connect_error);
+		die("Connection failed: " . mysqli_connect_error());
 	}
 
 	// begin timer:
@@ -303,7 +303,7 @@ function createDefaultSurvey($connection)
 	$arrayOfQuestionIDs = array();
 
 	insertDefaultQuestions($connection, $surveyID, $arrayOfQuestionIDs);
-	insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs);
+	insertDefaultOptions($connection, $arrayOfQuestionIDs);
 }
 
 // insert default survey into database:
@@ -366,7 +366,7 @@ function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
 }
 
 // insert default question options into survey:
-function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
+function insertDefaultOptions($connection, $arrayOfQuestionIDs)
 {
 
 	// question 1:
