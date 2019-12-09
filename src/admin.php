@@ -104,4 +104,3 @@ function displayListOfUsers($connection)
 	echo "</table>";
 }
 
-?>

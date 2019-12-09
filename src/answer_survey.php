@@ -339,4 +339,3 @@ function createResponseErrors($questionType, $surveyResponse)
 	}
 }
 
-?>

@@ -25,4 +25,3 @@ else {
 // finish of the HTML for this page:
 require_once "footer.php";
 
-?>

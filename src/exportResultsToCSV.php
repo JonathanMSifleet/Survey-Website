@@ -45,4 +45,3 @@ fclose($file);
 // drops table from database:
 dropTable($connection, $tableName);
 
-?>

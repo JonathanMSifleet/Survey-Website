@@ -4,4 +4,3 @@ $dbhost = 'localhost';
 $dbuser = 'root';
 $dbpass = '';
 $dbname = 'survey_database';
-?>

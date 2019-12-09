@@ -13,7 +13,7 @@ session_start();
 // loads style sheet and other header information:
 echo <<<_END
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
         <title>Jonathan's Survey Website</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -60,4 +60,3 @@ echo <<<_END
 <br><br><br><br>
 <body>
 _END;
-?>

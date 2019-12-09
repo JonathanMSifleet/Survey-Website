@@ -115,4 +115,3 @@ function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic,
 	$arrayOfSurveyErrors[3] = validateStringLength($topic, 0, 32);
 }
 
-?>
