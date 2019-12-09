@@ -17,7 +17,7 @@ function sanitise($str, $connection)
 }
 
 // validates input based upon field type
-function validateInput($input, $fieldToChange)
+function validateInput($input, $fieldToChange, $minLength, $maxLength, $todaysDate)
 {
 	switch ($fieldToChange) {
 		case $fieldToChange == "email":
@@ -225,7 +225,7 @@ function createArrayOfUsableCharacters()
 function createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
 	$arrayOfErrors[0] = validateStringLength($username, 1, 20);
-	$arrayOfErrors[1] = validateEmail($email, 3, 64);
+	$arrayOfErrors[1] = validateStringLength($email, 1, 64);
 	$arrayOfErrors[2] = validatePassword($password, 12, 32);
 	$arrayOfErrors[3] = validateName($firstname, 2, 16); // see line below +
 	$arrayOfErrors[4] = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
@@ -433,14 +433,15 @@ function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, 
 		echo "Change user details:";
 		echo "<br>";
 
-		// validate input:
+		// validate date
+		$todaysDate = date('Y-m-d'); // get current date:
 		$newInput = sanitise($_POST['newInput'], $connection);
-		$input_val = validateInput($newInput, $fieldToChange);
+		$input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength, $todaysDate);
 
 		// validate password
 		if ($input_val == "Generate random password") {
 			$newInput = generateAlphanumericString();
-			$input_val = validateInput($newInput, $fieldToChange);
+			$input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength);
 		}
 
 		// if there are no errors then encrypt the new password
@@ -713,4 +714,4 @@ function echoVariable($variableToEcho)
 	echo "<br>Variable value: " . $variableToEcho . "<br>";
 }
 
-
+?>

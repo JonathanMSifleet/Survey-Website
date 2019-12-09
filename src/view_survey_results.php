@@ -164,7 +164,7 @@ function drawGraph($connection, $questionID, $questionName)
       function drawChart() {
 		
         // Create the data table.
-        let data = new google.visualization.DataTable();
+        var data = new google.visualization.DataTable();
 		data.addColumn('string', '[key]'); // x axis
 		data.addColumn('number', '[key]'); // x axis
         data.addRows([
@@ -172,11 +172,11 @@ function drawGraph($connection, $questionID, $questionName)
         ]);
 		
         // Set chart options
-        let options = {'title':'$questionName',
+        var options = {'title':'$questionName',
                        'width':500,
                        'height':400};
         // Instantiate and draw our chart, passing in some options.
-        let chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
 	</script>
@@ -475,3 +475,4 @@ function displayRows($result, $surveyID)
 	}
 }
 
+?>

@@ -172,3 +172,4 @@ function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayO
 	$arrayOfQuestionErrors[1] = validateStringLength($numOptions, 1, 32);
 }
 
+?>

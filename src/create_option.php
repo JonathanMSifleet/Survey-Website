@@ -50,6 +50,7 @@ function getOptions($connection, $numOptions, $questionID)
 function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOptionErrors)
 {
 	// gets list of errors if user data is invalid
+	$errors = array();
 	createArrayOfOptionErrors($arrayOfOptions, $arrayOfOptionErrors);
 	$errors = implode('', $arrayOfOptionErrors);
 
@@ -113,6 +114,7 @@ function getNumOptions($connection)
 	// if no data returned, we set result to true(success)/false(failure):
 	if ($result) {
 		$row = mysqli_fetch_row($result);
+
 		return $row[0];
 	} else {
 		// show an unsuccessful signup message:
@@ -128,3 +130,4 @@ function createArrayOfOptionErrors($arrayOfOptions, &$arrayOfOptionErrors)
 	}
 }
 
+?>

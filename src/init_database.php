@@ -411,4 +411,4 @@ function insertDefaultOptions($connection, $surveyID, $arrayOfQuestionIDs)
 	}
 }
 
-
+?>

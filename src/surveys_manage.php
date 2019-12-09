@@ -39,7 +39,7 @@ else {
 
 	// if surveys exist into database, display them:
 	if (mysqli_num_rows($result) != 0) {
-		printSurveys($connection, $result, $userIsAdmin);
+		printSurveys($connection, $result, $userIsAdmin, $username);
 	} else {
 		// otherwise display no surveys found message:
 		echo "No surveys found<br>";
@@ -70,3 +70,4 @@ else {
 	require_once "footer.php";
 }
 
+?>
