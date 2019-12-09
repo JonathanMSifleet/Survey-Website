@@ -14,7 +14,7 @@ else {
 
 	// if the connection fails, we need to know, so allow this exit:
 	if (!$connection) {
-		die("Connection failed: " . mysqli_connect_error());
+		die("Connection failed: " . $mysqli_connect_error);
 	}
 
 	initNewSurvey($connection);

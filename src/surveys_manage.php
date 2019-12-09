@@ -11,7 +11,7 @@ else {
 	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 	// if the connection fails, we need to know, so allow this exit:
 	if (!$connection) {
-		die("Connection failed: " . mysqli_connect_error());
+		die("Connection failed: " . $mysqli_connect_error);
 	}
 
 	// display create question prompt:
@@ -39,7 +39,7 @@ else {
 
 	// if surveys exist into database, display them:
 	if (mysqli_num_rows($result) != 0) {
-		printSurveys($connection, $result, $userIsAdmin);
+		printSurveys($connection, $result, $userIsAdmin, $username);
 	} else {
 		// otherwise display no surveys found message:
 		echo "No surveys found<br>";
@@ -68,26 +68,6 @@ else {
 	}
 	// finish off the HTML for this page:
 	require_once "footer.php";
-}
-
-// prints list of user surveys
-function printSurveys($connection, $result, $userIsAdmin)
-{
-	// if user is admin print all surveys from database:
-	echo "<table>";
-	if ($userIsAdmin) {
-		echo "<tr><th>Survey ID</th><th>Username</th><th>Title</th><th>Topic</th><th>Survey link</th><th>View results</th><th>Delete survey</th></tr>";
-		while ($row = mysqli_fetch_assoc($result)) {
-			echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0>Survey link</a></td><td><a href = view_survey_results.php?surveyID={$row['surveyID']}>View Results</a><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
-		}
-	} else {
-		// if user is not the admin, only display the user's surveys:
-		echo "<tr><th>Survey ID</th><th>Title</th><th>Topic</th><th>Survey link</th><th>View results</th><th>Delete survey</th></tr>";
-		while ($row = mysqli_fetch_assoc($result)) {
-			echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = view_survey_results.php?surveyID={$row['surveyID']}>View Results</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
-		}
-	}
-	echo "</table>";
 }
 
 ?>

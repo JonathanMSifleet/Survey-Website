@@ -17,7 +17,7 @@ function sanitise($str, $connection)
 }
 
 // validates input based upon field type
-function validateInput($input, $fieldToChange)
+function validateInput($input, $fieldToChange, $minLength, $maxLength, $todaysDate)
 {
 	switch ($fieldToChange) {
 		case $fieldToChange == "email":
@@ -222,10 +222,10 @@ function createArrayOfUsableCharacters()
 }
 
 // this function validates all user inputs, and adds each validation message to an array of errors
-function createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $DOB, &$arrayOfErrors)
+function createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $DOB, $todaysDate, &$arrayOfErrors)
 {
 	$arrayOfErrors[0] = validateStringLength($username, 1, 20);
-	$arrayOfErrors[1] = validateEmail($email, 1, 64);
+	$arrayOfErrors[1] = validateStringLength($email, 1, 64);
 	$arrayOfErrors[2] = validatePassword($password, 12, 32);
 	$arrayOfErrors[3] = validateName($firstname, 2, 16); // see line below +
 	$arrayOfErrors[4] = validateName($surname, 2, 20); // shortest last name I've ever seen was a girl called "Ng" +
@@ -376,7 +376,7 @@ function initEmptyArray(&$array, $size)
 
 // this function gets the username of the selected user from the session superglobal, gets all their information using an SQL query, displays it in a table
 // then shows the options to either change the password or delete the account
-function printUserData($connection, $username)
+function printUserData($connection, $origin, $username)
 {
 	echo "<br>";
 
@@ -423,7 +423,7 @@ function printOptionsToEdit($origin, $username)
 
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
 // then updates the user's password via an SQL query
-function changeUserDetails($connection, $fieldToChange, $fieldType)
+function changeUserDetails($connection, $fieldToChange, $fieldType, $minLength, $maxLength)
 {
 	// if the user has inputted a new input then
 	if (isset($_POST['newInput'])) {
@@ -433,14 +433,15 @@ function changeUserDetails($connection, $fieldToChange, $fieldType)
 		echo "Change user details:";
 		echo "<br>";
 
-		// validate input
+		// validate date
+		$todaysDate = date('Y-m-d'); // get current date:
 		$newInput = sanitise($_POST['newInput'], $connection);
-		$input_val = validateInput($newInput, $fieldToChange);
+		$input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength, $todaysDate);
 
 		// validate password
 		if ($input_val == "Generate random password") {
 			$newInput = generateAlphanumericString();
-			$input_val = validateInput($newInput, $fieldToChange);
+			$input_val = validateInput($newInput, $fieldToChange, $minLength, $maxLength);
 		}
 
 		// if there are no errors then encrypt the new password
@@ -595,7 +596,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 	}
 
 	// creates an array of account errors
-	createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob,, $arrayOfAccountCreationErrors);
+	createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
 
 	// concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
 	$errors = implode('', $arrayOfAccountCreationErrors);
@@ -613,10 +614,9 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 		if ($result) {
 			// show a successful signup message:
 			echo "Account creation was successful<br><br>";
+			echo "Your password is: " . $plaintextPassword . "<br><br>";
 
-			if ($randomPasswordGenerated) {
-				echo "Your password is: " . $plaintextPassword . "<br><br>";
-			}
+
 			echo "<a href = sign_in.php>Click here to sign in</a><br>";
 		} else {
 			displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors);
@@ -668,10 +668,30 @@ function dropTable($connection, $tableName)
 	}
 }
 
+// prints list of user surveys
+function printSurveys($connection, $result, $userIsAdmin)
+{
+	// if user is admin print all surveys from database:
+	echo "<table>";
+	if ($userIsAdmin) {
+		echo "<tr><th>Survey ID</th><th>Username</th><th>Title</th><th>Topic</th><th>Survey link</th><th>View results</th><th>Delete survey</th></tr>";
+		while ($row = mysqli_fetch_assoc($result)) {
+			echo "<tr><td>{$row['surveyID']}</td><td>{$row['username']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0>Survey link</a></td><td><a href = view_survey_results.php?surveyID={$row['surveyID']}>View Results</a><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
+		}
+	} else {
+		// if user is not the admin, only display the user's surveys:
+		echo "<tr><th>Survey ID</th><th>Title</th><th>Topic</th><th>Survey link</th><th>View results</th><th>Delete survey</th></tr>";
+		while ($row = mysqli_fetch_assoc($result)) {
+			echo "<tr><td>{$row['surveyID']}</td><td>{$row['title']}</td><td>{$row['topic']}</td><td><a href = answer_survey.php?surveyID={$row['surveyID']}&questionsAnswered=0> Survey link</a></td><td><a href = view_survey_results.php?surveyID={$row['surveyID']}>View Results</a></td><td><a href = ?deleteSurvey=true&surveyID={$row['surveyID']}> Delete</a></td></tr>";
+		}
+	}
+	echo "</table>";
+}
+
 // deletes user responses from database
 function deleteUserResponse($connection, $surveyID)
 {
-	if (isset($_GET['username'])) {
+	if(isset($_GET['username'])) {
 		$username = $_GET['username'];
 	} else {
 		$username = $_SESSION['username'];
