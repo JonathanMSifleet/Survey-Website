@@ -1,9 +1,5 @@
 <?php
-// Things to notice:
-// You need to add code to this script to implement the admin functions and features
-// Notice that the code not only checks whether the user is logged in, but also whether they are the admin, before it displays the page content
-// When an admin user is verified, you can implement all the admin tools functionality from this script, or distribute them over multiple pages - your choice
-// execute the header script:
+
 require_once "header.php";
 
 // checks the session variable named 'loggedInSkeleton'

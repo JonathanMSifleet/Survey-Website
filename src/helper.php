@@ -425,47 +425,51 @@ function printOptionsToEdit($origin, $username)
 // then updates the user's password via an SQL query
 function changeUserDetails($connection, $fieldToChange, $fieldType)
 {
-	// if the user has inputted a new input then
-	if (isset($_POST['newInput'])) {
+	if ($_SESSION['username'] == "admin") {
+		echo "<br> Admin cannot have their details edited";
+	} else {
+		// if the user has inputted a new input then
+		if (isset($_POST['newInput'])) {
 
-		$currentUsername = $_SESSION['username'];
+			$currentUsername = $_SESSION['username'];
 
-		echo "Change user details:";
-		echo "<br>";
-
-		// validate input
-		$newInput = sanitise($_POST['newInput'], $connection);
-		$input_val = validateInput($newInput, $fieldToChange);
-
-		// validate password
-		if ($input_val == "Generate random password") {
-			$newInput = generateAlphanumericString();
-			$input_val = validateInput($newInput, $fieldToChange);
-		}
-
-		// if there are no errors then encrypt the new password
-		if ($input_val == "") {
-			if ($fieldType == "password") {
-				$newInput = encryptInput($newInput);
-				echo "<br>";
-				echo "Insert a new password if your browser hasn't automatically saved your password";
-			}
-			// update database with new details
-			$query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
-			$result = mysqli_query($connection, $query);
-
+			echo "Change user details:";
 			echo "<br>";
-			if ($result) {
-				echo ucfirst($fieldToChange) . " changed";
+
+			// validate input
+			$newInput = sanitise($_POST['newInput'], $connection);
+			$input_val = validateInput($newInput, $fieldToChange);
+
+			// validate password
+			if ($input_val == "Generate random password") {
+				$newInput = generateAlphanumericString();
+				$input_val = validateInput($newInput, $fieldToChange);
+			}
+
+			// if there are no errors then encrypt the new password
+			if ($input_val == "") {
+				if ($fieldType == "password") {
+					$newInput = encryptInput($newInput);
+					echo "<br>";
+					echo "Insert a new password if your browser hasn't automatically saved your password";
+				}
+				// update database with new details
+				$query = "UPDATE users SET $fieldToChange='$newInput' WHERE username = '$currentUsername'";
+				$result = mysqli_query($connection, $query);
+
+				echo "<br>";
+				if ($result) {
+					echo ucfirst($fieldToChange) . " changed";
+				} else {
+					echo mysqli_error($connection) . "<br>";
+				}
 			} else {
-				echo mysqli_error($connection) . "<br>";
+				echo "<br>";
+				echo "Updating field failed: " . $input_val;
 			}
 		} else {
-			echo "<br>";
-			echo "Updating field failed: " . $input_val;
+			showUserDataFieldForm($fieldToChange, $fieldType);
 		}
-	} else {
-		showUserDataFieldForm($fieldToChange, $fieldType);
 	}
 }
 
@@ -531,6 +535,7 @@ function deleteAccount($connection, $username)
 // required to enact the account detail edit
 function enactEdit($connection)
 {
+
 	if (isset($_GET['deleteAccount'])) {
 		deleteAccount($connection, $_GET['username']);
 	} else {
@@ -542,7 +547,6 @@ function enactEdit($connection)
 		$fieldType = determineFieldType($superGlobalName, $minLength, $maxLength);
 
 		echo "<br>";
-
 		if ($superGlobalName !== "") {
 			changeUserDetails($connection, $superGlobalName, $fieldType, $minLength, $maxLength);
 		}
@@ -595,7 +599,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 	}
 
 	// creates an array of account errors
-	createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob,, $arrayOfAccountCreationErrors);
+	createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $dob, $arrayOfAccountCreationErrors);
 
 	// concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
 	$errors = implode('', $arrayOfAccountCreationErrors);
