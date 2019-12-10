@@ -107,19 +107,48 @@ function displaySurvey($connection, $surveyID, $numQuestions)
 	$answerRequired = $questionData[3];
 	$responseErrors = "";
 
-	if (!empty($_POST['checkboxResponse'])) {
+	// if the form is submitted then:
+	if (isset($_POST['formSubmit'])) {
+		// if the question doesn't require an answer then:
+		if ($answerRequired == 0) {
+			if (!empty($_POST['checkboxResponse'])) {
+				// append list of responses if question is checkbox question:
+				$surveyResponse = implode(',', $_POST['checkboxResponse']);
+				$surveyResponse = sanitise($surveyResponse, $connection);
 
-		// append list of responses if question is checkbox question:
-		$surveyResponse = implode(',', $_POST['checkboxResponse']);
-		$surveyResponse = sanitise($surveyResponse, $connection);
+				// insert response into table:
+				insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+			} elseif (isset($_POST['surveyResponse'])) {
 
-		// insert response into table:
-		insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
-	} elseif (isset($_POST['surveyResponse'])) {
+				$surveyResponse = sanitise($_POST['surveyResponse'], $connection);
+				// insert response into table:
+				insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+			} else {
+				$surveyResponse = null;
+				// insert response into table:
+				insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+			}
+			// if question does require a question then:
+		} else {
+			if (!empty($_POST['checkboxResponse'])) {
+				echo "Checkbox response not empty";
+				// append list of responses if question is checkbox question:
+				$surveyResponse = implode(',', $_POST['checkboxResponse']);
+				$surveyResponse = sanitise($surveyResponse, $connection);
 
-		// insert response into table:
-		$surveyResponse = sanitise($_POST['surveyResponse'], $connection);
-		insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+				// insert response into table:
+				insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+			} elseif (isset($_POST['surveyResponse'])) {
+
+				$surveyResponse = sanitise($_POST['surveyResponse'], $connection);
+				// insert response into table:
+				insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions);
+			} else {
+				// if the question hasn't been answered display the question:
+				displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
+				echo "<br>Question requires an answer";
+			}
+		}
 	} else {
 		// if the question hasn't been answered display the question:
 		displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors);
@@ -143,21 +172,11 @@ function insertResponse($connection, $surveyID, $questionID, $questionName, $que
 
 		$currentUser = $_SESSION['username'];
 
-		if ($questionType == "checkboxes") {
-			$arrayOfCheckboxAnswers = explode(",", $surveyResponse);
+		$responseID = md5($surveyID . $questionID . $currentUser . $surveyResponse);
 
-			for ($i = 0; $i < count($arrayOfCheckboxAnswers); $i++) {
-				$responseID = md5($surveyID . $questionID . $currentUser . $arrayOfCheckboxAnswers[$i]);
+		$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
+		$result = mysqli_query($connection, $query);
 
-				$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '{$arrayOfCheckboxAnswers[$i]}')";
-				$result = mysqli_query($connection, $query);
-			}
-		} else {
-			$responseID = md5($surveyID . $questionID . $currentUser . $surveyResponse);
-
-			$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
-			$result = mysqli_query($connection, $query);
-		}
 
 		if ($result) {
 			echo "<br><br>Response was successful<br>";
@@ -246,7 +265,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
 			echo "<br>";
 	}
 
-	echo "<br><input type='submit' value='Submit'>";
+	echo "<br><input type='submit' name='formSubmit' value='Submit'>";
 	echo "</form>";
 }
 
