@@ -89,7 +89,7 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
 			$query = "UPDATE questions SET questionNo = '$numQuestionsInserted' WHERE questionID = '$questionID'";
 			$result = mysqli_query($connection, $query);
 
-			if($result) {
+			if ($result) {
 				$numQuestionsInserted++;
 
 				// shows prompt to create question options if it can have pre-defined options:

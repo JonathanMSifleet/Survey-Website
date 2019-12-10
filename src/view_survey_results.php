@@ -433,14 +433,14 @@ function displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $
 
 	echo "<br><table>";
 
-	displayHeaders( $arrayOfQuestionNames);
+	displayHeaders($arrayOfQuestionNames);
 	displayRows($result, $surveyID);
 
 	echo "</table>";
 }
 
 // displays the table headers:
-function displayHeaders( $arrayOfQuestionNames)
+function displayHeaders($arrayOfQuestionNames)
 {
 	echo "<tr>";
 	echo "<th>Username</th>";
