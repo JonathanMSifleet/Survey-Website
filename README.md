@@ -24,6 +24,7 @@ OTHER:
 - admin account has username: "admin", password: "secret"
 
 TO DO:
+- Fix date of birth not updatibg
 - Fix checkboxes not being converted into string
 - Improve use of superglobals (make site more secure)
 - Response summaries
