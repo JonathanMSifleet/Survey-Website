@@ -2,6 +2,8 @@
 Jonathan Sifleet
 18014017
 
+MUST BE RUN USING WINDOWS XAMPP OR YOU WILL ENCOUNTER ERRORS (Tested by Stuart Cunningham)
+
 SETUP:
 1) Must be running XAMPP version 7.2.5 or later (PHP 7.2.5 or later). If using an older version the survey may/will produce errors.
 https://www.apachefriends.org/download.html
@@ -24,9 +26,6 @@ OTHER:
 - admin account has username: "admin", password: "secret"
 
 TO DO:
-- Fix question does not progress if given no answer even if answer is not required
-- Fix date of birth not updating
-- Fix checkboxes not being converted into string
 - Improve use of superglobals (make site more secure)
 - Response summaries
 

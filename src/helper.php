@@ -422,16 +422,16 @@ function printOptionsToEdit($origin, $username)
 }
 
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
-// then updates the user's password via an SQL query
+// then updates the user's password via an SQL query:
 function changeUserDetails($connection, $fieldToChange, $fieldType)
 {
-	if ($_SESSION['username'] == "admin") {
+	if ($_GET['username'] == "admin") {
 		echo "<br> Admin cannot have their details edited";
 	} else {
 		// if the user has inputted a new input then
 		if (isset($_POST['newInput'])) {
 
-			$currentUsername = $_SESSION['username'];
+			$currentUsername = $_GET['username'];
 
 			echo "Change user details:";
 			echo "<br>";
