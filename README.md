@@ -25,6 +25,8 @@ OTHER:
 
 TO DO:
 - Fix question does not progress if given no answer even if answer is not required
+- Fix date of birth not updating
+- Fix checkboxes not being converted into string
 - Improve use of superglobals (make site more secure)
 - Response summaries
 
