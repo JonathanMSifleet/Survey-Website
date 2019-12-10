@@ -24,7 +24,7 @@ OTHER:
 - admin account has username: "admin", password: "secret"
 
 TO DO:
-- Fix checkboxes not being converted into string
+- Fix question does not progress if given no answer even if answer is not required
 - Improve use of superglobals (make site more secure)
 - Response summaries
 
