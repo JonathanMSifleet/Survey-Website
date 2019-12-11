@@ -386,7 +386,7 @@ function printUserData($connection, $username)
 	if ($result) {
 
 		// displays the table headers for the users data
-		echo "Account details:";
+		echo "<h4>Account details</h4>";
 		echo "<table>";
 		echo "<tr><th>Username</th><th>Email address</th><th>Password (hash)</th><th>First name</th><th>Surname</th><th>Phone Number</th><th>Date of Birth</th></tr>";
 
