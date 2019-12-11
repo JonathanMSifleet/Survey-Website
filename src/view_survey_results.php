@@ -306,7 +306,7 @@ function createResultsTable($connection, $surveyID, $tableName, $arrayOfQuestion
 	// if the user-friendly table for this survey exists, drop it:
 	dropTable($connection, $tableName);
 	// create the user-friendly table:
-	createTable($connection, $surveyID, $arrayOfQuestionNames, $tableName);
+	createTable($connection, $arrayOfQuestionNames, $tableName);
 	// insert responses into the user-friendly table:
 	populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
 }
