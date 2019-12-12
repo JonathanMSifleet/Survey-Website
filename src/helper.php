@@ -524,7 +524,13 @@ function deleteAccount($connection, $username)
 			echo "<br>";
 			if ($result) {
 				// show success message:
-				echo "Account deleted";
+				echo "Account deleted<br>";
+
+				if ($_SESSION['username'] == $username) {
+					signOut();
+					echo "You have been logged out, please <a href='about.php'>click here</a>  to return to the main page<br>";
+				}
+
 			} else {
 				echo mysqli_error($connection) . "<br>";
 			}
@@ -690,6 +696,18 @@ function deleteUserResponse($connection, $surveyID)
 	} else {
 		echo mysqli_error($connection);
 	}
+}
+
+// signs out current user:
+function signOut()
+{
+	// user just clicked to logout, so destroy the session data:
+	// first clear the session superglobal array:
+	$_SESSION = array();
+	// then the cookie that holds the session ID:
+	setcookie(session_name(), "", time() - 2592000, '/');
+	// then the session data on the server:
+	session_destroy();
 }
 
 // prints variable value, used for debugging
