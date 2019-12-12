@@ -304,6 +304,7 @@ function createDefaultSurvey($connection)
 
 	insertDefaultQuestions($connection, $surveyID, $arrayOfQuestionIDs);
 	insertDefaultOptions($connection, $arrayOfQuestionIDs);
+	insertDefaultResponses($connection, $arrayOfQuestionIDs);
 }
 
 // insert default survey into database:
@@ -383,7 +384,7 @@ function insertDefaultOptions($connection, $arrayOfQuestionIDs)
 		$result = mysqli_query($connection, $query);
 
 		if ($result) {
-			echo "Option " . ($i + 1) . " inserted succesfully<br>";
+			echo "Option " . ($i + 1) . " inserted successfully<br>";
 		} else {
 			echo "Error: " . mysqli_error($connection) . "<br>";
 		}
@@ -408,6 +409,70 @@ function insertDefaultOptions($connection, $arrayOfQuestionIDs)
 		} else {
 			echo "Error: " . mysqli_error($connection) . "<br>";
 		}
+	}
+}
+
+// inserts pre-defined responses into table, default-responses show off graphing abilities:
+function insertDefaultResponses($connection, $arrayOfQuestionIDs)
+{
+
+	$arrayOfUsers = array();
+
+	$arrayOfUsers[] = "timmy";
+	$arrayOfUsers[] = "mandyb";
+	$arrayOfUsers[] = "admin";
+	$arrayOfUsers[] = "briang";
+
+	// creates pre-defined array of responses:
+	$arrayOfResponses = array(
+		"2019-12-01",
+		"Slightly dissatisfied",
+		"Sharing surveys with friends",
+		"Neutral",
+		"Creating polls for friends",
+		"2019-12-02",
+		"Slightly satisfied",
+		"Site security",
+		"Slightly likely",
+		"Business use",
+		"2019-12-11",
+		"Very dissatisfied",
+		"Visual appearance",
+		"Slightly likely",
+		"I haven\'t",
+		"2019-12-11",
+		"Slightly satisfied",
+		"Add more features",
+		"Highly unlikely",
+		"Data gathering");
+
+	$counter = 0;
+	$questionCounter = 0;
+
+	// insert each response into table:
+	for ($i = 0; $i <= count($arrayOfResponses) - 1; $i++) {
+
+		if ($counter % 4 == 0) {
+			$counter = 0;
+		}
+
+		if ($questionCounter % 5 == 0) {
+			$questionCounter = 0;
+		}
+
+		$responseID = md5("af57a209f9e756664ef282d11a385c70" . $arrayOfQuestionIDs[$questionCounter] . $arrayOfUsers[$counter] . $arrayOfResponses[$i]);
+
+		$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('{$arrayOfQuestionIDs[$questionCounter]}','{$arrayOfUsers[$counter]}', '$responseID', '$arrayOfResponses[$i]')";
+		$result = mysqli_query($connection, $query);
+
+		if ($result) {
+			echo "Success entering default response <br>";
+		} else {
+			echo mysqli_error($connection);
+		}
+
+		$counter++;
+		$questionCounter++;
 	}
 }
 
