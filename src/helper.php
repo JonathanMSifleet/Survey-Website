@@ -7,6 +7,9 @@ function sanitise($str, $connection)
 		// just in case server is running an old version of PHP with "magic quotes" running:
 		$str = stripslashes($str);
 	}
+	
+	// ' is a delimiter, replace with a quotation mark:
+	$str = str_replace("'","’", $str);
 
 	// escape any dangerous characters, e.g. quotes:
 	$str = mysqli_real_escape_string($connection, $str);

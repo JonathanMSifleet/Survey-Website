@@ -439,7 +439,7 @@ function insertDefaultResponses($connection, $arrayOfQuestionIDs)
 		"Very dissatisfied",
 		"Visual appearance",
 		"Slightly likely",
-		"I haven\'t",
+		"I haven’t",
 		"2019-12-11",
 		"Slightly satisfied",
 		"Add more features",
