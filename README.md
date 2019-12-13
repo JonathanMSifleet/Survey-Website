@@ -26,6 +26,7 @@ OTHER:
 - dummy accounts are created in the init_database.php script
 
 TO DO:
+- Handle questions where response = null
 - Improve use of superglobals (make site more secure)
 - Response summaries
 

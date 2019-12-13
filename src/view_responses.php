@@ -21,6 +21,11 @@ else {
 
 	// display response table:
 	displayResponseTable($connection);
+
+	if(isset($_GET['response'])) {
+		deleteUserResponse($connection, $_GET['response']);
+	}
+
 }
 
 // finish of the HTML for this page:
@@ -37,10 +42,10 @@ function displayResponseTable($connection)
 	if ($result) {
 		// displays table:
 		echo "<table>";
-		echo "<tr><th>Survey name</th><th>Survey author</th><th>Your responses</th></tr>";
+		echo "<tr><th>Survey name</th><th>Survey author</th><th>My responses</th><th>Delete response</th></tr>";
 
 		while ($row = mysqli_fetch_row($result)) {
-			echo "<tr><td>{$row[0]}</td><td>{$row[1]}</td><td><a href = answer_survey.php?surveyID={$row[2]}&questionsAnswered=0>Edit response</a></td></tr>";
+			echo "<tr><td>{$row[0]}</td><td>{$row[1]}</td><td><a href = answer_survey.php?surveyID={$row[2]}&questionsAnswered=0>Edit response</a></td><td><a href = view_responses.php?response={$row[2]}>Delete response</a></td></tr>";
 		}
 		echo "</table>";
 	} else {
