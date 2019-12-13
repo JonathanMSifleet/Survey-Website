@@ -7,9 +7,9 @@ function sanitise($str, $connection)
 		// just in case server is running an old version of PHP with "magic quotes" running:
 		$str = stripslashes($str);
 	}
-	
+
 	// ' is a delimiter, replace with a quotation mark:
-	$str = str_replace("'","’", $str);
+	$str = str_replace("'", "’", $str);
 
 	// escape any dangerous characters, e.g. quotes:
 	$str = mysqli_real_escape_string($connection, $str);
@@ -71,17 +71,6 @@ function validateStringLength($field, $minlength, $maxlength) // edit function n
 	} else {
 		// data was valid, return an empty string:
 		return "";
-	}
-}
-
-// this function checks if an input is 0 chracters long and returns a message, if the input is larger than 0 characters
-// send a different message
-function checkIfLengthZero($field)
-{
-	if (strlen($field) == 0) {
-		return true;
-	} else {
-		return false;
 	}
 }
 
@@ -236,29 +225,6 @@ function createArrayOfAccountErrors($username, $email, $password, $firstname, $s
 	$arrayOfErrors[6] = validateDate($DOB);
 }
 
-// checks to make sure input is a number, and then validates the size of the integer
-function validateNumberOfQuestion($input, $minNo, $maxNo)
-{
-	$errors = checkOnlyNumeric($input);
-	$errors = $errors . validateIntSize($input, $minNo, $maxNo);
-	return $errors;
-}
-
-// checks integer is correct size
-function validateIntSize($input, $minNo, $maxNo)
-{
-	if ($input < $minNo) {
-		// wasn't a valid length, return a help message:
-		return "Input length: " . $input . ", minimum length: " . $minNo;
-	} elseif ($input > $maxNo) {
-		// wasn't a valid length, return a help message:
-		return "Input length: " . $input . ", maximum length: " . $maxNo;
-	} else {
-		// data was valid, return an empty string:
-		return "";
-	}
-}
-
 // gets the name of a superglobal from the current URL
 function getSuperGlobalName($inputURL)
 {
@@ -296,25 +262,10 @@ function containsAmpersand($inputString)
 function removeAmpersand($inputString)
 {
 	$stringLength = strlen($inputString);
-	$locationOfAmpersand = getAmpersandLocation($inputString);
+
+	// if found, return the location of the symbol:
+	$locationOfAmpersand = strpos($inputString, '&');
 	return substr($inputString, $locationOfAmpersand + 1, $stringLength); // trim variable
-}
-
-// returns the location in the input that the '&' symbol exists
-function getAmpersandLocation($inputString)
-{
-	// convert input into array of chars
-	$arrayOfChars = str_split($inputString);
-	$inputLength = count($arrayOfChars);
-
-	// for each char in array, check if it is the '&' symbol
-	// if found, return the location of the symbol
-	for ($i = 0; $i <= $inputLength; $i++) {
-		if ($arrayOfChars[$i] == '&') {
-			return $i;
-		}
-	}
-	return 127;
 }
 
 // determines the field type bust upon the superglobal name
@@ -601,7 +552,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 	$plaintextPassword = "";
 
 	// if password length = 0, generate a random password
-	if (checkIfLengthZero($password)) {
+	if (strlen($password) == 0) {
 		$randomPasswordGenerated = true;
 		$password = generateAlphanumericString();
 		$plaintextPassword = $password;
@@ -669,15 +620,6 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
 	} else {
 		echo "<br>Survey completed!<br>";
 		echo "<a href = surveys_manage.php> Click here to return to 'My Surveys' </a><br>";
-	}
-}
-
-// drops a table from a database:
-function dropTable($connection, $tableName)
-{
-	$sql = "DROP TABLE IF EXISTS $tableName";
-	if (!mysqli_query($connection, $sql)) {
-		echo "Error checking for user table: " . mysqli_error($connection);
 	}
 }
 

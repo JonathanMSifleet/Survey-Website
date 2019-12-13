@@ -310,6 +310,15 @@ function createResultsTable($connection, $surveyID, $tableName, $arrayOfQuestion
 	populateTable($connection, $tableName, $arrayOfQuestionIDs, $arrayOfRespondents, $numResponses);
 }
 
+// drops a table from a database:
+function dropTable($connection, $tableName)
+{
+	$sql = "DROP TABLE IF EXISTS $tableName";
+	if (!mysqli_query($connection, $sql)) {
+		echo "Error checking for user table: " . mysqli_error($connection);
+	}
+}
+
 // gets array of survey respondents from the database:
 function getSurveyRespondents($connection, $surveyID, &$arrayOfRespondents)
 {

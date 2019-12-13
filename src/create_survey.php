@@ -111,8 +111,31 @@ function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic,
 {
 	$arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
 	$arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, 500);
-	$arrayOfSurveyErrors[2] = validateNumberOfQuestion($numQuestions, 1, 32);
+	$arrayOfSurveyErrors[2] = validateNumberOfQuestions($numQuestions, 1, 32);
 	$arrayOfSurveyErrors[3] = validateStringLength($topic, 0, 32);
+}
+
+// checks integer is correct size
+function validateIntSize($input, $minNo, $maxNo)
+{
+	if ($input < $minNo) {
+		// wasn't a valid length, return a help message:
+		return "Input length: " . $input . ", minimum length: " . $minNo;
+	} elseif ($input > $maxNo) {
+		// wasn't a valid length, return a help message:
+		return "Input length: " . $input . ", maximum length: " . $maxNo;
+	} else {
+		// data was valid, return an empty string:
+		return "";
+	}
+}
+
+// checks to make sure input is a number, and then validates the size of the integer
+function validateNumberOfQuestions($input, $minNo, $maxNo)
+{
+	$errors = checkOnlyNumeric($input);
+	$errors = $errors . validateIntSize($input, $minNo, $maxNo);
+	return $errors;
 }
 
 ?>
