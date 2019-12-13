@@ -28,8 +28,7 @@ else {
 }
 
 // gets question data from user:
-function initNewQuestions($connection, $surveyID, $numQuestions)
-{
+function initNewQuestions($connection, $surveyID, $numQuestions) {
 	$arrayOfQuestionErrors = array();
 	initEmptyArray($arrayOfQuestionErrors, 1);
 
@@ -65,8 +64,7 @@ function initNewQuestions($connection, $surveyID, $numQuestions)
 }
 
 // inserts question into database if its valid
-function insertQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors)
-{
+function insertQuestion($connection, $surveyID, $questionName, $type, $numOptions, $required, $numQuestions, $arrayOfQuestionErrors) {
 	// create a list of errors:
 	createArrayOfQuestionErrors($questionName, $type, $numOptions, $arrayOfQuestionErrors);
 	$errors = implode('', $arrayOfQuestionErrors);
@@ -115,41 +113,39 @@ function insertQuestion($connection, $surveyID, $questionName, $type, $numOption
 }
 
 // displays the create question form:
-function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors)
-{
+function displayCreateQuestionForm($questionName, $type, $numOptions, $required, $arrayOfQuestionErrors) {
 	$questionNo = $_GET['numQuestionsInserted'];
 	$questionNo++;
 
 	// display form:
 	echo <<<_END
-        <form action="" method="post">
-          Question $questionNo: <br><br>
-          Title: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
-          <br>
-          Type of question:
-          <select name="type">
-            <option value ="checkboxes">Checkboxes</option>
-            <option value ="date">Date</option>
-            <option value ="dropdown">Dropdown</option>
-            <option value ="longAnswer">Long answer</option>
-            <option value ="multOption">Multiple options</option>
-            <option value ="number">Number</option>
-            <option value ="shortAnswer">Short answer</option>      
-            <option value ="time">Time</option>
-          </select>  
-          <br>
-          Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown, checkboxes or multiple choices
-          <br>
-          Required: <input type="checkbox" name="required" value="1">
-          <br><br>
-          <input type="submit" value="Submit">
-        </form>
+            <form action="" method="post">
+              Question $questionNo: <br><br>
+              Title: <input type="text" name="questionName" minlength="3" maxlength="64" value="$questionName" required> $arrayOfQuestionErrors[0]
+              <br>
+              Type of question:
+              <select name="type">
+                <option value ="checkboxes">Checkboxes</option>
+                <option value ="date">Date</option>
+                <option value ="dropdown">Dropdown</option>
+                <option value ="longAnswer">Long answer</option>
+                <option value ="multOption">Multiple options</option>
+                <option value ="number">Number</option>
+                <option value ="shortAnswer">Short answer</option>      
+                <option value ="time">Time</option>
+              </select>  
+              <br>
+              Number of pre-defined options: <input type="text" name="numOptions" minlength="1" maxlength="32" value="$numOptions" required> $arrayOfQuestionErrors[0] only applies to dropdown, checkboxes or multiple choices
+              <br>
+              Required: <input type="checkbox" name="required" value="1">
+              <br><br>
+              <input type="submit" value="Submit">
+            </form>
 _END;
 }
 
 // gets the number of questions a survey has from the database:
-function getNoOfSurveyQuestions($connection, $surveyID)
-{
+function getNoOfSurveyQuestions($connection, $surveyID) {
 	$query = "SELECT numQuestions FROM surveys WHERE surveyID = '$surveyID'";
 	$result = mysqli_query($connection, $query);
 
@@ -166,8 +162,7 @@ function getNoOfSurveyQuestions($connection, $surveyID)
 }
 
 // creates an array of question errors:
-function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayOfQuestionErrors)
-{
+function createArrayOfQuestionErrors($questionName, $type, $numOptions, &$arrayOfQuestionErrors) {
 	$arrayOfQuestionErrors[0] = validateStringLength($questionName, 4, 64);
 	$arrayOfQuestionErrors[1] = validateStringLength($numOptions, 1, 32);
 }

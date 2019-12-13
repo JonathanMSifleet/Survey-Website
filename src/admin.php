@@ -53,8 +53,7 @@ else {
 // finish off the HTML for this page:
 require_once "footer.php";
 
-function initCreateAccount($connection)
-{
+function initCreateAccount($connection) {
 	$arrayOfAccountCreationErrors = array();
 	initEmptyArray($arrayOfAccountCreationErrors, 6);
 
@@ -80,8 +79,7 @@ function initCreateAccount($connection)
 	}
 }
 
-function displayListOfUsers($connection)
-{
+function displayListOfUsers($connection) {
 	// queries mysql table for list of users, outputs list of users to table
 	// if no errors are encountered
 	$query = "SELECT username FROM users ORDER BY username ASC";

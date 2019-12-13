@@ -22,18 +22,16 @@ else {
 	// display response table:
 	displayResponseTable($connection);
 
-	if(isset($_GET['response'])) {
+	if (isset($_GET['response'])) {
 		deleteUserResponse($connection, $_GET['response']);
 	}
-
 }
 
 // finish of the HTML for this page:
 require_once "footer.php";
 
 // displays table of responses:
-function displayResponseTable($connection)
-{
+function displayResponseTable($connection) {
 
 	// gets a list of all surveys the user has responded to:
 	$query = "SELECT DISTINCT s.title, s.username, s.surveyID FROM surveys s INNER JOIN questions q USING(surveyID) INNER JOIN responses r USING(questionID) WHERE r.username = '{$_SESSION['username']}' ORDER BY s.title ASC";

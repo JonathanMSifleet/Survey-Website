@@ -67,8 +67,7 @@ if ($dbExists == false || ($dbExists == true && $userIsAdmin == true)) {
 require_once "footer.php";
 
 // calculates time taken between survey being initiated and it being finished:
-function calculateTimeTaken($time_pre, $time_post)
-{
+function calculateTimeTaken($time_pre, $time_post) {
 	$timeTaken = $time_post - $time_pre;
 	$timeTaken = $timeTaken * 1000;
 	$timeTaken = floor($timeTaken);
@@ -77,8 +76,7 @@ function calculateTimeTaken($time_pre, $time_post)
 }
 
 // if database exists, drop it:
-function dropDatabase($connection, $dbname)
-{
+function dropDatabase($connection, $dbname) {
 	// build a statement to create a new database:
 	$sql = "DROP DATABASE IF EXISTS " . $dbname;
 	// no data returned, we just test for true(success)/false(failure):
@@ -90,8 +88,7 @@ function dropDatabase($connection, $dbname)
 }
 
 // create database:
-function createDatabase($connection, $dbname)
-{
+function createDatabase($connection, $dbname) {
 	// build a statement to create a new database:
 	$sql = "CREATE DATABASE IF NOT EXISTS " . $dbname;
 	// no data returned, we just test for true(success)/false(failure):
@@ -105,8 +102,7 @@ function createDatabase($connection, $dbname)
 }
 
 // create user table:
-function createUserTable($connection)
-{
+function createUserTable($connection) {
 	// if there's an old version of our table, then drop it:
 	$sql = "DROP TABLE IF EXISTS users";
 	// no data returned, we just test for true(success)/false(failure):
@@ -126,8 +122,7 @@ function createUserTable($connection)
 }
 
 // create survey table:
-function createSurveyTable($connection)
-{
+function createSurveyTable($connection) {
 	// if there's an old version of our table, then drop it:
 	$sql = "DROP TABLE IF EXISTS surveys";
 	// no data returned, we just test for true(success)/false(failure):
@@ -147,8 +142,7 @@ function createSurveyTable($connection)
 }
 
 // create question table:
-function createQuestionTable($connection)
-{
+function createQuestionTable($connection) {
 	// if there's an old version of our table, then drop it:
 	$sql = "DROP TABLE IF EXISTS questions";
 	// no data returned, we just test for true(success)/false(failure):
@@ -168,8 +162,7 @@ function createQuestionTable($connection)
 }
 
 // create question options table:
-function createQuestionOptionsTable($connection)
-{
+function createQuestionOptionsTable($connection) {
 	// if there's an old version of our table, then drop it:
 	$sql = "DROP TABLE IF EXISTS question_options";
 	// no data returned, we just test for true(success)/false(failure):
@@ -189,8 +182,7 @@ function createQuestionOptionsTable($connection)
 }
 
 // create response table:
-function createResponseTable($connection)
-{
+function createResponseTable($connection) {
 	// if there's an old version of our table, then drop it:
 	$sql = "DROP TABLE IF EXISTS responses";
 	// no data returned, we just test for true(success)/false(failure):
@@ -210,8 +202,7 @@ function createResponseTable($connection)
 }
 
 // insert default users into table:
-function insertDefaultUsers($connection)
-{
+function insertDefaultUsers($connection) {
 	// put some data in our table:
 	// create an array variable for each field in the DB that we want to populate
 	$usernames[] = 'admin';
@@ -294,8 +285,7 @@ function insertDefaultUsers($connection)
 }
 
 // create default survey
-function createDefaultSurvey($connection)
-{
+function createDefaultSurvey($connection) {
 	$surveyID = "";
 
 	insertDefaultSurvey($connection, $surveyID);
@@ -308,8 +298,7 @@ function createDefaultSurvey($connection)
 }
 
 // insert default survey into database:
-function insertDefaultSurvey($connection, &$surveyID)
-{
+function insertDefaultSurvey($connection, &$surveyID) {
 	$title = "Website Feedback";
 	$surveyID = md5("admin" . $title);
 	$instructions = "This is the default survey. The survey contains five questions and five question types. This survey acts as feedback for the site";
@@ -326,8 +315,7 @@ function insertDefaultSurvey($connection, &$surveyID)
 }
 
 // insert default survey questions into database:
-function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
-{
+function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs) {
 	$arrayOfQuestions = array(
 		"What is todays date?",
 		"How satisfied are you with the website?",
@@ -367,8 +355,7 @@ function insertDefaultQuestions($connection, $surveyID, &$arrayOfQuestionIDs)
 }
 
 // insert default question options into survey:
-function insertDefaultOptions($connection, $arrayOfQuestionIDs)
-{
+function insertDefaultOptions($connection, $arrayOfQuestionIDs) {
 
 	// question 1:
 	$arrayOfOptions = array(
@@ -413,9 +400,7 @@ function insertDefaultOptions($connection, $arrayOfQuestionIDs)
 }
 
 // inserts pre-defined responses into table, default-responses show off graphing abilities:
-function insertDefaultResponses($connection, $arrayOfQuestionIDs)
-{
-
+function insertDefaultResponses($connection, $arrayOfQuestionIDs) {
 	$arrayOfUsers = array();
 
 	$arrayOfUsers[] = "timmy";
@@ -444,7 +429,8 @@ function insertDefaultResponses($connection, $arrayOfQuestionIDs)
 		"Slightly satisfied",
 		"Add more features",
 		"Highly unlikely",
-		"Data gathering");
+		"Data gathering"
+	);
 
 	$counter = 0;
 	$questionCounter = 0;

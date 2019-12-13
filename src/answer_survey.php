@@ -53,8 +53,7 @@ else {
 require_once "footer.php";
 
 // fetches survey data from database
-function getSurveyData($connection, $surveyID)
-{
+function getSurveyData($connection, $surveyID) {
 	$surveyID = $_GET['surveyID'];
 	$surveyInformation = array();
 
@@ -78,8 +77,7 @@ _END;
 }
 
 // determines if user has already responded to survey
-function hasUserRespondedToSurvey($connection, $surveyID, $username)
-{
+function hasUserRespondedToSurvey($connection, $surveyID, $username) {
 	// if the user has responded to the survey, return the value true, as they have answered the survey already
 	$query = "SELECT DISTINCT username FROM responses INNER JOIN questions USING(questionID) WHERE surveyID = '$surveyID' AND username = '$username'";
 	$result = mysqli_query($connection, $query);
@@ -95,8 +93,7 @@ function hasUserRespondedToSurvey($connection, $surveyID, $username)
 }
 
 // displays survey
-function displaySurvey($connection, $surveyID, $numQuestions)
-{
+function displaySurvey($connection, $surveyID, $numQuestions) {
 	$surveyResponse = "";
 
 	$questionData = Array();
@@ -156,8 +153,7 @@ function displaySurvey($connection, $surveyID, $numQuestions)
 }
 
 // attempts to insert user response into database
-function insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions)
-{
+function insertResponse($connection, $surveyID, $questionID, $questionName, $questionType, $answerRequired, $surveyResponse, $responseErrors, $numQuestions) {
 	if ($answerRequired == 1 && $surveyResponse == "") {
 		$responseErrors = "Answer required!";
 	} else {
@@ -176,7 +172,6 @@ function insertResponse($connection, $surveyID, $questionID, $questionName, $que
 
 		$query = "INSERT INTO responses (questionID, username, responseID, response) VALUES ('$questionID', '$currentUser', '$responseID', '$surveyResponse')";
 		$result = mysqli_query($connection, $query);
-
 
 		if ($result) {
 			echo "<br><br>Response was successful<br>";
@@ -205,8 +200,7 @@ function insertResponse($connection, $surveyID, $questionID, $questionName, $que
 }
 
 // displays the current question and response form
-function displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors)
-{
+function displaySurveyQuestion($connection, $surveyID, $questionName, $questionID, $questionType, $answerRequired, $surveyResponse, $responseErrors) {
 	echo "<br><h4>" . ($_GET['questionsAnswered'] + 1) . ": $questionName</h4>";
 
 	$predefinedOptions = array();
@@ -270,8 +264,7 @@ function displaySurveyQuestion($connection, $surveyID, $questionName, $questionI
 }
 
 // fetches question data from database
-function getQuestionData($connection, $surveyID, &$questionData)
-{
+function getQuestionData($connection, $surveyID, &$questionData) {
 	$questionToAnswer = $_GET['questionsAnswered'];
 
 	$query = "SELECT questionName, questionID, type, required FROM questions WHERE surveyID = '$surveyID' AND questionNo = '$questionToAnswer'";
@@ -291,8 +284,7 @@ function getQuestionData($connection, $surveyID, &$questionData)
 }
 
 // determine if surveyID exists in database
-function determineValidSurvey($connection, $surveyID)
-{
+function determineValidSurvey($connection, $surveyID) {
 	$query = "SELECT * FROM surveys WHERE surveyID='$surveyID'";
 	$result = mysqli_query($connection, $query);
 
@@ -304,8 +296,7 @@ function determineValidSurvey($connection, $surveyID)
 }
 
 // fetches a questions predefined options if it has any
-function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
-{
+function getPredefinedOptions($connection, $questionID, &$predefinedOptions) {
 	$query = "SELECT optionName FROM question_options WHERE questionID = '$questionID' ORDER BY optionNo ASC";
 	$result = mysqli_query($connection, $query);
 
@@ -320,8 +311,7 @@ function getPredefinedOptions($connection, $questionID, &$predefinedOptions)
 }
 
 // fetches survey information from database
-function getSurveyInformation($connection, $surveyID, &$surveyInformation)
-{
+function getSurveyInformation($connection, $surveyID, &$surveyInformation) {
 	$query = "SELECT title, topic, instructions, numQuestions FROM surveys WHERE surveyID = '$surveyID'";
 	$result = mysqli_query($connection, $query);
 
@@ -339,8 +329,7 @@ function getSurveyInformation($connection, $surveyID, &$surveyInformation)
 }
 
 // creates errors to response if user input is invalid:
-function createResponseErrors($questionType, $surveyResponse)
-{
+function createResponseErrors($questionType, $surveyResponse) {
 
 	// validate input based upon question type:
 	switch ($questionType) {

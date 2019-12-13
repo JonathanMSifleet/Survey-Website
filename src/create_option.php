@@ -20,8 +20,7 @@ else {
 require_once "footer.php";
 
 // gets users inputted options
-function getOptions($connection, $numOptions, $questionID)
-{
+function getOptions($connection, $numOptions, $questionID) {
 	// creates required arrays
 	$arrayOfOptions = Array();
 	initEmptyArray($arrayOfOptions, $numOptions);
@@ -47,8 +46,7 @@ function getOptions($connection, $numOptions, $questionID)
 }
 
 // attempts to insert options into database
-function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOptionErrors)
-{
+function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOptionErrors) {
 	// gets list of errors if user data is invalid
 	createArrayOfOptionErrors($arrayOfOptions, $arrayOfOptionErrors);
 	$errors = implode('', $arrayOfOptionErrors);
@@ -87,8 +85,7 @@ function insertOptions($connection, $arrayOfOptions, $numOptions, $arrayOfOption
 }
 
 // displays the form for creating an option:
-function displayOptionForm($numOptions, $arrayOfOptionErrors)
-{
+function displayOptionForm($numOptions, $arrayOfOptionErrors) {
 	echo "<form action='' method='post'>";
 
 	$optionNum = 0;
@@ -104,8 +101,7 @@ function displayOptionForm($numOptions, $arrayOfOptionErrors)
 }
 
 // get the number of options a question has from the database:
-function getNumOptions($connection)
-{
+function getNumOptions($connection) {
 	$questionID = $_GET['questionID'];
 
 	$query = "SELECT numOptions FROM questions WHERE questionID = '$questionID'";
@@ -123,8 +119,7 @@ function getNumOptions($connection)
 }
 
 // creates an array of option errors:
-function createArrayOfOptionErrors($arrayOfOptions, &$arrayOfOptionErrors)
-{
+function createArrayOfOptionErrors($arrayOfOptions, &$arrayOfOptionErrors) {
 	for ($i = 0; $i < count($arrayOfOptions); $i++) {
 		$arrayOfOptionErrors[$i] = validateStringLength($arrayOfOptions[$i], 1, 64);
 	}

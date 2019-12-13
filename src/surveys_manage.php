@@ -71,8 +71,7 @@ else {
 }
 
 // prints list of user surveys
-function printSurveys($connection, $result, $userIsAdmin)
-{
+function printSurveys($connection, $result, $userIsAdmin) {
 	// if user is admin print all surveys from database:
 	echo "<table>";
 	if ($userIsAdmin) {

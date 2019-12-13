@@ -24,8 +24,7 @@ else {
 require_once "footer.php";
 
 // get survey data from user:
-function initNewSurvey($connection)
-{
+function initNewSurvey($connection) {
 	$arrayOfSurveyErrors = array();
 	initEmptyArray($arrayOfSurveyErrors, 4);
 
@@ -51,8 +50,7 @@ function initNewSurvey($connection)
 }
 
 // inserts survey into database:
-function createSurvey($connection, $title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors)
-{
+function createSurvey($connection, $title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors) {
 	// creates array of survey data:
 	createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors);
 	$errors = implode('', $arrayOfSurveyErrors);
@@ -86,29 +84,27 @@ function createSurvey($connection, $title, $instructions, $numQuestions, $topic,
 }
 
 // displays create survey form:
-function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors)
-{
+function displayCreateSurveyForm($title, $instructions, $numQuestions, $topic, $arrayOfSurveyErrors) {
 
 	// max number of questions length to be compatible with MYSQL smallint max value
 	echo <<<_END
-        <form action="create_survey.php" method="post">
-          Input survey details:<br>
-          Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
-          <br>
-          Instructions: <input type="text" name="instructions" minlength="2" maxlength="500" value="$instructions" required> $arrayOfSurveyErrors[1]
-          <br>
-          Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$numQuestions" required> $arrayOfSurveyErrors[2]
-          <br>
-          Survey Topic: <input type="text" name="topic" maxlength="32" value="$topic"> $arrayOfSurveyErrors[4]
-          <br>
-          <input type="submit" value="Submit">
-        </form>
+            <form action="create_survey.php" method="post">
+              Input survey details:<br>
+              Title: <input type="text" name="title" minlength="3" maxlength="64" value="$title" required> $arrayOfSurveyErrors[0]
+              <br>
+              Instructions: <input type="text" name="instructions" minlength="2" maxlength="500" value="$instructions" required> $arrayOfSurveyErrors[1]
+              <br>
+              Number of questions: <input type="text" name="noOfQuestions" minlength="1" maxlength="512" value="$numQuestions" required> $arrayOfSurveyErrors[2]
+              <br>
+              Survey Topic: <input type="text" name="topic" maxlength="32" value="$topic"> $arrayOfSurveyErrors[4]
+              <br>
+              <input type="submit" value="Submit">
+            </form>
 _END;
 }
 
 // creates an array of invalid survey data:
-function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic, &$arrayOfSurveyErrors)
-{
+function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic, &$arrayOfSurveyErrors) {
 	$arrayOfSurveyErrors[0] = validateStringLength($title, 4, 64);
 	$arrayOfSurveyErrors[1] = validateStringLength($instructions, 1, 500);
 	$arrayOfSurveyErrors[2] = validateNumberOfQuestions($numQuestions, 1, 32);
@@ -116,8 +112,7 @@ function createArrayOfSurveyErrors($title, $instructions, $numQuestions, $topic,
 }
 
 // checks integer is correct size
-function validateIntSize($input, $minNo, $maxNo)
-{
+function validateIntSize($input, $minNo, $maxNo) {
 	if ($input < $minNo) {
 		// wasn't a valid length, return a help message:
 		return "Input length: " . $input . ", minimum length: " . $minNo;
@@ -131,8 +126,7 @@ function validateIntSize($input, $minNo, $maxNo)
 }
 
 // checks to make sure input is a number, and then validates the size of the integer
-function validateNumberOfQuestions($input, $minNo, $maxNo)
-{
+function validateNumberOfQuestions($input, $minNo, $maxNo) {
 	$errors = checkOnlyNumeric($input);
 	$errors = $errors . validateIntSize($input, $minNo, $maxNo);
 	return $errors;

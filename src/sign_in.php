@@ -92,14 +92,14 @@ if ($show_signin_form) {
 	// show the form that allows users to log in
 	// Note we use an HTTP POST request to avoid their password appearing in the URL:
 	echo <<<_END
-        <form action="sign_in.php" method="post">
-          Please enter your username and password:<br>
-          Username: <input type="text" name="username" minlength="3" maxlength="20" value="$username" required> $username_val
-          <br>
-          Password: <input type="password" name="password" minlength="6" maxlength="32" value="$password" required> $password_val
-          <br>
-          <input type="submit" value="Submit">
-        </form>
+            <form action="sign_in.php" method="post">
+              Please enter your username and password:<br>
+              Username: <input type="text" name="username" minlength="3" maxlength="20" value="$username" required> $username_val
+              <br>
+              Password: <input type="password" name="password" minlength="6" maxlength="32" value="$password" required> $password_val
+              <br>
+              <input type="submit" value="Submit">
+            </form>
 _END;
 }
 

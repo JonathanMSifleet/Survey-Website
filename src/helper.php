@@ -1,8 +1,7 @@
 <?php
 
 // function to sanitise (clean) user data:
-function sanitise($str, $connection)
-{
+function sanitise($str, $connection) {
 	if (get_magic_quotes_gpc()) {
 		// just in case server is running an old version of PHP with "magic quotes" running:
 		$str = stripslashes($str);
@@ -20,8 +19,7 @@ function sanitise($str, $connection)
 }
 
 // validates input based upon field type
-function validateInput($input, $fieldToChange)
-{
+function validateInput($input, $fieldToChange) {
 	switch ($fieldToChange) {
 		case $fieldToChange == "email":
 			return validateStringLength($input, 1, 64);
@@ -50,8 +48,7 @@ function validateName($field, $minlength, $maxlength) // master function +
 }
 
 // this function checks if an inputted email address is valid, and then returns an error message if it isn't
-function validateEmail($field, $minLength, $maxLength)
-{
+function validateEmail($field, $minLength, $maxLength) {
 	$errors = "";
 	$errors = $errors . validateStringLength($field, $minLength, $maxLength);
 	$errors = $errors . checkIsEmail($field);
@@ -75,8 +72,7 @@ function validateStringLength($field, $minlength, $maxlength) // edit function n
 }
 
 // if the input contains the @ symbol then return an empty string, if the data is invalid return a help message
-function checkIsEmail($field)
-{
+function checkIsEmail($field) {
 	if (strpos($field, '@') == false) {
 		return "Email must contain an '@'";
 	} else {
@@ -85,8 +81,7 @@ function checkIsEmail($field)
 }
 
 // if the input is contains only numbers then return an empty string, if the data is invalid return a help message
-function checkIsNonNumeric($field)
-{
+function checkIsNonNumeric($field) {
 	$charArray = str_split($field);
 	$lengthOfCharArray = count($charArray);
 
@@ -99,8 +94,7 @@ function checkIsNonNumeric($field)
 }
 
 // if the input contains only numbers then return an empty string, if the data is invalid return a help message
-function checkOnlyNumeric($field)
-{
+function checkOnlyNumeric($field) {
 	if (is_numeric($field) == false) {
 		return "Must not contain any characters ";
 	} else {
@@ -109,8 +103,7 @@ function checkOnlyNumeric($field)
 }
 
 // if the input is 11 digits long return an empty string, if the data is invalid return a help message
-function validatePhoneNumber($field)
-{
+function validatePhoneNumber($field) {
 
 	// could add functionality that only allows specific number prefixs
 	// e.g. 01, 07, 08, etc... but https://en.wikipedia.org/wiki/Telephone_numbers_in_the_United_Kingdom
@@ -127,8 +120,7 @@ function validatePhoneNumber($field)
 }
 
 // if the input date is less than 13 years ago or more than 120, return an empty string, if the data is invalid return a help message
-function validateDate($field)
-{
+function validateDate($field) {
 	$todaysDate = date('Y-m-d');
 
 	$inputYear = substr($field, 0, 4);
@@ -148,8 +140,7 @@ function validateDate($field)
 
 // if password length = 0, generate a random password,
 // otherwise check if password is correct length
-function validatePassword($field, $minLength, $maxLength)
-{
+function validatePassword($field, $minLength, $maxLength) {
 	if (strlen($field) == 0) {
 		return "Generate random password";
 	} else {
@@ -158,14 +149,12 @@ function validatePassword($field, $minLength, $maxLength)
 }
 
 // this function encrypts a user input
-function encryptInput($input)
-{
+function encryptInput($input) {
 	return password_hash($input, PASSWORD_BCRYPT); // leave third parameter empty to generate random salt every time
 }
 
 // this function generates 32 random alphanumeric characters, converts them to ascii, combines the combination of characters, then returns the combination
-function generateAlphanumericString()
-{
+function generateAlphanumericString() {
 	$charArray = createArrayOfUsableCharacters();
 	$lengthOfCharArray = count($charArray) - 1;
 
@@ -186,8 +175,7 @@ function generateAlphanumericString()
 }
 
 // this function creates an array of all alphanumeric characters
-function createArrayOfUsableCharacters()
-{
+function createArrayOfUsableCharacters() {
 	$charArray[] = "";
 
 	$j = 0;
@@ -214,8 +202,7 @@ function createArrayOfUsableCharacters()
 }
 
 // this function validates all user inputs, and adds each validation message to an array of errors
-function createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $DOB, &$arrayOfErrors)
-{
+function createArrayOfAccountErrors($username, $email, $password, $firstname, $surname, $number, $DOB, &$arrayOfErrors) {
 	$arrayOfErrors[0] = validateStringLength($username, 1, 20);
 	$arrayOfErrors[1] = validateEmail($email, 1, 64);
 	$arrayOfErrors[2] = validatePassword($password, 12, 32);
@@ -226,8 +213,7 @@ function createArrayOfAccountErrors($username, $email, $password, $firstname, $s
 }
 
 // gets the name of a superglobal from the current URL
-function getSuperGlobalName($inputURL)
-{
+function getSuperGlobalName($inputURL) {
 	$tempString = $inputURL;
 
 	if (containsAmpersand($tempString)) {
@@ -243,8 +229,7 @@ function getSuperGlobalName($inputURL)
 }
 
 // returns true if input contains the '&' symbol
-function containsAmpersand($inputString)
-{
+function containsAmpersand($inputString) {
 	// convert input into array of chars
 	$arrayOfChars = str_split($inputString);
 	$inputLength = count($arrayOfChars);
@@ -259,8 +244,7 @@ function containsAmpersand($inputString)
 }
 
 // removes ampersand from string
-function removeAmpersand($inputString)
-{
+function removeAmpersand($inputString) {
 	$stringLength = strlen($inputString);
 
 	// if found, return the location of the symbol:
@@ -269,8 +253,7 @@ function removeAmpersand($inputString)
 }
 
 // determines the field type bust upon the superglobal name
-function determineFieldType($superGlobalName, &$minLength, &$maxLength)
-{
+function determineFieldType($superGlobalName, &$minLength, &$maxLength) {
 	switch ($superGlobalName) {
 		case $superGlobalName == "email":
 			$minLength = 3;
@@ -299,8 +282,7 @@ function determineFieldType($superGlobalName, &$minLength, &$maxLength)
 }
 
 // calculates the earliest date that a user can be born
-function calcEarliestDate($todaysDate)
-{
+function calcEarliestDate($todaysDate) {
 	$minDate = substr($todaysDate, 0, 4);
 	$minDate = (int)$minDate;
 	$minYear = $minDate - 120;
@@ -310,8 +292,7 @@ function calcEarliestDate($todaysDate)
 }
 
 // calculates the latest date that a user can be born
-function calcLatestDate($todaysDate)
-{
+function calcLatestDate($todaysDate) {
 	$maxDate = substr($todaysDate, 0, 4);
 	$maxDate = (int)$maxDate;
 	$maxYear = $maxDate - 13;
@@ -321,8 +302,7 @@ function calcLatestDate($todaysDate)
 }
 
 // initialises every element in an array with a null value
-function initEmptyArray(&$array, $size)
-{
+function initEmptyArray(&$array, $size) {
 	for ($i = 0; $i <= $size; $i++) {
 		$array[$i] = "";
 	}
@@ -330,8 +310,7 @@ function initEmptyArray(&$array, $size)
 
 // this function gets the username of the selected user from the session superglobal, gets all their information using an SQL query, displays it in a table
 // then shows the options to either change the password or delete the account
-function printUserData($connection, $username)
-{
+function printUserData($connection, $username) {
 	echo "<br>";
 
 	$query = "SELECT * FROM users WHERE username = '$username'";
@@ -355,8 +334,7 @@ function printUserData($connection, $username)
 }
 
 // displays the account detail edit options:
-function printOptionsToEdit($origin, $username)
-{
+function printOptionsToEdit($origin, $username) {
 	$URL = $origin . "?username=" . $username;
 
 	echo "<br>";
@@ -377,8 +355,7 @@ function printOptionsToEdit($origin, $username)
 
 // this function gets the select user's username from the session superglobal, asks the admin to fill in a new password for the user
 // then updates the user's password via an SQL query:
-function changeUserDetails($connection, $fieldToChange, $fieldType)
-{
+function changeUserDetails($connection, $fieldToChange, $fieldType) {
 	if ($_GET['username'] == "admin") {
 		echo "<br> Admin cannot have their details edited";
 	} else {
@@ -428,8 +405,7 @@ function changeUserDetails($connection, $fieldToChange, $fieldType)
 }
 
 // displays the input form for user to update their account details
-function showUserDataFieldForm($fieldToChange, $fieldType)
-{
+function showUserDataFieldForm($fieldToChange, $fieldType) {
 	$currentURL = $_SERVER['REQUEST_URI'];
 	$fieldToDisplay = ucfirst($fieldToChange);
 
@@ -449,20 +425,19 @@ function showUserDataFieldForm($fieldToChange, $fieldType)
 	}
 
 	echo <<<_END
-        <br><br>
+		<br><br>
         <input type="submit" value="Submit">
         </form>
 _END;
 }
 
 // this function gets the username of the selected user from the session superglobal, then deletes the account via an SQL query
-function deleteAccount($connection, $username)
-{
+function deleteAccount($connection, $username) {
 	echo "<br>";
 
 	if ($username == "admin") {
 		// display message that the admin account cannot be deleted:
-		echo "The admin account cannot be deleted";
+		echo "<br>The admin account cannot be deleted";
 	} else {
 		// display confirmation prompt that the account should be deleted:
 		echo "<br>Are you sure you want to delete the account " . $username . "?<br>";
@@ -484,7 +459,6 @@ function deleteAccount($connection, $username)
 					signOut();
 					echo "You have been logged out, please <a href='about.php'>click here</a>  to return to the main page<br>";
 				}
-
 			} else {
 				echo mysqli_error($connection) . "<br>";
 			}
@@ -493,9 +467,7 @@ function deleteAccount($connection, $username)
 }
 
 // required to enact the account detail edit
-function enactEdit($connection)
-{
-
+function enactEdit($connection) {
 	if (isset($_GET['deleteAccount'])) {
 		deleteAccount($connection, $_GET['username']);
 	} else {
@@ -514,8 +486,7 @@ function enactEdit($connection)
 }
 
 // displays the account creation form:
-function displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors)
-{
+function displayCreateAccountForm($username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountErrors) {
 	$minDate = calcEarliestDate($todaysDate);
 	$maxDate = calcLatestDate($todaysDate);
 
@@ -523,31 +494,29 @@ function displayCreateAccountForm($username, $email, $password, $firstname, $sur
 
 	// form to create account:
 	echo <<<_END
-        <form action="$currentURL" method="post">
-          Please fill in the following fields:<br>
-          Username: <input type="text" name="username" minlength="3" maxlength="20" value="$username" required> $arrayOfAccountErrors[0]
-          <br>
-          Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
-          <br>
-          Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfAccountErrors[2]
-          <br>
-          First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfAccountErrors[3]
-          <br>
-          Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfAccountErrors[4]
-          <br>
-          Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
-          <br>
-          Date of birth: <input type="date" name="dob" min="$minDate" max="$maxDate" value="$dob" required> $arrayOfAccountErrors[6]
-          <br>
-          <input type="submit" value="Submit">
-        </form>
+            <form action="$currentURL" method="post">
+              Please fill in the following fields:<br>
+              Username: <input type="text" name="username" minlength="3" maxlength="20" value="$username" required> $arrayOfAccountErrors[0]
+              <br>
+              Email: <input type="email" name="email" minlength="3" maxlength="64" value="$email" required> $arrayOfAccountErrors[1]
+              <br>
+              Password: <input type="password" name="password" maxlength="32" value="$password"> Leave blank for an auto-generated password $arrayOfAccountErrors[2]
+              <br>
+              First name: <input type="text" name="firstname" minlength="2" maxlength="16" value="$firstname" required> $arrayOfAccountErrors[3]
+              <br>
+              Surname: <input type="text" name="surname" minlength="2" maxlength="24" value="$surname" required> $arrayOfAccountErrors[4]
+              <br>
+              Phone number: <input type="text" name="number" min=length"11" maxlength="11" value="$number" required> $arrayOfAccountErrors[5]
+              <br>
+              Date of birth: <input type="date" name="dob" min="$minDate" max="$maxDate" value="$dob" required> $arrayOfAccountErrors[6]
+              <br>
+              <input type="submit" value="Submit">
+            </form>
 _END;
 }
 
 // inserts new account into database:
-function createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors)
-{
-
+function createAccount($connection, $username, $email, $password, $firstname, $surname, $number, $dob, $todaysDate, $arrayOfAccountCreationErrors) {
 	$randomPasswordGenerated = false;
 	$plaintextPassword = "";
 
@@ -600,8 +569,7 @@ function createAccount($connection, $username, $email, $password, $firstname, $s
 }
 
 // sanitise user inputs when they are creating their account:
-function sanitiseUserData($connection, &$username, &$email, &$password, &$firstname, &$surname, &$number, &$dob)
-{
+function sanitiseUserData($connection, &$username, &$email, &$password, &$firstname, &$surname, &$number, &$dob) {
 	$username = sanitise($_POST['username'], $connection);
 	$email = sanitise($_POST['email'], $connection);
 	$password = sanitise($_POST['password'], $connection);
@@ -612,8 +580,7 @@ function sanitiseUserData($connection, &$username, &$email, &$password, &$firstn
 }
 
 // displays the create question prompt
-function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions)
-{
+function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuestions) {
 	if ($numQuestionsInserted < $numQuestions) {
 		$nextQuestionURL = "create_question.php?surveyID=$surveyID&numQuestionsInserted=$numQuestionsInserted";
 		echo "<a href= $nextQuestionURL> Click here to create new question </a><br>";
@@ -624,8 +591,7 @@ function displayCreateQuestionPrompt($surveyID, $numQuestionsInserted, $numQuest
 }
 
 // deletes user responses from database
-function deleteUserResponse($connection, $surveyID)
-{
+function deleteUserResponse($connection, $surveyID) {
 	if (isset($_GET['username'])) {
 		$username = $_GET['username'];
 	} else {
@@ -644,8 +610,7 @@ function deleteUserResponse($connection, $surveyID)
 }
 
 // signs out current user:
-function signOut()
-{
+function signOut() {
 	// user just clicked to logout, so destroy the session data:
 	// first clear the session superglobal array:
 	$_SESSION = array();
@@ -656,8 +621,7 @@ function signOut()
 }
 
 // prints variable value, used for debugging
-function echoVariable($variableToEcho)
-{
+function echoVariable($variableToEcho) {
 	echo "<br>Variable value: " . $variableToEcho . "<br>";
 }
 
