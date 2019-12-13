@@ -133,15 +133,18 @@ function drawGraph($connection, $questionID, $questionName) {
 		$graphResults = "";
 
 		while ($row = mysqli_fetch_assoc($result)) {
-			if ($row['type'] == "checkboxes") {
 
-				$arrayOfCheckboxes = explode(",", $row['response']);
+			if (!$row['response'] == "") {
+				if ($row['type'] == "checkboxes") {
 
-				for ($i = 0; $i < count($arrayOfCheckboxes); $i++) {
-					$graphResults = $graphResults . "['" . $arrayOfCheckboxes[$i] . "'," . $row['countResponse'] . "],";
+					$arrayOfCheckboxes = explode(",", $row['response']);
+
+					for ($i = 0; $i < count($arrayOfCheckboxes); $i++) {
+						$graphResults = $graphResults . "['" . $arrayOfCheckboxes[$i] . "'," . $row['countResponse'] . "],";
+					}
+				} else {
+					$graphResults = $graphResults . "['" . $row['response'] . "'," . $row['countResponse'] . "],";
 				}
-			} else {
-				$graphResults = $graphResults . "['" . $row['response'] . "'," . $row['countResponse'] . "],";
 			}
 		}
 
