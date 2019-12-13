@@ -107,7 +107,6 @@ else {
 
 				// displays table of results:
 				displayTableOfResults($connection, $tableName, $arrayOfQuestionNames, $surveyID);
-				//dropTable($connection, $tableName);
 			} else {
 				// otherwise show message that survey has no respondents:
 				echo "No survey responses<br>";
@@ -359,7 +358,7 @@ function getSurveyQuestions($connection, $surveyID, &$arrayOfQuestions, &$arrayO
 // inserts the user-friendly table into the database:
 function createTable($connection, $arrayOfQuestionNames, $tableName)
 {
-	$query = "CREATE TABLE $tableName (Username VARCHAR(20), PRIMARY KEY(username))";
+	$query = "CREATE TEMPORARY TABLE $tableName (Username VARCHAR(20), PRIMARY KEY(username))";
 	$result = mysqli_query($connection, $query);
 
 	if ($result) {
