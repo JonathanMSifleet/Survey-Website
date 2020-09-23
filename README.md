@@ -1,3 +1,5 @@
+University coursework. Grade: 83%
+
 6G5Z2107 - 2CWK50 - 2019/20
 Jonathan Sifleet
 18014017
